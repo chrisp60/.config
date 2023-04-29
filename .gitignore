@@ -3,3 +3,6 @@ lazygit
 tmux/plugins
 nushell/history.txt
 fish/fish_variables
+dconf
+enchant
+fltk.org
