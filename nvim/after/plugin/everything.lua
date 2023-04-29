@@ -1,11 +1,6 @@
 local lsp = require("lsp-zero")
 local null_ls = require("null-ls")
-
-null_ls.setup({
-    sources = {
-        null_ls.builtins.formatting.prettier,
-    }
-})
+null_ls.setup({ sources = { null_ls.builtins.formatting.prettier, } })
 
 lsp.preset({
     name = "recommended",
@@ -52,8 +47,8 @@ end)
 
 vim.diagnostic.config({
     virtual_text = false,
-    update_in_insert = false,
-    underline = true,
+    update_in_insert = true,
+    underline = false,
     signs = false,
     float = true,
     severity_sort = true,
@@ -85,6 +80,7 @@ local defaults = {
     wrap_results = true,
     border = false,
 }
+
 tele.setup { defaults = defaults }
 
 require 'nvim-treesitter.configs'.setup {
@@ -93,6 +89,6 @@ require 'nvim-treesitter.configs'.setup {
     auto_install = true,
     highlight = {
         enable = true,
-        additional_vim_regex_highlighting = false,
+        additional_vim_regex_highlighting = true,
     },
 }
