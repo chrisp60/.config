@@ -9,10 +9,12 @@ fish_vi_key_bindings insert
 fish_config theme choose "Catppuccin Mocha"
 
 export PATH="$HOME/.cargo/bin:$PATH"
+fish_add_path "~/.local/bin/"
+
 set -gx DISPLAY :0
+set -gx EDITOR "nvim"
+set -gx VISUAL "nvim"
 
 alias lg='lazygit'
-alias sc='source'
+alias e='exa'
 alias cl='clear'
-alias lsa='ls -al'
-
