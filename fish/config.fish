@@ -3,6 +3,8 @@ if status is-interactive
 and not set -q TMUX
     exec tmux
 end
+
+zoxide init fish | source
 fish_vi_key_bindings insert
 fish_config theme choose "Catppuccin Mocha"
 
