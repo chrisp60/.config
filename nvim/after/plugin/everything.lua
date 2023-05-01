@@ -2,6 +2,8 @@ local lsp = require("lsp-zero")
 local null_ls = require("null-ls")
 null_ls.setup({ sources = { null_ls.builtins.formatting.prettier, } })
 
+lsp.nvim_lua_ls()
+
 lsp.preset({
     name = "recommended",
     suggest_lsp_servers = false,
@@ -10,11 +12,11 @@ lsp.preset({
 local cmp = require('cmp')
 local cmp_select = { behavior = cmp.SelectBehavior.Select }
 local cmp_mappings = lsp.defaults.cmp_mappings({
+    ['<C-t>'] = cmp.mapping.complete(),
+    ['<CR>'] = cmp.mapping.confirm({ select = false }),
+    ['<C-y>'] = cmp.mapping.confirm({ select = true }),
     ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
     ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
-    ['<C-y>'] = cmp.mapping.confirm({ select = true }),
-    ['<C-k>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-j>'] = cmp.mapping.scroll_docs(4),
 })
 
 lsp.setup_nvim_cmp({
@@ -24,7 +26,6 @@ lsp.setup_nvim_cmp({
         completeopt = 'menu,menuone,noinsert,noselect'
     },
     mapping = cmp_mappings,
-    -- Turn off a lot of noise from extra snippets.
     sources = {
         { name = 'nvim_lsp' },
         { name = 'path' },
@@ -89,6 +90,6 @@ require 'nvim-treesitter.configs'.setup {
     auto_install = true,
     highlight = {
         enable = true,
-        additional_vim_regex_highlighting = true,
+        additional_vim_regex_highlighting = false,
     },
 }
