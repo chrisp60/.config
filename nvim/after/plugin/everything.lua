@@ -39,6 +39,7 @@ lsp.setup()
 -- LspZero probably says something about it on the help docs.
 -- I don't notice anything currently broken though so uhhh haha whatever.
 lsp.on_attach(function(client, bufnr)
+  client.server_capabilities.semanticTokensProvider = nil
     vim.keymap.set('n', '<leader>k', function() vim.lsp.buf.hover() end, opts)
     vim.keymap.set('n', '<leader>D', function() vim.diagnostic.open_float() end, opts)
     vim.keymap.set('n', '<leader>r', function() vim.lsp.buf.rename() end, opts)
