@@ -18,26 +18,12 @@ return require('packer').startup(function(use)
     use('tpope/vim-surround')
     use('lukas-reineke/indent-blankline.nvim')
     use('nvim-treesitter/playground')
-
-    use { "vimwiki/vimwiki", setup = function()
-        vim.g.vimwiki_list = { {
-            ["path"] = "~/wiki/",
-            ["syntax"] = "default",
-            ["ext"] = ".wiki",
-            ["auto_toc"] = 1,
-        } }
-        vim.g.vimwiki_global_ext = 0
-    end }
-
     use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
     use { 'catppuccin/nvim', as = 'catppuccin' }
     -- -- Telescope related
     use { 'nvim-telescope/telescope.nvim', tag = '0.1.1',
         requires = { { 'nvim-lua/plenary.nvim' } }
     }
-    use { 'nvim-telescope/telescope-file-browser.nvim' }
-
-    -- -- LSP
     use {
         'VonHeikemen/lsp-zero.nvim',
         requires = {
