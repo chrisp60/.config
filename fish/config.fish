@@ -1,3 +1,8 @@
+# Always start with tmux
+if status is-interactive
+and not set -q TMUX
+    exec tmux
+end
 fish_vi_key_bindings insert
 fish_config theme choose "Catppuccin Mocha"
 
