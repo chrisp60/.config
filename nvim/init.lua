@@ -6,6 +6,7 @@ vim.cmd [[packadd packer.nvim]]
 -- Only required if you have packer configured as `opt`
 
 return require('packer').startup(function(use)
+    use('nvim-treesitter/nvim-treesitter-context')
     use({
         "jose-elias-alvarez/null-ls.nvim",
         config = function()
@@ -15,6 +16,7 @@ return require('packer').startup(function(use)
     })
     use('christoomey/vim-tmux-navigator')
     use('wbthomason/packer.nvim')
+    use('ThePrimeagen/harpoon')
     use('tpope/vim-surround')
     use('lukas-reineke/indent-blankline.nvim')
     use('nvim-treesitter/playground')

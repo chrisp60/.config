@@ -2,7 +2,7 @@ require("catppuccin").setup({
     flavour = "mocha", -- latte, frappe, macchiato, mocha
     transparent_background = false,
     show_end_of_buffer = true,
-    term_colors = true,
+    term_colors = false,
     dim_inactive = {
         enabled = false,
         shade = "dark",

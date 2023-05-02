@@ -1,7 +1,6 @@
 local lsp = require("lsp-zero")
 local null_ls = require("null-ls")
 null_ls.setup({ sources = { null_ls.builtins.formatting.prettier, } })
-
 lsp.nvim_lua_ls()
 
 lsp.preset({
@@ -33,26 +32,33 @@ lsp.setup_nvim_cmp({
     }
 })
 
-lsp.setup()
-
--- FIXME: I don't know if this is supposed to be after lsp.setup()
--- LspZero probably says something about it on the help docs.
--- I don't notice anything currently broken though so uhhh haha whatever.
+lsp.setup() -- Must be called before native lsp
 lsp.on_attach(function(client, bufnr)
-  client.server_capabilities.semanticTokensProvider = nil
+    client.server_capabilities.semanticTokensProvider = nil
     vim.keymap.set('n', '<leader>k', function() vim.lsp.buf.hover() end, opts)
     vim.keymap.set('n', '<leader>D', function() vim.diagnostic.open_float() end, opts)
     vim.keymap.set('n', '<leader>r', function() vim.lsp.buf.rename() end, opts)
+    vim.keymap.set('n', '<leader>q', function() vim.diagnostic.goto_next() end, opts)
+    vim.keymap.set('n', '<leader>w', function() vim.diagnostic.goto_prev() end, opts)
     vim.keymap.set({ 'v', 'n' }, '<leader>a', function() vim.lsp.buf.code_action() end, opts)
     vim.keymap.set({ 'v', 'n' }, '<leader>h', function() vim.lsp.buf.format { async = true } end, opts)
+    vim.keymap.set('i', 'C-;', function() vim.lsp.buf.signature_help() end, opts)
 end)
+
+vim.api.nvim_create_augroup('diagnostics', { clear = true })
+vim.api.nvim_create_autocmd('DiagnosticChanged', {
+    group = 'diagnostics',
+    callback = function()
+        vim.diagnostic.setqflist({ open = false })
+    end,
+})
 
 vim.diagnostic.config({
     virtual_text = false,
     update_in_insert = true,
     underline = false,
     signs = false,
-    float = true,
+    float = false,
     severity_sort = true,
 })
 
@@ -65,7 +71,6 @@ vim.keymap.set('n', '<leader>d', builtin.diagnostics, {})
 vim.keymap.set('n', '<leader>H', builtin.help_tags, {})
 vim.keymap.set('n', '<leader>s', builtin.lsp_workspace_symbols, {})
 vim.keymap.set('n', '<leader>R', builtin.lsp_references, {})
-
 -- Plain lines and minimal flair, please.
 vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
     vim.lsp.handlers.hover, {
@@ -94,3 +99,28 @@ require 'nvim-treesitter.configs'.setup {
         additional_vim_regex_highlighting = false,
     },
 }
+
+require("harpoon").setup({
+    menu = { width = vim.api.nvim_win_get_width(0) - 4, },
+    global_settings = {
+        -- sets the marks upon calling `toggle` on the ui, instead of require `:w`.
+        save_on_toggle = false,
+        -- saves the harpoon file upon every change. disabling is unrecommended.
+        save_on_change = true,
+        -- closes any tmux windows harpoon that harpoon creates when you close Neovim.
+        tmux_autoclose_windows = false,
+        -- filetypes that you want to prevent from adding to the harpoon list menu.
+        excluded_filetypes = { "harpoon" },
+        -- set marks specific to each git branch inside git repository
+        mark_branch = false,
+    }
+})
+
+local mark = require("harpoon.mark")
+local ui = require("harpoon.ui")
+vim.keymap.set("n", "<leader>z", mark.add_file)
+vim.keymap.set("n", "<leader>x", ui.toggle_quick_menu)
+vim.keymap.set("n", "<C-h>", function() ui.nav_file(1) end)
+vim.keymap.set("n", "<C-t>", function() ui.nav_file(2) end)
+vim.keymap.set("n", "<C-n>", function() ui.nav_file(3) end)
+vim.keymap.set("n", "<C-s>", function() ui.nav_file(4) end)
