@@ -6,3 +6,5 @@ fish/fish_variables
 dconf
 enchant
 fltk.org
+htop
+nvim/plugin/packer_compiled.lua
