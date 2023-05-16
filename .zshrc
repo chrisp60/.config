@@ -1,5 +1,6 @@
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 export ZSH="$HOME/.oh-my-zsh"
+. "$HOME/.cargo/env"
 
 ZSH_THEME="robbyrussell"
 CASE_SENSITIVE="true"
@@ -14,7 +15,7 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 ENABLE_CORRECTION="true"
 
 # oh-my-zsh plugin settings
-ZSH_TMUX_AUTOSTART=true
+ZSH_TMUX_AUTOSTART=false
 
 # vim zsh plugin likes their config in this function
 function zvm_config() {
@@ -23,10 +24,10 @@ function zvm_config() {
 
 plugins=(git zsh-vi-mode tmux)
 source $ZSH/oh-my-zsh.sh
-
 alias lg="lazygit"
 
 export PATH="/home/chris/.local/share/fnm:$PATH" # fnm
 eval "`fnm env`" #fnm
 eval "$(zoxide init zsh)"
+alias tn="tmux new-session\; split-window -h -p 35\; select-pane -t 0"
 
