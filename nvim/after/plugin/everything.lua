@@ -1,12 +1,9 @@
 local lsp = require("lsp-zero")
-local null_ls = require("null-ls")
-null_ls.setup({ sources = { null_ls.builtins.formatting.prettier, } })
-lsp.nvim_lua_ls()
-
 lsp.preset({
     name = "recommended",
     suggest_lsp_servers = false,
 })
+
 
 local cmp = require('cmp')
 local cmp_select = { behavior = cmp.SelectBehavior.Select }
@@ -55,16 +52,15 @@ vim.api.nvim_create_autocmd('DiagnosticChanged', {
 
 vim.diagnostic.config({
     virtual_text = false,
-    update_in_insert = true,
+    update_in_insert = false,
     underline = false,
-    signs = false,
+    signs = true,
     float = false,
     severity_sort = true,
 })
 
 -- Mainly LSP stuff
 local builtin = require('telescope.builtin')
-vim.keymap.set('n', '<leader>b', builtin.git_branches, {})
 vim.keymap.set('n', '<leader>f', builtin.find_files, {})
 vim.keymap.set('n', '<leader>g', builtin.live_grep, {})
 vim.keymap.set('n', '<leader>d', builtin.diagnostics, {})
@@ -120,7 +116,13 @@ local mark = require("harpoon.mark")
 local ui = require("harpoon.ui")
 vim.keymap.set("n", "<leader>z", mark.add_file)
 vim.keymap.set("n", "<leader>x", ui.toggle_quick_menu)
-vim.keymap.set("n", "<C-h>", function() ui.nav_file(1) end)
-vim.keymap.set("n", "<C-t>", function() ui.nav_file(2) end)
-vim.keymap.set("n", "<C-n>", function() ui.nav_file(3) end)
-vim.keymap.set("n", "<C-s>", function() ui.nav_file(4) end)
+
+local null_ls = require("null-ls")
+local sources = {
+    null_ls.builtins.formatting.prettier,
+    null_ls.builtins.code_actions.gitsigns,
+}
+null_ls.setup({
+    debug = true,
+    sources = sources
+})
