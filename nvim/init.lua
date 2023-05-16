@@ -1,48 +1,61 @@
 vim.g.mapleader = " "
-require('colors')
-require('set')
 
-vim.cmd [[packadd packer.nvim]]
--- Only required if you have packer configured as `opt`
-
-return require('packer').startup(function(use)
-    use('nvim-treesitter/nvim-treesitter-context')
-    use({
-        "jose-elias-alvarez/null-ls.nvim",
-        config = function()
-            require("null-ls").setup()
-        end,
-        requires = { "nvim-lua/plenary.nvim" },
+-- Bootstrap Laxy
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+    vim.fn.system({
+        "git",
+        "clone",
+        "--filter=blob:none",
+        "https://github.com/folke/lazy.nvim.git",
+        "--branch=stable", -- latest stable release
+        lazypath,
     })
-    use('christoomey/vim-tmux-navigator')
-    use('wbthomason/packer.nvim')
-    use('ThePrimeagen/harpoon')
-    use('tpope/vim-surround')
-    use('lukas-reineke/indent-blankline.nvim')
-    use('nvim-treesitter/playground')
-    use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
-    use { 'catppuccin/nvim', as = 'catppuccin' }
-    -- -- Telescope related
-    use { 'nvim-telescope/telescope.nvim', tag = '0.1.1',
-        requires = { { 'nvim-lua/plenary.nvim' } }
-    }
-    use {
+end
+vim.opt.rtp:prepend(lazypath)
+
+local plugins = {
+    {
+        'catppuccin/nvim',
+        name = 'catppuccin',
+        lazy = false,
+        config = function()
+            require('colors')
+        end,
+    },
+    'jose-elias-alvarez/null-ls.nvim',
+    'nvim-treesitter/nvim-treesitter-context',
+    'christoomey/vim-tmux-navigator',
+    'wbthomason/packer.nvim',
+    'wbthomason/packer.nvim',
+    'ThePrimeagen/harpoon',
+    'tpope/vim-surround',
+    'lukas-reineke/indent-blankline.nvim',
+    'nvim-treesitter/playground',
+    'nvim-treesitter/nvim-treesitter',
+    {
+        'nvim-telescope/telescope.nvim',
+        dependencies = {
+            'nvim-lua/plenary.nvim',
+        },
+    },
+    {
         'VonHeikemen/lsp-zero.nvim',
-        requires = {
-            -- LSP Support
-            { 'neovim/nvim-lspconfig' },
-            { 'williamboman/mason.nvim' },
-            { 'williamboman/mason-lspconfig.nvim' },
-            -- Autocompletion
-            { 'hrsh7th/nvim-cmp' },
-            { 'hrsh7th/cmp-buffer' },
-            { 'hrsh7th/cmp-path' },
-            { 'saadparwaiz1/cmp_luasnip' },
-            { 'hrsh7th/cmp-nvim-lsp' },
-            { 'hrsh7th/cmp-nvim-lua' },
-            -- Snippets
-            { 'L3MON4D3/LuaSnip' },
-            { 'rafamadriz/friendly-snippets' },
-        }
-    }
-end)
+        dependencies = {
+            'neovim/nvim-lspconfig',
+            'williamboman/mason.nvim',
+            'williamboman/mason-lspconfig.nvim',
+            'hrsh7th/nvim-cmp',
+            'hrsh7th/cmp-buffer',
+            'hrsh7th/cmp-path',
+            'saadparwaiz1/cmp_luasnip',
+            'hrsh7th/cmp-nvim-lsp',
+            'hrsh7th/cmp-nvim-lua',
+            'L3MON4D3/LuaSnip',
+            'rafamadriz/friendly-snippets',
+        },
+    },
+}
+
+require("lazy").setup(plugins, opts)
+require('set')

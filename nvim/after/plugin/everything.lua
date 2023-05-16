@@ -4,7 +4,6 @@ lsp.preset({
     suggest_lsp_servers = false,
 })
 
-
 local cmp = require('cmp')
 local cmp_select = { behavior = cmp.SelectBehavior.Select }
 local cmp_mappings = lsp.defaults.cmp_mappings({
@@ -77,14 +76,14 @@ vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
 
 -- Telescope and telescope accesories
 local tele = require('telescope')
-local defaults = {
-    layout_strategy = 'flex',
-    layout_config = { width = 0.95, height = 0.95, prompt_position = 'bottom' },
-    wrap_results = true,
-    border = false,
+tele.setup {
+    defaults = {
+        layout_strategy = 'flex',
+        layout_config = { width = 0.95, height = 0.95, prompt_position = 'bottom' },
+        wrap_results = true,
+        border = false,
+    }
 }
-
-tele.setup { defaults = defaults }
 
 require 'nvim-treesitter.configs'.setup {
     ensure_installed = { "rust" },
@@ -96,33 +95,10 @@ require 'nvim-treesitter.configs'.setup {
     },
 }
 
-require("harpoon").setup({
-    menu = { width = vim.api.nvim_win_get_width(0) - 4, },
-    global_settings = {
-        -- sets the marks upon calling `toggle` on the ui, instead of require `:w`.
-        save_on_toggle = false,
-        -- saves the harpoon file upon every change. disabling is unrecommended.
-        save_on_change = true,
-        -- closes any tmux windows harpoon that harpoon creates when you close Neovim.
-        tmux_autoclose_windows = false,
-        -- filetypes that you want to prevent from adding to the harpoon list menu.
-        excluded_filetypes = { "harpoon" },
-        -- set marks specific to each git branch inside git repository
-        mark_branch = false,
-    }
-})
-
-local mark = require("harpoon.mark")
-local ui = require("harpoon.ui")
-vim.keymap.set("n", "<leader>z", mark.add_file)
-vim.keymap.set("n", "<leader>x", ui.toggle_quick_menu)
-
 local null_ls = require("null-ls")
-local sources = {
-    null_ls.builtins.formatting.prettier,
-    null_ls.builtins.code_actions.gitsigns,
-}
 null_ls.setup({
     debug = true,
-    sources = sources
+    sources = {
+        null_ls.builtins.formatting.prettierd,
+    },
 })
