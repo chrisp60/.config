@@ -23,6 +23,7 @@ local plugins = {
             require('colors')
         end,
     },
+    'folke/trouble.nvim',
     'jose-elias-alvarez/null-ls.nvim',
     'nvim-treesitter/nvim-treesitter-context',
     'christoomey/vim-tmux-navigator',

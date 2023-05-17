@@ -31,29 +31,21 @@ lsp.setup_nvim_cmp({
 lsp.setup() -- Must be called before native lsp
 lsp.on_attach(function(client, bufnr)
     client.server_capabilities.semanticTokensProvider = nil
-    vim.keymap.set('n', '<leader>k', function() vim.lsp.buf.hover() end, opts)
-    vim.keymap.set('n', '<leader>D', function() vim.diagnostic.open_float() end, opts)
+    vim.keymap.set('n', '<leader>k', "<cmd>TroubleToggle<cr>", { silent = true, noremap = true })
+    vim.keymap.set('n', '<leader>K', "<cmd>TroubleToggle lsp_references<cr>", { silent = true, noremap = true })
     vim.keymap.set('n', '<leader>r', function() vim.lsp.buf.rename() end, opts)
     vim.keymap.set('n', '<leader>q', function() vim.diagnostic.goto_next() end, opts)
     vim.keymap.set('n', '<leader>w', function() vim.diagnostic.goto_prev() end, opts)
     vim.keymap.set({ 'v', 'n' }, '<leader>a', function() vim.lsp.buf.code_action() end, opts)
     vim.keymap.set({ 'v', 'n' }, '<leader>h', function() vim.lsp.buf.format { async = true } end, opts)
-    vim.keymap.set('i', 'C-;', function() vim.lsp.buf.signature_help() end, opts)
 end)
 
-vim.api.nvim_create_augroup('diagnostics', { clear = true })
-vim.api.nvim_create_autocmd('DiagnosticChanged', {
-    group = 'diagnostics',
-    callback = function()
-        vim.diagnostic.setqflist({ open = false })
-    end,
-})
 
 vim.diagnostic.config({
     virtual_text = false,
     update_in_insert = false,
     underline = false,
-    signs = true,
+    signs = false,
     float = false,
     severity_sort = true,
 })
@@ -62,26 +54,22 @@ vim.diagnostic.config({
 local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<leader>f', builtin.find_files, {})
 vim.keymap.set('n', '<leader>g', builtin.live_grep, {})
-vim.keymap.set('n', '<leader>d', builtin.diagnostics, {})
 vim.keymap.set('n', '<leader>H', builtin.help_tags, {})
-vim.keymap.set('n', '<leader>s', builtin.lsp_workspace_symbols, {})
+vim.keymap.set('n', '<leader>s', builtin.lsp_document_symbols, {})
+vim.keymap.set('n', '<leader>b', builtin.buffers, {})
 vim.keymap.set('n', '<leader>R', builtin.lsp_references, {})
 -- Plain lines and minimal flair, please.
 vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
-    vim.lsp.handlers.hover, {
-        border = nil,
-        title = nil,
-    })
-
+    vim.lsp.handlers.hover, { border = nil, title = nil, })
 
 -- Telescope and telescope accesories
 local tele = require('telescope')
 tele.setup {
     defaults = {
         layout_strategy = 'flex',
-        layout_config = { width = 0.95, height = 0.95, prompt_position = 'bottom' },
-        wrap_results = true,
-        border = false,
+        layout_config = { prompt_position = 'bottom' },
+        wrap_results = false,
+        border = true,
     }
 }
 
@@ -101,4 +89,37 @@ null_ls.setup({
     sources = {
         null_ls.builtins.formatting.prettierd,
     },
+})
+
+require('trouble').setup({
+    position = "right",
+    width = 80,
+    group = true,                     -- group results by file
+    padding = false,                  -- add an extra new line on top of the list
+    action_keys = {
+        close = "q",                  -- close the list
+        cancel = "<esc>",             -- cancel the preview and get back to your last window / buffer / cursor
+        refresh = "r",                -- manually refresh
+        jump = { "<cr>" },            -- jump to the diagnostic or open / close folds
+        open_split = {},
+        open_vsplit = { "<c-v>" },    -- open buffer in new vsplit
+        open_tab = { "<c-t>" },       -- open buffer in new tab
+        jump_close = { "o" },         -- jump to the diagnostic and close the list
+        toggle_mode = "m",            -- toggle between "workspace" and "document" diagnostics mode
+        toggle_preview = "P",         -- toggle auto_preview
+        hover = "K",                  -- opens a small popup with the full multiline message
+        preview = "p",                -- preview the diagnostic location
+        close_folds = { "zM", "zm" }, -- close all folds
+        open_folds = { "zR", "zr" },  -- open all folds
+        toggle_fold = { "zA", "za" }, -- toggle fold of current file
+        previous = "k",               -- previous item
+        next = "j"                    -- next item
+    },
+    indent_lines = false,             -- add an indent guide below the fold icons
+    auto_open = false,                -- automatically open the list when you have diagnostics
+    auto_close = false,               -- automatically close the list when you have no diagnostics
+    auto_preview = false,             -- automatically preview the location of the diagnostic. <esc> to close preview and go back to last window
+    auto_fold = false,                -- automatically fold a file trouble list at creation
+    icons = false,
+    use_diagnostic_signs = true       -- enabling this will use the signs defined in your lsp client
 })
