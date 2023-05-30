@@ -1,3 +1,6 @@
+vim.keymap.set('n', ']]', ':cn<CR>', {})
+vim.keymap.set('n', '[[', ':cp<CR>', {})
+vim.keymap.set('n', '<leader>k', ':copen<CR>', {})
 vim.g.mapleader = ' '
 vim.opt.path:append '**'
 vim.opt.nu = true
