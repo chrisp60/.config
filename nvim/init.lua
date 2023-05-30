@@ -1,6 +1,6 @@
 vim.g.mapleader = " "
 
--- Bootstrap Laxy
+-- Bootstrap Lazy
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
     vim.fn.system({
@@ -12,6 +12,7 @@ if not vim.loop.fs_stat(lazypath) then
         lazypath,
     })
 end
+
 vim.opt.rtp:prepend(lazypath)
 
 local plugins = {
@@ -23,13 +24,9 @@ local plugins = {
             require('colors')
         end,
     },
-    'folke/trouble.nvim',
     'jose-elias-alvarez/null-ls.nvim',
     'nvim-treesitter/nvim-treesitter-context',
     'christoomey/vim-tmux-navigator',
-    'wbthomason/packer.nvim',
-    'wbthomason/packer.nvim',
-    'ThePrimeagen/harpoon',
     'tpope/vim-surround',
     'lukas-reineke/indent-blankline.nvim',
     'nvim-treesitter/playground',

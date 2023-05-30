@@ -1,8 +1,8 @@
 require("catppuccin").setup({
-    flavour = "frappe", -- latte, frappe, macchiato, mocha
+    flavour = "mocha", -- latte, frappe, macchiato, mocha
     transparent_background = false,
     show_end_of_buffer = true,
-    term_colors = false,
+    term_colors = true,
     dim_inactive = {
         enabled = false,
         shade = "dark",
@@ -40,8 +40,6 @@ require("catppuccin").setup({
     },
 })
 
--- setup must be called before loading
 vim.cmd.colorscheme "catppuccin"
--- Pairs highlights
 vim.cmd [[:highlight MatchParen cterm=bold ctermbg=black ctermfg=NONE]]
 vim.cmd [[:highlight MatchParen gui=bold guibg=black guifg=NONE]]
