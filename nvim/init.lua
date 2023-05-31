@@ -30,6 +30,7 @@ local plugins = {
             'nvim-lua/plenary.nvim',
         },
     },
+    'theprimeagen/harpoon',
     'jose-elias-alvarez/null-ls.nvim',
     'nvim-treesitter/nvim-treesitter-context',
     'christoomey/vim-tmux-navigator',
