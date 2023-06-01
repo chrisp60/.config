@@ -1,22 +1,13 @@
-require("harpoon").setup({ menu = { width = vim.api.nvim_win_get_width(0) - 4, } })
-local mark = require("harpoon.mark")
-local ui = require("harpoon.ui")
-vim.keymap.set('n', '<leader>j', mark.add_file)
-vim.keymap.set('n', '<leader>J', ui.toggle_quick_menu)
-vim.keymap.set('n', '<C-q>', function() ui.nav_file(1) end)
-vim.keymap.set('n', '<C-w>', function() ui.nav_file(2) end)
-vim.keymap.set('n', '<C-e>', function() ui.nav_file(4) end)
-vim.keymap.set('n', '<C-r>', function() ui.nav_file(4) end)
-
+---@diagnostic disable: trailing-space
 local lsp = require("lsp-zero")
 lsp.preset({
-    name = "recommended",
-    suggest_lsp_servers = false,
+    name = "minimal",
 })
 
 local cmp = require('cmp')
 local cmp_select = { behavior = cmp.SelectBehavior.Select }
 local cmp_mappings = lsp.defaults.cmp_mappings({
+    ['<C-t>'] = cmp.get_entries(),
     ['<CR>'] = cmp.mapping.confirm({ select = false }),
     ['<C-l>'] = cmp.mapping.confirm({ select = true }),
     ['<C-k>'] = cmp.mapping.select_prev_item(cmp_select),
@@ -61,11 +52,16 @@ lsp.on_attach(function(client, bufnr)
     vim.keymap.set({ 'v', 'n' }, 'gaf', function() vim.lsp.buf.format { async = false } end, opts)
 end)
 
+vim.keymap.set({ 'n', 'v' }, 'gsj', '<cmd>cnext<cr>', {}, opts)
+vim.keymap.set({ 'n', 'v' }, 'gsk', '<cmd>cprev<cr>', {}, opts)
+vim.keymap.set({ 'n', 'v' }, 'gso', '<cmd>vertical botright copen 60<cr>', {}, opts)
+vim.keymap.set({ 'n', 'v' }, 'gsx', '<cmd>cclose<cr>', {}, opts)
+
 vim.diagnostic.config({
     virtual_text = { severity = { min = vim.diagnostic.severity.WARN } },
     update_in_insert = true,
     underline = false,
-    signs = true,
+    signs = false,
     float = false,
 })
 
@@ -86,22 +82,13 @@ require('telescope').setup({
     },
 })
 
-vim.keymap.set('n', '<leader>C', builtin.command_history, {})
 vim.keymap.set('n', '<leader>F', builtin.live_grep, {})
-vim.keymap.set('n', '<leader>GS', builtin.git_stash, {})
-vim.keymap.set('n', '<leader>Gb', builtin.git_branches, {})
-vim.keymap.set('n', '<leader>Gc', builtin.git_commits, {})
-vim.keymap.set('n', '<leader>Gf', builtin.git_files, {})
-vim.keymap.set('n', '<leader>Gs', builtin.git_status, {})
 vim.keymap.set('n', '<leader>H', builtin.help_tags, {})
 vim.keymap.set('n', '<leader>R', builtin.lsp_references, {})
-vim.keymap.set('n', '<leader>b', builtin.buffers, {})
 vim.keymap.set('n', '<leader>d', builtin.diagnostics, {})
 vim.keymap.set('n', '<leader>f', builtin.find_files, {})
-vim.keymap.set('n', '<leader>m', builtin.marks, {})
 vim.keymap.set('n', '<leader>s', builtin.lsp_workspace_symbols, {})
 vim.keymap.set('n', '<leader>S', builtin.lsp_document_symbols, {})
-vim.keymap.set('n', '<leader>t', builtin.spell_suggest, {})
 
 -- Plain lines and minimal flair, please.
 vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
@@ -124,46 +111,13 @@ null_ls.setup({
     },
 })
 
-
-require('gitsigns').setup {
-    on_attach = function(bufnr)
-        local gs = package.loaded.gitsigns
-        local function map(mode, l, r, opts)
-            opts = opts or {}
-            opts.buffer = bufnr
-            vim.keymap.set(mode, l, r, opts)
-        end
-        -- Navigation
-        map('n', ']c', function()
-            if vim.wo.diff then return ']c' end
-            vim.schedule(function() gs.next_hunk() end)
-            return '<Ignore>'
-        end, { expr = true })
-
-        map('n', '[c', function()
-            if vim.wo.diff then return '[c' end
-            vim.schedule(function() gs.prev_hunk() end)
-            return '<Ignore>'
-        end, { expr = true })
-
-        -- Actions
-        -- Hunks
-        map('n', '<leader>gs', gs.stage_hunk)
-        map('n', '<leader>gu', gs.undo_stage_hunk)
-        map('n', '<leader>gp', gs.preview_hunk)
-        map('v', '<leader>gs', function() gs.stage_hunk { vim.fn.line("."), vim.fn.line("v") } end)
-        map('v', '<leader>gr', function() gs.reset_hunk { vim.fn.line("."), vim.fn.line("v") } end)
-
-        -- Buffers
-        map('n', '<leader>gS', gs.stage_buffer)
-        map('n', '<leader>gR', gs.reset_buffer)
-
-
-        map('n', '<leader>gd', gs.diffthis)
-        map('n', '<leader>gD', function() gs.diffthis('~') end)
-        map('n', '<leader>gt', gs.toggle_deleted)
-        map('n', '<leader>gr', gs.reset_hunk)
-        -- Text object
-        map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
-    end
-}
+require("harpoon").setup({ menu = { width = vim.api.nvim_win_get_width(0) - 4, } })
+local mark = require("harpoon.mark")
+local ui = require("harpoon.ui")
+vim.keymap.set('n', 'g.', mark.add_file)
+vim.keymap.set('n', 'gm', ui.toggle_quick_menu)
+vim.keymap.set('n', 'gn', function() ui.nav_next() end)
+vim.keymap.set('n', 'gj', function() ui.nav_file(1) end)
+vim.keymap.set('n', 'gk', function() ui.nav_file(2) end)
+vim.keymap.set('n', 'gl', function() ui.nav_file(3) end)
+vim.keymap.set('n', 'gh', function() ui.nav_file(4) end)

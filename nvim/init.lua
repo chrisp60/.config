@@ -24,15 +24,8 @@ local plugins = {
             require('colors')
         end,
     },
-    {
-        "lewis6991/gitsigns.nvim",
-        dependencies = {
-            'nvim-lua/plenary.nvim',
-        },
-    },
     'theprimeagen/harpoon',
     'jose-elias-alvarez/null-ls.nvim',
-    'nvim-treesitter/nvim-treesitter-context',
     'christoomey/vim-tmux-navigator',
     'tpope/vim-surround',
     'lukas-reineke/indent-blankline.nvim',
