@@ -34,21 +34,39 @@ lsp.setup_nvim_cmp({
     }
 })
 
+
 lsp.setup() -- Must be called before native lsp
 lsp.on_attach(function(client, bufnr)
     client.server_capabilities.semanticTokensProvider = nil
-    vim.keymap.set('n', '<leader>r', function() vim.lsp.buf.rename() end, opts)
-    vim.keymap.set({ 'v', 'n' }, '<leader>a', function() vim.lsp.buf.code_action() end, opts)
-    vim.keymap.set({ 'v', 'n' }, '<leader>h', function() vim.lsp.buf.format { async = false } end, opts)
+    vim.keymap.set('n', 'K', function() vim.lsp.buf.hover() end, opts)
+
+    vim.keymap.set('n', 'gdd', function() vim.lsp.buf.definition() end, opts)
+    vim.keymap.set('n', 'gdj',
+        function() vim.diagnostic.goto_next({ severity = { min = vim.diagnostic.severity.WARN } }) end, opts)
+    vim.keymap.set('n', 'gdk',
+        function() vim.diagnostic.goto_prev({ severity = { min = vim.diagnostic.severity.WARN } }) end, opts)
+
+
+    -- Set qf list but dont open it, just go to the first
+    local function on_list(options)
+        vim.fn.setqflist({}, ' ', options)
+        vim.api.nvim_command('cfirst')
+    end
+    vim.keymap.set('n', 'gvr', function() vim.lsp.buf.references(nil, { on_list = on_list }) end, opts)
+    vim.keymap.set('n', 'gvS', function() vim.lsp.buf.document_symbol({ on_list = on_list }) end, opts)
+    vim.keymap.set('n', 'gvs', function() vim.lsp.buf.workspace_symbol(nil, { on_list = on_list }) end, opts)
+
+    vim.keymap.set('n', 'gar', function() vim.lsp.buf.rename() end, opts)
+    vim.keymap.set({ 'v', 'n' }, 'gaa', function() vim.lsp.buf.code_action() end, opts)
+    vim.keymap.set({ 'v', 'n' }, 'gaf', function() vim.lsp.buf.format { async = false } end, opts)
 end)
 
 vim.diagnostic.config({
-    virtual_text = false,
+    virtual_text = { severity = { min = vim.diagnostic.severity.WARN } },
     update_in_insert = true,
     underline = false,
     signs = true,
     float = false,
-    severity_sort = true,
 })
 
 -- Mainly LSP stuff
