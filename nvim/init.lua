@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-global
 vim.g.mapleader = " "
 
 -- Bootstrap Lazy
@@ -14,7 +15,6 @@ if not vim.loop.fs_stat(lazypath) then
 end
 
 vim.opt.rtp:prepend(lazypath)
-
 local plugins = {
     {
         'catppuccin/nvim',
@@ -24,13 +24,11 @@ local plugins = {
             require('colors')
         end,
     },
-    'theprimeagen/harpoon',
-    'jose-elias-alvarez/null-ls.nvim',
-    'christoomey/vim-tmux-navigator',
-    'tpope/vim-surround',
-    'lukas-reineke/indent-blankline.nvim',
-    'nvim-treesitter/playground',
-    'nvim-treesitter/nvim-treesitter',
+    {
+        "ellisonleao/glow.nvim",
+        config = true,
+        cmd = "Glow"
+    },
     {
         'nvim-telescope/telescope.nvim',
         dependencies = {
@@ -50,14 +48,19 @@ local plugins = {
                     pcall(vim.cmd, 'MasonUpdate')
                 end,
             },
-            { 'williamboman/mason-lspconfig.nvim' }, -- Optional
-
-            -- Autocompletion
-            { 'hrsh7th/nvim-cmp' },     -- Required
-            { 'hrsh7th/cmp-nvim-lsp' }, -- Required
-            { 'L3MON4D3/LuaSnip' },     -- Required
+            { 'williamboman/mason-lspconfig.nvim' },
+            { 'hrsh7th/nvim-cmp' },
+            { 'hrsh7th/cmp-nvim-lsp' },
+            { 'L3MON4D3/LuaSnip' },
         }
     },
+    'theprimeagen/harpoon',
+    'jose-elias-alvarez/null-ls.nvim',
+    'christoomey/vim-tmux-navigator',
+    'tpope/vim-surround',
+    'lukas-reineke/indent-blankline.nvim',
+    'nvim-treesitter/playground',
+    'nvim-treesitter/nvim-treesitter',
 }
 
 require("lazy").setup(plugins, opts)

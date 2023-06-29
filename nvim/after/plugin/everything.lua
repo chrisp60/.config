@@ -1,14 +1,13 @@
 ---@diagnostic disable: trailing-space
 ---@diagnostic disable: undefined-global
 
-
 local lsp = require("lsp-zero")
 lsp.preset({
     name = "minimal",
 })
 
 local cmp = require('cmp')
-local cmp_select = { behavior = cmp.SelectBehavior.Select }
+local cmp_select = { behavior = cmp.SelectBehavior.Insert }
 local cmp_mappings = lsp.defaults.cmp_mappings({
     -- Only show the good stuff
     ['<C-t>'] = cmp.mapping.complete({ config = {
@@ -30,14 +29,15 @@ lsp.setup_nvim_cmp({
         end,
     },
     preselect = 'none',
-    completion = { completeopt = 'menu,menuone,noinsert,noselect' },
+    completion = { completeopt = 'menu,menuone,noselectpreview' },
     mapping = cmp_mappings,
     sources = {
-        { name = 'nvim_lsp' },
-        { name = 'luasnip' },
-        { name = 'buffer',  keyword_length = 3 },
+        { name = 'nvim_lsp', group_index = 1 },
+        { name = 'luasnip',  group_index = 2 },
+        { name = 'buffer',   keyword_length = 3, group_index = 4 },
         { name = 'path' },
-    }
+    },
+    experimental = { ghost_text = true },
 })
 
 lsp.setup() -- Must be called before native lsp
@@ -45,7 +45,7 @@ lsp.setup() -- Must be called before native lsp
 local min_error = { severity = { min = vim.diagnostic.severity.WARN } }
 
 lsp.on_attach(function(client, bufnr)
-    --    client.server_capabilities.semanticTokensProvider = nil
+    -- client.server_capabilities.semanticTokensProvider = nil
     vim.keymap.set({ 'n', 'v' }, 'K', function() vim.lsp.buf.hover() end, opts)
 
     vim.keymap.set('n', 'gdd', function() vim.lsp.buf.definition() end, opts)
@@ -106,7 +106,6 @@ vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
     vim.lsp.handlers.hover, { title = nil, border = nil })
 
 require 'nvim-treesitter.configs'.setup {
-    ensure_installed = { "rust" },
     sync_install = false,
     auto_install = true,
     highlight = {

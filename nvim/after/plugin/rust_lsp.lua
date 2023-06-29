@@ -6,9 +6,19 @@ require('lspconfig').rust_analyzer.setup({
         ["rust-analyzer"] = {
             imports = {
                 granularity = {
-                    group = "module",
+                    group = "crate",
+                    enforce = true,
+                },
+                group = {
+                    enable = true,
+                },
+                merge = {
+                    glob = false,
                 },
                 prefix = "self",
+            },
+            interpret = {
+                tests = true,
             },
             cargo = {
                 features = "all",
@@ -16,36 +26,25 @@ require('lspconfig').rust_analyzer.setup({
                     enable = true,
                 },
             },
-            check = {
-                command = "clippy"
-            },
-            hover = {
-                links = {
-                    enable = false,
-                },
-                actions = {
-                    debug = {
-                        enable = true,
-                    }
-                }
-            },
             completion = {
                 callable = {
                     snippets = "fill_arguments",
                 },
                 postfix = {
-                    enable = true
+                    enable = false,
                 },
-            },
-            inlayHints = {
-                typeHints = {
-                    enable = true,
-                }
             },
             references = {
                 excludeImports = {
                     enable = true,
                 }
+            },
+            hover = {
+                memoryLayout = {
+                    size = 'both',
+                    enable = true,
+                    niches = true,
+                },
             },
             procMacro = {
                 enable = true,
