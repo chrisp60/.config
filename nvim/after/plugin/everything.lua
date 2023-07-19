@@ -99,7 +99,15 @@ vim.keymap.set('n', '<leader>F', builtin.live_grep, {})
 vim.keymap.set('n', '<leader>H', builtin.help_tags, {})
 vim.keymap.set('n', '<leader>d', builtin.diagnostics, {})
 vim.keymap.set('n', '<leader>f', builtin.find_files, {})
+vim.keymap.set('n', '<leader>q', builtin.quickfix, {})
+vim.keymap.set('n', '<leader>h', builtin.command_history, {})
+vim.keymap.set('n', '<leader>b', builtin.buffers, {})
+vim.keymap.set('n', '<leader>o', builtin.oldfiles, {})
+vim.keymap.set('n', '<leader>l', builtin.loclist, {})
 vim.keymap.set('n', '<leader>s', builtin.lsp_workspace_symbols, {})
+vim.keymap.set('n', '<leader>j', function()
+    builtin.jumplist({ fname_width = 100 })
+end, {})
 
 -- Plain lines and minimal flair, please.
 vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(

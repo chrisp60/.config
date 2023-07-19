@@ -15,15 +15,22 @@ require('lspconfig').rust_analyzer.setup({
                 merge = {
                     glob = false,
                 },
-                prefix = "self",
+                prefix = "crate",
             },
             interpret = {
                 tests = true,
             },
             cargo = {
-                features = "all",
                 buildScripts = {
                     enable = true,
+                },
+            },
+            check = {
+                command = "clippy"
+            },
+            hover = {
+                links = {
+                    enable = false,
                 },
             },
             completion = {
