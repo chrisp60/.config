@@ -1,0 +1,31 @@
+summary = false
+wrap = true
+# reverse = true
+export_locations = false
+
+[jobs.expand]
+command = ["cargo", "expand", "--color", "always"]
+need_stdout = true
+
+[jobs.test_no_capp]
+command = ["cargo", "test", "--color", "always", "--", "--nocapture"]
+need_stdout = true
+
+[keybindings]
+q = "quit"
+s = "toggle-summary"
+w = "toggle-wrap"
+ctrl-t = "toggle-backtrace"
+o = "toggle-raw-output"
+ctrl-d = "scroll-pages(-1)"
+ctrl-u = "scroll-pages(1)"
+g = "scroll-to-top"
+shift-g = "scroll-to-bottom"
+k = "scroll-lines(-1)"
+j = "scroll-lines(1)"
+e = "job:expand"
+t = "job:test_no_capp"
+# c = "job:clippy"
+# d = "job:doc-open"
+# t = "job:test"
+# r = "job:run"
