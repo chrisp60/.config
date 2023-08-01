@@ -1,5 +1,6 @@
+require('set')
+
 ---@diagnostic disable: undefined-global
-vim.g.mapleader = " "
 
 -- Bootstrap Lazy
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -64,4 +65,3 @@ local plugins = {
 }
 
 require("lazy").setup(plugins, opts)
-require('set')
