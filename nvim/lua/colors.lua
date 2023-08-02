@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-global
 require("catppuccin").setup({
     flavour = "mocha", -- latte, frappe, macchiato, mocha
     transparent_background = false,

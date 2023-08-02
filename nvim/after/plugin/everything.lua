@@ -1,10 +1,9 @@
----@diagnostic disable: trailing-space
 ---@diagnostic disable: undefined-global
 
 local lsp = require("lsp-zero")
 lsp.preset({ name = "minimal" })
 lsp.format_on_save({
-    format_opts = { async = true, timeout_ms = 10000, },
+    format_opts = { async = false, timeout_ms = 10000, },
     servers = {
         ['lua_ls'] = { 'lua' },
         ['rust_analyzer'] = { 'rust' },
@@ -57,7 +56,7 @@ lsp.on_attach(function(client, bufnr)
     vim.keymap.set('n', 'gp', function() vim.diagnostic.goto_prev() end, opts)
     vim.keymap.set('n', '<leader>r', function() vim.lsp.buf.rename() end, opts)
     vim.keymap.set({ 'n', 'v', 'x' }, 'ga', function() vim.lsp.buf.code_action() end, opts)
-    vim.keymap.set({ 'n', 'v', 'x' }, '<leader>h', function() vim.lsp.buf.format({ async = true }) end, opts)
+    vim.keymap.set({ 'n', 'v', 'x' }, '<leader>h', function() vim.lsp.buf.format({ async = false }) end, opts)
 end)
 
 vim.diagnostic.config({

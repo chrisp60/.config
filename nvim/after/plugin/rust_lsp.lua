@@ -53,6 +53,9 @@ require('lspconfig').rust_analyzer.setup({
                     niches = true,
                 },
             },
+            diagnostics = {
+                disabled = { "inactive-code" },
+            },
             procMacro = {
                 enable = true,
                 attributes = {
