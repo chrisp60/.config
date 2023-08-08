@@ -1,5 +1,5 @@
 ---@diagnostic disable: undefined-global
-
+require 'colorizer'.setup()
 local lsp = require("lsp-zero")
 lsp.preset({ name = "minimal" })
 lsp.format_on_save({
@@ -7,8 +7,9 @@ lsp.format_on_save({
     servers = {
         ['lua_ls'] = { 'lua' },
         ['rust_analyzer'] = { 'rust' },
-        ['null-ls'] = { 'markdown' },
+        ['null-ls'] = { 'markdown', 'html', 'htmldjango' },
         ['taplo'] = { 'toml' },
+        ['tsserver'] = { 'typescript' },
     }
 })
 
@@ -93,14 +94,16 @@ require 'nvim-treesitter.configs'.setup {
 require("harpoon").setup({ menu = { width = vim.api.nvim_win_get_width(0) - 4, } })
 local mark = require("harpoon.mark")
 local ui = require("harpoon.ui")
-vim.keymap.set('n', '<leader>a', mark.add_file)
-vim.keymap.set('n', '<leader>m', ui.toggle_quick_menu)
+vim.keymap.set('n', 'gA', mark.add_file)
+vim.keymap.set('n', 'gm', ui.toggle_quick_menu)
 vim.keymap.set('n', 'gj', function() ui.nav_file(1) end)
 vim.keymap.set('n', 'gk', function() ui.nav_file(2) end)
 vim.keymap.set('n', 'gl', function() ui.nav_file(3) end)
 vim.keymap.set('n', 'gh', function() ui.nav_file(4) end)
 
+
 local null_ls = require("null-ls")
+
 null_ls.setup({
     sources = {
         null_ls.builtins.formatting.prettierd,
