@@ -1,5 +1,13 @@
 ---@diagnostic disable: undefined-global
 require 'colorizer'.setup()
+vim.diagnostic.config({
+    update_in_insert = true,
+    virtual_text = true,
+    underline = false,
+    signs = false,
+    float = false,
+})
+
 local lsp = require("lsp-zero")
 lsp.preset({ name = "minimal" })
 lsp.format_on_save({
@@ -7,7 +15,7 @@ lsp.format_on_save({
     servers = {
         ['lua_ls'] = { 'lua' },
         ['rust_analyzer'] = { 'rust' },
-        ['null-ls'] = { 'markdown', 'html', 'htmldjango' },
+        ['null-ls'] = { 'markdown', 'html', 'htmldjango', 'md' },
         ['taplo'] = { 'toml' },
         ['tsserver'] = { 'typescript' },
     }
@@ -60,20 +68,14 @@ lsp.on_attach(function(client, bufnr)
     vim.keymap.set({ 'n', 'v', 'x' }, '<leader>h', function() vim.lsp.buf.format({ async = false }) end, opts)
 end)
 
-vim.diagnostic.config({
-    update_in_insert = true,
-    virtual_text = true,
-    underline = false,
-    signs = false,
-    float = false,
-})
 
 local builtin = require('telescope.builtin')
 require('telescope').setup({})
 
 vim.keymap.set('n', '<leader>g', builtin.live_grep, {})
 vim.keymap.set('n', '<leader>H', builtin.help_tags, {})
-vim.keymap.set('n', '<leader>d', builtin.diagnostics, {})
+-- !TODO: change this when fixed. See https://github.com/nvim-telescope/telescope.nvim/issues/2661
+vim.keymap.set('n', '<leader>d', '<cmd>Telescope diagnostics severity_bound=ERROR<CR>', {})
 vim.keymap.set('n', '<leader>f', builtin.find_files, {})
 vim.keymap.set('n', '<leader>R', builtin.registers, {})
 vim.keymap.set('n', '<leader>s', builtin.lsp_workspace_symbols, {})
