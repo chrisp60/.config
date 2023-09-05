@@ -7,6 +7,10 @@ export_locations = false
 command = ["cargo", "expand", "--color", "always"]
 need_stdout = true
 
+[jobs.clippy_all_features]
+command = ["cargo", "clippy", "--all-features", "--color", "always"]
+need_stdout = true
+
 [jobs.test_no_capp]
 command = ["cargo", "test", "--color", "always", "--", "--nocapture"]
 need_stdout = true
@@ -25,6 +29,7 @@ k = "scroll-lines(-1)"
 j = "scroll-lines(1)"
 e = "job:expand"
 t = "job:test_no_capp"
+f = "job:clippy_all_features"
 # c = "job:clippy"
 # d = "job:doc-open"
 # t = "job:test"
