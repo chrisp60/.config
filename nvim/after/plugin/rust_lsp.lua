@@ -24,6 +24,7 @@ require('lspconfig').rust_analyzer.setup({
                 buildScripts = {
                     enable = true,
                 },
+                features = "all",
             },
             check = {
                 command = "clippy"
