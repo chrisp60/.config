@@ -30,14 +30,21 @@ require("catppuccin").setup({
     integrations = {
         native_lsp = { enabled = true },
         cmp = true,
-        gitsigns = false,
-        nvimtree = false,
+        gitsigns = true,
+        nvimtree = true,
         telescope = true,
-        notify = false,
-        mini = false,
+        notify = true,
+        mini = true,
         harpoon = true,
         vimwiki = true,
+        which_key = true,
         mason = true,
+        markdown = true,
+        indent_blankline = {
+            enabled = true,
+            colored_indent_levels = true,
+        },
+
     },
 })
 
