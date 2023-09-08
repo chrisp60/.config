@@ -66,6 +66,7 @@ lsp.on_attach(function(client, bufnr)
     vim.keymap.set('n', '<leader>r', function() vim.lsp.buf.rename() end, opts)
     vim.keymap.set({ 'n', 'v', 'x' }, 'ga', function() vim.lsp.buf.code_action() end, opts)
     vim.keymap.set({ 'n', 'v', 'x' }, '<leader>h', function() vim.lsp.buf.format({ async = false }) end, opts)
+    vim.keymap.set({ 'n', 'v', 'x' }, '<leader>o', "<cmd>w % | silent !leptosfmt % -t 2<CR>", opts)
 end)
 
 
@@ -79,6 +80,7 @@ vim.keymap.set('n', '<leader>d', '<cmd>Telescope diagnostics severity_bound=ERRO
 vim.keymap.set('n', '<leader>f', builtin.find_files, {})
 vim.keymap.set('n', '<leader>R', builtin.registers, {})
 vim.keymap.set('n', '<leader>s', builtin.lsp_workspace_symbols, {})
+vim.keymap.set('n', '<leader>u', '<cmd>UndotreeToggle<CR>', {})
 
 -- Plain lines and minimal flair, please.
 vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(

@@ -50,6 +50,8 @@ local plugins = {
             { 'L3MON4D3/LuaSnip' },
         }
     },
+    'mbbill/undotree',
+    'tpope/vim-fugitive',
     'NvChad/nvim-colorizer.lua',
     'theprimeagen/harpoon',
     'jose-elias-alvarez/null-ls.nvim',
