@@ -4,23 +4,33 @@ local vim = vim
 local lsp_config = require('lspconfig')
 local cmp = require('cmp')
 local set = vim.keymap.set
-local config = {}
+local M = {}
 
-config.lsp_keymaps = function()
+function M.keybinds()
     set('n', '<leader>o', vim.lsp.buf.format)
     set('n', 'K', vim.lsp.buf.hover)
     set('n', 'gd', vim.lsp.buf.definition)
-    set('n', 'gn', vim.diagnostic.goto_next)
-    set('n', 'gp', vim.diagnostic.goto_prev)
+    set('n', '<C-n>', vim.diagnostic.goto_next)
+    set('n', '<C-p>', vim.diagnostic.goto_prev)
     set('n', '<leader>r', vim.lsp.buf.rename)
     set({ 'n', 'v', 'x' }, 'ga', vim.lsp.buf.code_action)
 end
 
+function M.formatting()
+    vim.api.nvim_create_autocmd("BufWritePre", {
+        grouH = augroup,
+        buffer = bufnr,
+        callback = function()
+            vim.lsp.buf.format({ bufnr = bufnr })
+        end
+    })
+end
+
 vim.api.nvim_create_autocmd('LspAttach', {
     desc = 'LSP actions',
-    callback = config.lsp_keymaps
+    callback = function()
+    end
 })
-
 local cmp_mappings = {
     ['<CR>'] = cmp.mapping.confirm({ select = false }),
     ['<C-d>'] = cmp.mapping.scroll_docs(-4),
@@ -116,4 +126,13 @@ lsp_config.rust_analyzer.setup({
             },
         }
     }
+})
+
+-- Sets all diagnostic options.
+vim.diagnostic.config({
+    update_in_insert = true,
+    virtual_text = true,
+    signs = false,
+    float = true,
+    underline = false,
 })
