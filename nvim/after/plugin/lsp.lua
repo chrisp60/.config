@@ -15,28 +15,33 @@ function M.diagnostics()
 end
 
 function M.keybinds()
-    vim.keymap.set('n', '<leader>o', vim.lsp.buf.format)
-    vim.keymap.set('n', 'K', vim.lsp.buf.hover)
-    vim.keymap.set('n', 'gd', vim.lsp.buf.definition)
-    vim.keymap.set('n', '<C-n>', vim.diagnostic.goto_next)
-    vim.keymap.set('n', '<C-p>', vim.diagnostic.goto_prev)
-    vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename)
-    vim.keymap.set({ 'n', 'v', 'x' }, 'ga', vim.lsp.buf.code_action)
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, { desc = 'hover [LSP]' })
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { desc = 'definition [LSP]' })
+    vim.keymap.set('n', '<C-n>', vim.diagnostic.goto_next, { desc = 'next diagnostic [LSP]' })
+    vim.keymap.set('n', '<C-p>', vim.diagnostic.goto_prev, { desc = 'next diagnostic [LSP]' })
+    vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename, { desc = 'rename [LSP]' })
+    vim.keymap.set({ 'n', 'v', 'x' }, 'ga', vim.lsp.buf.code_action, { desc = 'code action [LSP]' })
 end
 
 function M.formatting()
     vim.api.nvim_create_autocmd("BufWritePre", {
         callback = function()
-            vim.lsp.buf.format()
+            require('util').save_current_buf_cursors()
+            vim.lsp.buf.format({ async = false })
+            require('util').restore_current_buf_cursors()
         end
     })
 end
 
 vim.api.nvim_create_autocmd('LspAttach', {
     desc = 'LSP actions',
-    callback = function()
+    callback = function(args)
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        if client.server_capabilities.formatting then
+            vim.keymap.set('n', '<leader>o', vim.lsp.buf.format, { desc = 'format [LSP]' })
+            M.formatting()
+        end
         M.keybinds()
-        M.formatting()
         M.diagnostics()
     end
 })
@@ -143,5 +148,3 @@ lsp_config.rust_analyzer.setup({
         }
     }
 })
-
-return M
