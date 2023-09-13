@@ -1,27 +1,33 @@
----@diagnostic disable-next-line undefined-global
-local vim = vim
-
 local lsp_config = require('lspconfig')
 local cmp = require('cmp')
-local set = vim.keymap.set
+local cmp_nvim_lsp = require('cmp_nvim_lsp')
+
 local M = {}
 
+function M.diagnostics()
+    vim.diagnostic.config({
+        update_in_insert = true,
+        virtual_text = true,
+        signs = false,
+        float = true,
+        underline = false,
+    })
+end
+
 function M.keybinds()
-    set('n', '<leader>o', vim.lsp.buf.format)
-    set('n', 'K', vim.lsp.buf.hover)
-    set('n', 'gd', vim.lsp.buf.definition)
-    set('n', '<C-n>', vim.diagnostic.goto_next)
-    set('n', '<C-p>', vim.diagnostic.goto_prev)
-    set('n', '<leader>r', vim.lsp.buf.rename)
-    set({ 'n', 'v', 'x' }, 'ga', vim.lsp.buf.code_action)
+    vim.keymap.set('n', '<leader>o', vim.lsp.buf.format)
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover)
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition)
+    vim.keymap.set('n', '<C-n>', vim.diagnostic.goto_next)
+    vim.keymap.set('n', '<C-p>', vim.diagnostic.goto_prev)
+    vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename)
+    vim.keymap.set({ 'n', 'v', 'x' }, 'ga', vim.lsp.buf.code_action)
 end
 
 function M.formatting()
     vim.api.nvim_create_autocmd("BufWritePre", {
-        grouH = augroup,
-        buffer = bufnr,
         callback = function()
-            vim.lsp.buf.format({ bufnr = bufnr })
+            vim.lsp.buf.format()
         end
     })
 end
@@ -29,13 +35,17 @@ end
 vim.api.nvim_create_autocmd('LspAttach', {
     desc = 'LSP actions',
     callback = function()
+        M.keybinds()
+        M.formatting()
+        M.diagnostics()
     end
 })
+
 local cmp_mappings = {
     ['<CR>'] = cmp.mapping.confirm({ select = false }),
     ['<C-d>'] = cmp.mapping.scroll_docs(-4),
     ['<C-u>'] = cmp.mapping.scroll_docs(4),
-    ['<C-y>'] = cmp.mapping.confirm({ select = true }),
+    ['<C-l>'] = cmp.mapping.confirm({ select = true }),
     ['<C-p>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
     ['<C-n>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
 }
@@ -58,13 +68,19 @@ cmp.setup({
     experimental = { ghost_text = true },
 })
 
-local default_capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 lsp_config.lua_ls.setup({
-    capabilities = default_capabilities,
+    capabilities = cmp_nvim_lsp.default_capabilities(),
+    settings = {
+        Lua = {
+            diagnostics = {
+                globals = { 'vim' }
+            }
+        }
+    }
 })
 lsp_config.rust_analyzer.setup({
-    capabilities = default_capabilities,
+    capabilities = cmp_nvim_lsp.default_capabilities(),
     settings = {
         ["rust-analyzer"] = {
             imports = {
@@ -107,7 +123,7 @@ lsp_config.rust_analyzer.setup({
             },
             hover = {
                 links = {
-                    enable = false,
+                    enable = true,
                 },
                 memoryLayout = {
                     size = 'both',
@@ -128,11 +144,4 @@ lsp_config.rust_analyzer.setup({
     }
 })
 
--- Sets all diagnostic options.
-vim.diagnostic.config({
-    update_in_insert = true,
-    virtual_text = true,
-    signs = false,
-    float = true,
-    underline = false,
-})
+return M
