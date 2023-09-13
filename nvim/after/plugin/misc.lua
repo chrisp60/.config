@@ -9,11 +9,11 @@ local builtin = require('telescope.builtin')
 
 telescope.setup()
 telescope.load_extension('git_worktree')
-
-set('n', '<leader>gn', gitsigns.next_hunk)
-set('n', '<leader>gp', gitsigns.prev_hunk)
-set('n', '<leader>gw', telescope.extensions.git_worktree.git_worktrees)
-set('n', '<leader>ga', telescope.extensions.git_worktree.create_git_worktree)
+set('n', '<leader>gn', gitsigns.next_hunk, { desc = "next hunk [gitsigns]" })
+set('n', '<leader>gp', gitsigns.prev_hunk, { desc = "prev hunk [gitsigns]" })
+set('n', '<leader>Gw', telescope.extensions.git_worktree.git_worktrees)
+set('n', '<leader>Ga', telescope.extensions.git_worktree.create_git_worktree)
+set('n', '<leader>c', function() print("hello") end)
 set('n', '<leader>g', builtin.live_grep)
 set('n', '<leader>H', builtin.help_tags)
 set('n', '<leader>Gb', builtin.git_branches)
@@ -25,6 +25,7 @@ set('n', '<leader>s', builtin.lsp_workspace_symbols)
 set('n', '<leader>s', builtin.diagnostics)
 set('n', '<leader>GG', '<cmd>vertical rightbelow G<CR>')
 set('n', '<leader>x', '<cmd>Neorg toggle-concealer<CR>')
+
 set('n', '<leader>u', vim.cmd.UndotreeToggle) ---@diagnostic disable-line: undefined-global
 vim.g.undotree_WindowLayout = 3 ---@diagnostic disable-line: undefined-global
 vim.g.undotree_ShortIndicators = 1 ---@diagnostic disable-line: undefined-global
