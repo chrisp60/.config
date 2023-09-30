@@ -99,7 +99,7 @@ require("mason-lspconfig").setup_handlers {
                             snippets = "fill_arguments",
                         },
                         postfix = {
-                            enable = false,
+                            enable = true,
                         },
                     },
                     references = {
@@ -118,7 +118,7 @@ require("mason-lspconfig").setup_handlers {
                             },
                         },
                         links = {
-                            enable = false,
+                            enable = true,
                         },
                         memoryLayout = {
                             size = 'both',
@@ -128,6 +128,9 @@ require("mason-lspconfig").setup_handlers {
                     },
                     diagnostics = {
                         disabled = { "inactive-code" },
+                        experimental = {
+                            enable = true,
+                        }
                     },
                     procMacro = {
                         ignored = {
@@ -141,6 +144,16 @@ require("mason-lspconfig").setup_handlers {
                             enable = true,
                         }
                     },
+                    semanticHighlighting = {
+                        punctuation = {
+                            enable = true,
+                            separate = {
+                                macro = {
+                                    bang = true
+                                }
+                            },
+                        },
+                    }
                 }
             }
         })

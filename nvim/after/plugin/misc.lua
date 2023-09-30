@@ -8,6 +8,9 @@ gitsigns.setup()
 telescope.setup()
 
 require("harpoon").setup({
+    menu = {
+        width = vim.api.nvim_win_get_width(0) - 4,
+    },
     global_settings = {
         mark_branch = true,
         save_on_change = true,
