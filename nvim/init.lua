@@ -62,7 +62,12 @@ local plugins = {
     'hrsh7th/cmp-nvim-lsp',
     'hrsh7th/nvim-cmp',
     'lewis6991/gitsigns.nvim',
-    'lukas-reineke/indent-blankline.nvim',
+    {
+        'lukas-reineke/indent-blankline.nvim',
+        init = function()
+            require('ibl').setup()
+        end
+    },
     'mbbill/undotree',
     'neovim/nvim-lspconfig',
     'nvim-treesitter/playground',
