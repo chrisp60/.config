@@ -48,20 +48,10 @@ local plugins = {
         lazy = false,
         dependencies = { 'nvim-lua/plenary.nvim' }
     },
-    {
-        "folke/which-key.nvim",
-        event = "VeryLazy",
-        init = function()
-            vim.o.timeout = true
-            vim.o.timeoutlen = 600
-        end,
-        opts = {}
-    },
     'L3MON4D3/LuaSnip',
     'christoomey/vim-tmux-navigator',
     'hrsh7th/cmp-nvim-lsp',
     'hrsh7th/nvim-cmp',
-    'lewis6991/gitsigns.nvim',
     {
         'lukas-reineke/indent-blankline.nvim',
         init = function()
@@ -85,6 +75,26 @@ local plugins = {
     },
     'tpope/vim-surround',
     'williamboman/mason-lspconfig.nvim',
+    {
+        "nvim-neorg/neorg",
+        build = ":Neorg sync-parsers",
+        dependencies = { "nvim-lua/plenary.nvim" },
+        config = function()
+            require("neorg").setup {
+                load = {
+                    ["core.defaults"] = {},      -- Loads default behaviour
+                    ["core.concealer"] = {},     -- Adds pretty icons to your documents
+                    ["core.dirman"] = {          -- Manages Neorg workspaces
+                        config = {
+                            workspaces = {
+                                notes = "~/notes",
+                            },
+                        },
+                    },
+                },
+            }
+        end,
+    },
     {
         'nvim-treesitter/nvim-treesitter',
         cmf = 'TSUpdate',

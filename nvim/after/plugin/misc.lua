@@ -2,9 +2,7 @@ local telescope = require('telescope')
 local builtin = require('telescope.builtin')
 local harpoon_ui = require("harpoon.ui")
 local harpoon_mark = require("harpoon.mark")
-local gitsigns = require('gitsigns')
 
-gitsigns.setup()
 telescope.setup()
 
 require("harpoon").setup({
@@ -55,8 +53,6 @@ vim.keymap.set('n', '<leader>m', function() harpoon_ui.toggle_quick_menu() end,
 -- Misc
 vim.keymap.set('n', '<leader>g', '<cmd>vertical rightbelow G<CR>')
 vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle, { desc = 'Toggle [UndoTree]' })
-vim.keymap.set('n', '<leader>gn', gitsigns.next_hunk, { desc = 'next hunk [Gitsigns]' })
-vim.keymap.set('n', '<leader>gp', gitsigns.prev_hunk, { desc = 'next hunk [Gitsigns]' })
 
 vim.g.undotree_WindowLayout = 3 ---@diagnostic disable-line: undefined-global
 vim.g.undotree_ShortIndicators = 1 ---@diagnostic disable-line: undefined-global
