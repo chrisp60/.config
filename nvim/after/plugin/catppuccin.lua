@@ -1,6 +1,8 @@
+local flavour = os.getenv('CATPPUCCIN_FLAVOUR') or 'mocha'
+
 ---@diagnostic disable: undefined-global
 require("catppuccin").setup({
-    flavour = "mocha", -- latte, frappe, macchiato, mocha
+    flavour = flavour,
     transparent_background = false,
     show_end_of_buffer = true,
     term_colors = true,
