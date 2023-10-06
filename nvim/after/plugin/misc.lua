@@ -20,8 +20,8 @@ require("harpoon").setup({
 local function find_hidden()
     builtin.find_files({
         hidden = true,
-        no_ignore = false,
-        no_ignore_parent = false
+        no_ignore = true,
+        no_ignore_parent = true,
     })
 end
 
