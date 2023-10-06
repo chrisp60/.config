@@ -1,72 +1,81 @@
-local lsp = function(args)
-    vim.keymap.set('n', '<leader>o', vim.lsp.buf.format, { desc = 'format [LSP]' })
-    vim.keymap.set('n', 'K', vim.lsp.buf.hover, { desc = 'hover [LSP]' })
-    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { desc = 'definition [LSP]' })
-    vim.keymap.set('n', '<C-n>', vim.diagnostic.goto_next, { desc = 'next diagnostic [LSP]' })
-    vim.keymap.set('n', '<C-p>', vim.diagnostic.goto_prev, { desc = 'next diagnostic [LSP]' })
-    vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename, { desc = 'rename [LSP]' })
-    vim.keymap.set({ 'n', 'v', 'x' }, 'ga', vim.lsp.buf.code_action, { desc = 'code action [LSP]' })
-    vim.keymap.set('n', '<leader>O', function() vim.cmd([[silent%! leptosfmt -t 2 -s]]) end)
-    vim.keymap.set('n', '<leader>X', vim.diagnostic.hide, { desc = 'hide diagnostic [LSP]' })
-    vim.keymap.set('n', '<leader>x', vim.diagnostic.show, { desc = 'show diagnostic [LSP]' })
-    vim.keymap.set('n', '<leader>I', function() vim.lsp.inlay_hint(0) end, { desc = 'toggle inlay hints [LSP]' })
+require("lsp-format").setup({})
+local u = require("util")
+
+local handle_formatting = function()
+    local filetype = vim.filetype.match({ buf = 0 })
+    if filetype == "rust" and u.buf_has_str(0, "leptos") then
+        vim.cmd.write()
+        vim.cmd([[silent! leptosfmt % -t 2]])
+    elseif filetype == "lua" then
+        require("stylua").format()
+    elseif filetype == "lua" then
+    else
+        vim.lsp.buf.format()
+    end
 end
 
-vim.api.nvim_create_autocmd('LspAttach', {
-    desc = 'LSP actions',
-    callback = function(args)
-        lsp(args)
-        vim.diagnostic.config({
-            update_in_insert = true,
-            virtual_text = { severity = { min = vim.diagnostic.severity.ERROR } },
-            signs = true,
-            float = true,
-            underline = false,
+local on_attach = function(client, bufnr)
+    -- LuaLs default formatter kind of really sucks.
+    vim.keymap.set("n", "<leader>o", handle_formatting)
+
+    vim.keymap.set("n", "K", vim.lsp.buf.hover)
+    vim.keymap.set("n", "gd", vim.lsp.buf.definition)
+    vim.keymap.set("n", "<C-n>", vim.diagnostic.goto_next)
+    vim.keymap.set("n", "<C-p>", vim.diagnostic.goto_prev)
+    vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename)
+    vim.keymap.set({ "n", "v", "x" }, "ga", vim.lsp.buf.code_action)
+
+    -- https://github.com/lukas-reineke/lsp-format.nvim#wq-will-not-format-when-not-using-sync
+    vim.cmd([[cabbrev wq execute "Format sync" <bar> wq]])
+    require("lsp-format").on_attach(client, bufnr)
+
+    -- Reduce noise from lsp diagnostics
+    vim.diagnostic.config({
+        update_in_insert = true,
+        -- Virtual text should only include ERROR level diagnostics
+        virtual_text = { severity = { min = vim.diagnostic.severity.ERROR } },
+        signs = true,
+        float = true,
+        underline = false,
+    })
+end
+
+local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
+local mason = require("mason")
+local mason_lspconfig = require("mason-lspconfig")
+mason.setup({})
+mason_lspconfig.setup({})
+mason_lspconfig.setup_handlers({
+    function(server_name)
+        require("lspconfig")[server_name].setup({
+            on_attach = on_attach,
+            capabilities = capabilities,
         })
-    end
-})
-
-local cmp = require('cmp')
-local cmp_nvim_lsp = require('cmp_nvim_lsp')
-local cmp_mappings = {
-    ['<CR>'] = cmp.mapping.confirm({ select = false }),
-    ['<C-d>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-u>'] = cmp.mapping.scroll_docs(4),
-    ['<C-l>'] = cmp.mapping.confirm({ select = true }),
-    ['<C-k>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
-    ['<C-j>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
-}
-
-cmp.setup({
-    snippet = {
-        expand = function(args)
-            require('luasnip').lsp_expand(args.body)
-        end,
-    },
-    preselect = 'none',
-    completion = { completeopt = 'menu,menuone,noselectpreview' },
-    mapping = cmp_mappings,
-    sources = {
-        { name = 'nvim_lsp' },
-        { name = 'luasnip', },
-        { name = 'buffer' },
-        { name = 'path' },
-    },
-    experimental = { ghost_text = true },
-})
-
-
-require("mason").setup()
-require("mason-lspconfig").setup()
-require("mason-lspconfig").setup_handlers {
-    function(server_name) -- default handler (optional)
-        require("lspconfig")[server_name].setup {
-            capabilities = cmp_nvim_lsp.default_capabilities(),
-        }
+    end,
+    ["lua_ls"] = function()
+        require("lspconfig").lua_ls.setup({
+            on_attach = on_attach,
+            capabilities = capabilities,
+            settings = {
+                Lua = {
+                    diagnostics = {
+                        globals = {
+                            "vim",
+                            "require",
+                        },
+                    },
+                    workspace = {
+                        library = vim.api.nvim_get_runtime_file("", true),
+                    },
+                },
+            },
+        })
     end,
     ["rust_analyzer"] = function()
         require("lspconfig")["rust_analyzer"].setup({
-            capabilities = cmp_nvim_lsp.default_capabilities(),
+            capabilities = capabilities,
+            on_attach = on_attach,
             settings = {
                 ["rust-analyzer"] = {
                     imports = {
@@ -92,7 +101,7 @@ require("mason-lspconfig").setup_handlers {
                         features = "all",
                     },
                     check = {
-                        command = "clippy"
+                        command = "clippy",
                     },
                     completion = {
                         callable = {
@@ -105,13 +114,13 @@ require("mason-lspconfig").setup_handlers {
                     references = {
                         excludeImports = {
                             enable = true,
-                        }
+                        },
                     },
                     hover = {
                         actions = {
                             enable = true,
                             run = {
-                                enable = true
+                                enable = true,
                             },
                             debug = {
                                 enable = true,
@@ -121,7 +130,7 @@ require("mason-lspconfig").setup_handlers {
                             enable = true,
                         },
                         memoryLayout = {
-                            size = 'both',
+                            size = "both",
                             enable = true,
                             niches = true,
                         },
@@ -130,32 +139,31 @@ require("mason-lspconfig").setup_handlers {
                         disabled = { "inactive-code" },
                         experimental = {
                             enable = true,
-                        }
+                        },
                     },
                     procMacro = {
                         ignored = {
                             leptos_macro = {
-                                "server",
                                 "component",
                             },
                         },
                         enable = true,
                         attributes = {
                             enable = true,
-                        }
+                        },
                     },
                     semanticHighlighting = {
                         punctuation = {
                             enable = true,
                             separate = {
                                 macro = {
-                                    bang = true
-                                }
+                                    bang = true,
+                                },
                             },
                         },
-                    }
-                }
-            }
+                    },
+                },
+            },
         })
-    end
-}
+    end,
+})

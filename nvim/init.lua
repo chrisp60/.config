@@ -1,13 +1,12 @@
----@diagnostic disable: undefined-global
-vim.g.mapleader = ' '
+vim.g.mapleader = " "
 vim.opt.backup = false
 vim.opt.colorcolumn = "80,100"
 vim.opt.cursorline = true
 vim.opt.expandtab = true
 vim.opt.hlsearch = false
 vim.opt.incsearch = true
+vim.opt.path:append("**")
 vim.opt.nu = true
-vim.opt.path:append '**'
 vim.opt.relativenumber = true
 vim.opt.scrolloff = 999
 vim.opt.shiftwidth = 4
@@ -22,7 +21,6 @@ vim.opt.termguicolors = true
 vim.opt.undofile = true
 vim.opt.updatetime = 10
 vim.opt.wrap = false
-
 
 -- Bootstrap Lazy
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -39,54 +37,54 @@ end
 
 vim.opt.rtp:prepend(lazypath)
 local plugins = {
+    "wesleimp/stylua.nvim",
     {
-        'catppuccin/nvim',
+        "catppuccin/nvim",
         lazy = false,
     },
     {
-        'nvim-telescope/telescope.nvim',
+        "nvim-telescope/telescope.nvim",
         lazy = false,
-        dependencies = { 'nvim-lua/plenary.nvim' }
+        dependencies = { "nvim-lua/plenary.nvim" },
     },
-    'L3MON4D3/LuaSnip',
-    'christoomey/vim-tmux-navigator',
-    'hrsh7th/cmp-nvim-lsp',
-    'hrsh7th/nvim-cmp',
+    "L3MON4D3/LuaSnip",
+    "christoomey/vim-tmux-navigator",
+    "hrsh7th/cmp-nvim-lsp",
+    "hrsh7th/nvim-cmp",
     {
-        'lukas-reineke/indent-blankline.nvim',
+        "lukas-reineke/indent-blankline.nvim",
         init = function()
-            require('ibl').setup({ scope = { enabled = false } })
-        end
+            require("ibl").setup({ scope = { enabled = false } })
+        end,
     },
-    'mbbill/undotree',
-    'neovim/nvim-lspconfig',
-    'nvim-treesitter/playground',
+    "mbbill/undotree",
+    "neovim/nvim-lspconfig",
+    "nvim-treesitter/playground",
     {
-        'nvim-treesitter/nvim-treesitter-textobjects',
-        dependencies = { "nvim-treesitter", "nvim-treesitter/nvim-treesitter" }
+        "nvim-treesitter/nvim-treesitter-textobjects",
+        dependencies = { "nvim-treesitter", "nvim-treesitter/nvim-treesitter" },
     },
-    'theprimeagen/harpoon',
-    'tpope/vim-fugitive',
+    "lukas-reineke/lsp-format.nvim",
+    "theprimeagen/harpoon",
+    "tpope/vim-fugitive",
     {
-        'williamboman/mason.nvim',
+        "williamboman/mason.nvim",
         config = function()
-            require('mason').setup()
-        end
+            require("mason").setup()
+        end,
     },
-    'tpope/vim-surround',
-    'williamboman/mason-lspconfig.nvim',
+    "tpope/vim-surround",
+    "williamboman/mason-lspconfig.nvim",
     {
         "nvim-neorg/neorg",
         build = ":Neorg sync-parsers",
         dependencies = { "nvim-lua/plenary.nvim" },
         config = function()
-            require("neorg").setup {
+            require("neorg").setup({
                 load = {
                     ["core.defaults"] = {},
-                    -- This plugin is kind of annoying
-                    -- Handles icons and "prettying" up
-                    -- ["core.concealer"] = {},     
-                    ["core.dirman"] = {          -- Manages Neorg workspaces
+                    -- ["core.concealer"] = {}, -- Uncomment to use icons over text
+                    ["core.dirman"] = { -- Manages Neorg workspaces
                         config = {
                             workspaces = {
                                 notes = "~/notes",
@@ -94,25 +92,28 @@ local plugins = {
                         },
                     },
                 },
-            }
+            })
         end,
     },
     {
-        'nvim-treesitter/nvim-treesitter',
-        cmf = 'TSUpdate',
+        "nvim-treesitter/nvim-treesitter",
+        cmf = "TSUpdate",
         config = function()
-            require 'nvim-treesitter.configs'.setup {
+            require("nvim-treesitter.configs").setup({
                 sync_install = true,
                 auto_install = true,
                 highlight = {
                     enable = true,
                     additional_vim_regex_highlighting = false,
                 },
-            }
-        end
-
+            })
+        end,
     },
+    -- Plugin development help.
+    "folke/neodev.nvim",
+    --	{
+    --		dir = "~/projects/cargofeat.nvim",
+    --	},
 }
 
----@diagnostic disable-next-line: undefined-global
 require("lazy").setup(plugins, opts)

@@ -1,60 +1,27 @@
--- Taken from: https://github.com/elentok/format-on-save.nvim/blob/main/lua/format-on-save/cursors.lua
-
 local M = {}
 
--- Finds all of the windows that are showing the current buffer.
----@return number[] Window handles
-local function get_current_buf_windows()
-    local current_buf = vim.api.nvim_get_current_buf()
-
-    local windows = vim.api.nvim_list_wins()
-    local buffer_windows = {}
-    for _, win in ipairs(windows) do
-        local win_buf = vim.api.nvim_win_get_buf(win)
-
-        if win_buf == current_buf then
-            table.insert(buffer_windows, win)
-        end
-    end
-
-    return buffer_windows
+---Returns true if any line in the buffer contains the literal string
+---@param bufnr? integer Buffer number to search (default 0)
+---@param lit string Literal string to match
+---@return boolean true if string is found
+function M.buf_has_str(bufnr, lit)
+    local lines = vim.api.nvim_buf_get_lines(bufnr or 0, 0, -1, false)
+    -- I don't know if this breaks on true of iterates until the end.
+    return vim.iter(lines):any(function(content)
+        return content:match(lit)
+    end)
 end
 
----@alias BufferCursors { [number]: number[] } Window cursor by window handle
-
--- Returns a mapping between the window handle of each window that is
--- showing the current buffer and its current cursor location.
----@return BufferCursors Window cursor by window handle
-local function get_current_buf_win_cursors()
-    local cursors = {}
-
-    local buffer_windows = get_current_buf_windows()
-    for _, win in ipairs(buffer_windows) do
-        cursors[win] = vim.api.nvim_win_get_cursor(win)
-    end
-
-    return cursors
-end
-
--- A mapping between buffer handle and the last known cursor position of each
--- window showing this buffer.
----@type { [number]: BufferCursors }
-local win_cursor_cache_by_buf = {}
-
--- Saves the current cursor position of every window showing this buffer.
-function M.save_current_buf_cursors()
-    local cursors = get_current_buf_win_cursors()
-    win_cursor_cache_by_buf[vim.api.nvim_get_current_buf()] = cursors
-end
-
--- Restore the cursor position of every window showing this buffer to the last
--- saved value.
-function M.restore_current_buf_cursors()
-    local current_buf = vim.api.nvim_get_current_buf()
-
-    for win, cursor in pairs(win_cursor_cache_by_buf[current_buf] or {}) do
-        cursor[1] = math.min(cursor[1], vim.api.nvim_buf_line_count(0))
-        vim.api.nvim_win_set_cursor(win, cursor)
+local handle_formatting = function()
+    local filetype = vim.filetype.match({ buf = 0 })
+    if filetype == "rust" and u.buf_has_str(0, "leptos") then
+        vim.cmd.write()
+        vim.cmd([[silent! leptosfmt % -t 2]])
+    elseif filetype == "lua" then
+        require("stylua").format()
+    elseif filetype == "lua" then
+    else
+        vim.lsp.buf.format()
     end
 end
 
