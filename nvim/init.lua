@@ -82,8 +82,10 @@ local plugins = {
         config = function()
             require("neorg").setup {
                 load = {
-                    ["core.defaults"] = {},      -- Loads default behaviour
-                    ["core.concealer"] = {},     -- Adds pretty icons to your documents
+                    ["core.defaults"] = {},
+                    -- This plugin is kind of annoying
+                    -- Handles icons and "prettying" up
+                    -- ["core.concealer"] = {},     
                     ["core.dirman"] = {          -- Manages Neorg workspaces
                         config = {
                             workspaces = {
