@@ -7,7 +7,7 @@ telescope.setup()
 
 require("harpoon").setup({
     menu = {
-        width = vim.api.nvim_win_get_width(0) - 4,
+        width = vim.api.nvim_win_get_width(0) - 20,
     },
     global_settings = {
         mark_branch = true,
@@ -51,8 +51,6 @@ vim.keymap.set('n', '<leader>m', function() harpoon_ui.toggle_quick_menu() end,
     { desc = 'toggle_quick_menu() [Harpoon]' })
 
 -- Misc
-vim.keymap.set('n', '<leader>g', '<cmd>vertical rightbelow G<CR>')
-vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle, { desc = 'Toggle [UndoTree]' })
 
 vim.g.undotree_WindowLayout = 3 ---@diagnostic disable-line: undefined-global
 vim.g.undotree_ShortIndicators = 1 ---@diagnostic disable-line: undefined-global
