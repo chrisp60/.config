@@ -22,6 +22,7 @@ vim.opt.undofile = true
 vim.opt.updatetime = 10
 vim.opt.wrap = false
 
+
 -- Bootstrap Lazy
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -47,6 +48,8 @@ local plugins = {
         lazy = false,
         dependencies = { "nvim-lua/plenary.nvim" },
     },
+
+    "saadparwaiz1/cmp_luasnip",
     "L3MON4D3/LuaSnip",
     "christoomey/vim-tmux-navigator",
     "hrsh7th/cmp-nvim-lsp",

@@ -1,16 +1,16 @@
 local ls = require("luasnip")
 
-vim.keymap.set({ "i" }, "<C-Y>", ls.expand)
+vim.keymap.set({ "i" }, "<C-l>", ls.expand)
 
-vim.keymap.set({ "i", "s" }, "<C-J>", function()
+vim.keymap.set({ "i", "s" }, "<C-j>", function()
     ls.jump(1)
 end, { silent = true })
 
-vim.keymap.set({ "i", "s" }, "<C-H>", function()
+vim.keymap.set({ "i", "s" }, "<C-k>", function()
     ls.jump(-1)
 end, { silent = true })
 
-vim.keymap.set({ "i", "s" }, "<C-L>", function()
+vim.keymap.set({ "i", "s" }, "<C-l>", function()
     if ls.choice_active() then
         ls.change_choice(1)
     end
@@ -61,15 +61,62 @@ ls.add_snippets("rust", {
         "lc",
         fmt(
             [[
-                #[component{}]
-                {}fn {}() -> impl IntoView {{
-                    view! {{}}
-                }}
+            #[component{}]
+            {}fn {}() -> impl IntoView {{
+                view! {{}}
+            }}
             ]],
             {
                 c(1, { t(""), t("(transparent)") }),
                 c(2, { t("pub "), t("") }),
                 i(3, "Foo"),
+            }
+        )
+    ),
+    s(
+        "struct",
+        fmt(
+            [[
+            {import_serde}
+            #[derive(Serialize, Deserialize, Debug, Clone)]
+            {vis}struct {struct_name} {{}}
+            ]],
+            {
+                import_serde = c(1, { t(""), t("use serde::{Deserialize, Serialize};") }),
+                vis = c(2, { t(""), t("pub "), t("pub(crate) ") }),
+                struct_name = i(3, "FooStruct"),
+            }
+        )
+    ),
+    s(
+        "test",
+        fmt(
+            [[
+            #[cfg(test)]
+            mod test {{
+                #[allow(unused_imports)]
+                use super::*;
+
+                #[test]
+                fn {fn_name}() {{}}
+            }}
+            ]],
+            {
+                fn_name = i(1, "foo_test"),
+            }
+        )
+    ),
+    s(
+        "ustruct",
+        fmt(
+            [[
+            #[derive(Serialize, Deserialize, Debug, Clone)]
+            {vis}struct {struct_name}({type});
+            ]],
+            {
+                vis = c(1, { t(""), t("pub "), t("pub(crate) ") }),
+                struct_name = i(2, "FooUnit"),
+                type = i(3, "Type"),
             }
         )
     ),
