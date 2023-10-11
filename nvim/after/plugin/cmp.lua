@@ -16,11 +16,11 @@ cmp.setup({
         ["<C-j>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
     },
     sources = {
+        { name = "neorg" },
         { name = "luasnip" },
         { name = "nvim_lsp" },
         { name = "buffer" },
         { name = "path" },
     },
-
-    experimental = { ghost_text = true },
+    experimental = { ghost_text = false },
 })

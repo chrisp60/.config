@@ -22,7 +22,6 @@ vim.opt.undofile = true
 vim.opt.updatetime = 10
 vim.opt.wrap = false
 
-
 -- Bootstrap Lazy
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -85,8 +84,17 @@ local plugins = {
         config = function()
             require("neorg").setup({
                 load = {
+                    ["core.summary"] = { config = { stragegy = "default" } },
+                    ["core.completion"] = { config = { engine = "nvim-cmp" } },
+                    ["core.concealer"] = {},
+                    ["core.ui.calendar"] = {},
+                    ["core.export"] = {
+                        config = {
+                            export_dir = "exports/<export-dir>/<language>",
+                        },
+                    },
+                    ["core.export.markdown"] = {},
                     ["core.defaults"] = {},
-                    -- ["core.concealer"] = {}, -- Uncomment to use icons over text
                     ["core.dirman"] = { -- Manages Neorg workspaces
                         config = {
                             workspaces = {
