@@ -12,11 +12,12 @@ function M.buf_has_str(bufnr, lit)
     end)
 end
 
-local handle_formatting = function()
+M.handle_formatting = function()
     local filetype = vim.filetype.match({ buf = 0 })
-    if filetype == "rust" and u.buf_has_str(0, "leptos") then
+    if filetype == "rust" and M.buf_has_str(0, "leptos") then
         vim.cmd.write()
         vim.cmd([[silent! leptosfmt % -t 2]])
+        vim.notify("using leptos", vim.log.levels.INFO)
     elseif filetype == "lua" then
         require("stylua").format()
     elseif filetype == "lua" then
