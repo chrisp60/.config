@@ -121,6 +121,24 @@ ls.add_snippets("rust", {
         )
     ),
     s(
+        "#[deri",
+        fmt(
+            [[
+            #[derive(Debug, {ser}{de}{clone}{peq}{pord}{eq}{ord}{other})]
+            ]],
+            {
+                ser = c(1, { t("Serialize, "), t(""), }),
+                de = c(2, { t("Deserialize, "), t(""), }),
+                clone = c(3, { t("Clone, "), t(""), }),
+                peq = c(4, { t("PartialEq, "), t(""), }),
+                pord = c(5, { t("PartialOrd, "), t(""), }),
+                eq = c(6, { t("Eq, "), t(""), }),
+                ord = c(7, { t("Ord, "), t(""), }),
+                other = i(8, "SomeDerive"),
+            }
+        )
+    ),
+    s(
         "//",
         fmt(
             [[
