@@ -2,6 +2,8 @@
 local builtin = require("telescope.builtin")
 local include_hidden = { hidden = true, no_ignore = true, no_ignore_parent = true }
 
+vim.keymap.set("n", "<leader>z", "<cmd>ZenMode<cr>")
+vim.keymap.set("n", "<leader>t", "<cmd>Twilight<cr>")
 vim.keymap.set("n", "<leader>L", "<cmd> luafile %<cr>")
 vim.keymap.set("n", "<leader>C", builtin.commands)
 vim.keymap.set("n", "<leader>G", builtin.live_grep)
