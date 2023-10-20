@@ -25,6 +25,7 @@ local handle_formatting = function()
 		end
 	end
 
+	local filetype = vim.filetype.match({ buf = 0 })
 	if filetype == "rust" and utils.buf_has_str(0, "leptos") then
 		vim.cmd.write()
 		vim.cmd([[silent !leptosfmt % -t 2]])
