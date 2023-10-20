@@ -83,24 +83,25 @@ local plugins = {
                 -- by default, no options are changed for the Zen window
                 -- uncomment any of the options below, or add other vim.wo options you want to apply
                 options = {
-                    signcolumn = "yes",    -- disable signcolumn
+                    signcolumn = "no",     -- disable signcolumn
                     number = true,         -- disable number column
                     relativenumber = true, -- disable relative numbers
-                    cursorline = false,    -- disable cursorline
+                    cursorline = true,     -- disable cursorline
                     cursorcolumn = false,  -- disable cursor column
                 },
             },
             plugins = {
                 options = {
                     enabled = true,
-                    ruler = false,         -- disables the ruler text in the cmd line area
-                    showcmd = false,       -- disables the command in the last line of the screen
-                    laststatus = 0,        -- turn off the statusline in zen mode
+                    ruler = false,   -- disables the ruler text in the cmd line area
+                    showcmd = false, -- disables the command in the last line of the screen
+                    laststatus = 0,  -- turn off the statusline in zen mode
                 },
+                twilight = { enabled = false },
                 tmux = { enabled = true }, -- disables the tmux statusline
                 wezterm = {
                     enabled = true,
-                    font = "+12", -- (10% increase per step)
+                    font = "+20", -- (10% increase per step)
                 },
             },
         },
