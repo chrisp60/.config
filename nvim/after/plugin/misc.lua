@@ -18,6 +18,10 @@ vim.keymap.set("n", "<leader>h", builtin.help_tags)
 vim.keymap.set("n", "<leader>s", builtin.lsp_workspace_symbols)
 vim.keymap.set("n", "<leader>R", builtin.lsp_references)
 
+vim.keymap.set("n", "gc", function()
+    require("treesitter-context").go_to_context()
+end, { silent = true })
+
 -- Harpoon
 local harpoon_ui = require("harpoon.ui")
 local harpoon_mark = require("harpoon.mark")
