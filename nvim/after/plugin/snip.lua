@@ -46,50 +46,43 @@ local k = require("luasnip.nodes.key_indexer").new_key
 
 ls.add_snippets("rust", {
     s(
-        "ls",
+        "#[server]",
         fmt(
             [[
-                #[server]
-                {}async fn {}({}) -> Result<{}, ServerFnError> {{
-                    todo!()
-                }}
-            ]],
-            { c(1, { t("pub "), t("") }), i(2, "foo"), i(3, "_v: ()"), i(4, "()") }
-        )
-    ),
-    s(
-        "lc",
-        fmt(
-            [[
-            #[component{}]
-            {}fn {}() -> impl IntoView {{
-                view! {{}}
+            #[server]
+            {vis}async fn {name}({args}) -> Result<{rtn}, ServerFnError> {{
+                {insert}
             }}
             ]],
             {
-                c(1, { t(""), t("(transparent)") }),
-                c(2, { t("pub "), t("") }),
-                i(3, "Foo"),
+                insert = i(1),
+                rtn = i(2, "()"),
+                name = i(3, "fun_name_server"),
+                args = i(4, ""),
+                vis = c(5, { t(""), t("pub"), t("pub(crate)") }),
             }
         )
     ),
     s(
-        "struct",
+        "#[component]",
         fmt(
             [[
-            {import_serde}
-            #[derive(Serialize, Deserialize, Debug, Clone)]
-            {vis}struct {struct_name} {{}}
+            #[component]
+            {vis}fn {name}({args}) -> impl IntoView {{
+                {insert}
+
+            }}
             ]],
             {
-                import_serde = c(1, { t(""), t("use serde::{Deserialize, Serialize};") }),
-                vis = c(2, { t(""), t("pub "), t("pub(crate) ") }),
-                struct_name = i(3, "FooStruct"),
+                insert = i(1),
+                name = i(2, "FunName"),
+                args = i(3, ""),
+                vis = c(4, { t(""), t("pub"), t("pub(crate)") }),
             }
         )
     ),
     s(
-        "test",
+        "#[cfg(test)]",
         fmt(
             [[
             #[cfg(test)]
@@ -97,57 +90,30 @@ ls.add_snippets("rust", {
                 #[allow(unused_imports)]
                 use super::*;
 
-                #[test]
-                fn {fn_name}() {{}}
+                #[{tokio}test{flavor}]
+                fn fun_name_test() {{
+                    {insert}
+
+                }}
             }}
             ]],
             {
-                fn_name = i(1, "foo_test"),
+                insert = i(1),
+                tokio = c(2, { t(""), t("tokio::") }),
+                flavor = c(3, { t(""), t('(flavor = "multi_thread")') }),
             }
         )
     ),
     s(
-        "ustruct",
+        "#[derive(",
         fmt(
             [[
-            #[derive(Serialize, Deserialize, Debug, Clone)]
-            {vis}struct {struct_name}({type});
+            #[derive(Debug, Clone{serde}{eqs}{ords})]
             ]],
             {
-                vis = c(1, { t(""), t("pub "), t("pub(crate) ") }),
-                struct_name = i(2, "FooUnit"),
-                type = i(3, "Type"),
-            }
-        )
-    ),
-    s(
-        "#[deri",
-        fmt(
-            [[
-            #[derive(Debug, {ser}{de}{clone}{peq}{pord}{eq}{ord}{other})]
-            ]],
-            {
-                ser = c(1, { t("Serialize, "), t(""), }),
-                de = c(2, { t("Deserialize, "), t(""), }),
-                clone = c(3, { t("Clone, "), t(""), }),
-                peq = c(4, { t("PartialEq, "), t(""), }),
-                pord = c(5, { t("PartialOrd, "), t(""), }),
-                eq = c(6, { t("Eq, "), t(""), }),
-                ord = c(7, { t("Ord, "), t(""), }),
-                other = i(8, "SomeDerive"),
-            }
-        )
-    ),
-    s(
-        "//",
-        fmt(
-            [[
-            ////////////////////////////////////////////////////////////////////////////////
-            // {section_name}
-            ////////////////////////////////////////////////////////////////////////////////
-            ]],
-            {
-                section_name = i(1, "section name"),
+                serde = c(1, { t(""), t(", Serialize, Deserialize") }),
+                eqs = c(2, { t(""), t(", PartialEq, Eq") }),
+                ords = c(3, { t(""), t(", PartialOrd, Ord") }),
             }
         )
     ),
