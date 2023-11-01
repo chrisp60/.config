@@ -1,4 +1,4 @@
-summary = false
+summary = true
 wrap = true
 # reverse = true
 export_locations = false
