@@ -9,8 +9,6 @@ cmp.setup({
     completion = { completeopt = "menu,menuone,noselectpreview" },
     mapping = {
         ["<CR>"] = cmp.mapping.confirm({ select = false }),
-        ["<C-d>"] = cmp.mapping.scroll_docs(-4),
-        ["<C-u>"] = cmp.mapping.scroll_docs(4),
         ["<C-l>"] = cmp.mapping.confirm({ select = true }),
         ["<C-k>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
         ["<C-j>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
@@ -19,8 +17,7 @@ cmp.setup({
         { name = "neorg" },
         { name = "luasnip" },
         { name = "nvim_lsp" },
-        { name = "buffer" },
         { name = "path" },
     },
-    experimental = { ghost_text = true },
+    experimental = { ghost_text = false },
 })

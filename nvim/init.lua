@@ -145,8 +145,6 @@ local plugins = {
     "L3MON4D3/LuaSnip",
     "christoomey/vim-tmux-navigator",
     "folke/neodev.nvim",
-    "hrsh7th/cmp-nvim-lsp",
-    "hrsh7th/nvim-cmp",
     "lukas-reineke/lsp-format.nvim",
     "mbbill/undotree",
     "neovim/nvim-lspconfig",
@@ -158,6 +156,10 @@ local plugins = {
     "wesleimp/stylua.nvim",
     "williamboman/mason-lspconfig.nvim",
     "williamboman/mason.nvim",
+
+    "hrsh7th/nvim-cmp",
+    "hrsh7th/cmp-path",
+    "hrsh7th/cmp-nvim-lsp",
 }
 
 require("lazy").setup(plugins)
