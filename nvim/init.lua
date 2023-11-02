@@ -141,6 +141,7 @@ local plugins = {
         end,
     },
 
+    "brenoprata10/nvim-highlight-colors",
     "L3MON4D3/LuaSnip",
     "christoomey/vim-tmux-navigator",
     "folke/neodev.nvim",
