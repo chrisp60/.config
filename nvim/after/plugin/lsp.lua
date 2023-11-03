@@ -43,13 +43,12 @@ local on_attach = function(client, bufnr)
 
     vim.keymap.set("n", "K", vim.lsp.buf.hover)
     vim.keymap.set("n", "gd", vim.lsp.buf.definition)
-    vim.keymap.set("n", "<C-n>", vim.diagnostic.goto_next)
-    vim.keymap.set("n", "<C-p>", vim.diagnostic.goto_prev)
+    vim.keymap.set("n", "<leader>j", vim.diagnostic.goto_next)
+    vim.keymap.set("n", "<leader>k", vim.diagnostic.goto_prev)
     vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename)
     vim.keymap.set({ "n", "v", "x" }, "ga", vim.lsp.buf.code_action)
 
     -- https://github.com/lukas-reineke/lsp-format.nvim#wq-will-not-format-when-not-using-sync
-    vim.cmd([[cabbrev wq execute "Format sync" <bar> wq]])
     require("lsp-format").on_attach(client, bufnr)
 
     -- Reduce noise from lsp diagnostics

@@ -15,16 +15,16 @@ require("catppuccin").setup({
         native_lsp = {
             enabled = true,
             virtual_text = {
-                errors = { "bold" },
-                hints = { "bold" },
-                warnings = { "bold" },
-                information = { "bold" },
+                errors = {},
+                hints = {},
+                warnings = {},
+                information = {},
             },
             underlines = {
-                errors = { "underline" },
-                hints = { "underline" },
-                warnings = { "underline" },
-                information = { "underline" },
+                errors = {},
+                hints = {},
+                warnings = {},
+                information = {},
             },
             inlay_hints = {
                 background = true,
@@ -49,5 +49,5 @@ require("catppuccin").setup({
 })
 
 vim.cmd.colorscheme "catppuccin"
-vim.cmd [[:highlight MatchParen cterm=bold ctermbg=black ctermfg=NONE]]
-vim.cmd [[:highlight MatchParen gui=bold guibg=black guifg=NONE]]
+vim.cmd [[:highlight MatchParen cterm=bold ctermbg=red ctermfg=black]]
+vim.cmd [[:highlight MatchParen gui=bold guibg=red guifg=black]]
