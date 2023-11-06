@@ -26,4 +26,12 @@ M.handle_formatting = function()
     end
 end
 
+function M.handle_diagnostics()
+    vim.keymap.set({ "n", "v" }, "<leader>D", vim.diagnostic.setqflist, { desc = "[qflist] next" })
+    vim.keymap.set({ "n", "v" }, "gn", "<cmd>cn<CR>", { desc = "[qflist] next" })
+    vim.keymap.set({ "n", "v" }, "gp", "<cmd>cp<CR>", { desc = "[qflist] pref" })
+end
+
+M.handle_diagnostics()
+
 return M

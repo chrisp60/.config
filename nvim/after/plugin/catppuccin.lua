@@ -6,7 +6,7 @@ require("catppuccin").setup({
     transparent_background = false,
     show_end_of_buffer = true,
     term_colors = true,
-    no_italic = false,
+    no_italic = true,
     no_bold = false,
     styles = {},
     color_overrides = {},

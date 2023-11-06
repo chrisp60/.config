@@ -1,5 +1,3 @@
-vim.keymap.set("n", "<leader>x", "\"_")
-vim.keymap.set("n", "<leader>E", ":Explore<CR>")
 vim.keymap.set("n", "<leader>css", function()
     require("nvim-highlight-colors").toggle()
 end, { silent = true })
@@ -12,24 +10,21 @@ require("harpoon").setup({
         width = vim.api.nvim_win_get_width(0) - 20,
     },
     global_settings = {
-        mark_branch = true,
+        mark_branch = false,
         save_on_change = true,
-        save_on_toggle = true,
-        tabline = false,
+        save_on_toggle = false,
+        tabline = true,
     },
 })
 
-vim.keymap.set("n", "gj", function()
-    harpoon_ui.nav_file(1)
-end)
-vim.keymap.set("n", "gk", function()
-    harpoon_ui.nav_file(2)
-end)
-vim.keymap.set("n", "gl", function()
-    harpoon_ui.nav_file(3)
-end)
-vim.keymap.set("n", "g;", function()
-    harpoon_ui.nav_file(4)
-end)
-vim.keymap.set("n", "gA", harpoon_mark.add_file)
-vim.keymap.set("n", "gm", harpoon_ui.toggle_quick_menu)
+local function harp(num)
+    harpoon_ui.nav_file(num)
+end
+
+vim.keymap.set("n", "gj", function() harp(1) end, { desc = "[harp] nav 1" })
+vim.keymap.set("n", "gk", function() harp(2) end, { desc = "[harp] nav 2" })
+vim.keymap.set("n", "gl", function() harp(3) end, { desc = "[harp] nav 3" })
+vim.keymap.set("n", "gh", function() harp(4) end, { desc = "[harp] nav 4" })
+vim.keymap.set("n", "gA", harpoon_mark.add_file, { desc = "[harp] add_file" })
+vim.keymap.set("n", "gm", harpoon_ui.toggle_quick_menu, { desc = "[harp] toggle_quick_menu" })
+vim.keymap.set("n", "<leader>z", "<cmd>ZenMode<cr>", { desc = "zen mod" })

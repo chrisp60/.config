@@ -5,12 +5,13 @@ vim.opt.cursorline = true
 vim.opt.expandtab = true
 vim.opt.hlsearch = false
 vim.opt.incsearch = true
-vim.opt.path:append("**")
 vim.opt.nu = true
+vim.opt.path:append("**")
 vim.opt.relativenumber = true
 vim.opt.scrolloff = 999
 vim.opt.shiftwidth = 4
 vim.opt.showmode = true
+vim.opt.showtabline = 1
 vim.opt.signcolumn = "yes"
 vim.opt.smartindent = true
 vim.opt.softtabstop = 4

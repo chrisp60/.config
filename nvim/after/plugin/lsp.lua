@@ -38,15 +38,13 @@ local handle_formatting = function()
 end
 
 local on_attach = function(client, bufnr)
-    -- LuaLs default formatter kind of really sucks.
-    vim.keymap.set("n", "<leader>o", handle_formatting)
-
-    vim.keymap.set("n", "K", vim.lsp.buf.hover)
-    vim.keymap.set("n", "gd", vim.lsp.buf.definition)
-    vim.keymap.set("n", "<leader>j", vim.diagnostic.goto_next)
-    vim.keymap.set("n", "<leader>k", vim.diagnostic.goto_prev)
-    vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename)
-    vim.keymap.set({ "n", "v", "x" }, "ga", vim.lsp.buf.code_action)
+    vim.keymap.set("n", "gn", vim.diagnostic.goto_next, { desc = "goto_next" })
+    vim.keymap.set("n", "gp", vim.diagnostic.goto_prev, { desc = "goto_prev" })
+    vim.keymap.set("n", "<leader>o", handle_formatting, { desc = "handle formatting" })
+    vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, { desc = "rename" })
+    vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "hover" })
+    vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "definition" })
+    vim.keymap.set({ "n", "v", "x" }, "ga", vim.lsp.buf.code_action, { desc = "code_action" })
 
     -- https://github.com/lukas-reineke/lsp-format.nvim#wq-will-not-format-when-not-using-sync
     require("lsp-format").on_attach(client, bufnr)
