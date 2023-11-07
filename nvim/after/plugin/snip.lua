@@ -1,20 +1,13 @@
 local ls = require("luasnip")
 
-vim.keymap.set({ "i" }, "<C-l>", ls.expand)
-
-vim.keymap.set({ "i", "s" }, "<C-j>", function()
+vim.keymap.set({ "i", "s" }, "<C-n>", function()
     ls.jump(1)
 end, { silent = true })
 
-vim.keymap.set({ "i", "s" }, "<C-k>", function()
+vim.keymap.set({ "i", "s" }, "<C-p>", function()
     ls.jump(-1)
 end, { silent = true })
 
-vim.keymap.set({ "i", "s" }, "<C-l>", function()
-    if ls.choice_active() then
-        ls.change_choice(1)
-    end
-end, { silent = true })
 
 --- @diagnostic disable:unused-local
 local s = ls.snippet
@@ -105,7 +98,7 @@ ls.add_snippets("rust", {
         )
     ),
     s(
-        "#[derive(",
+        "#[derive()]",
         fmt(
             [[
             #[derive(Debug, Clone{serde}{eqs}{ords})]

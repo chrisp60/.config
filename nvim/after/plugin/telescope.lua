@@ -2,9 +2,8 @@ require("telescope").setup({
     defaults = {
         layout_strategy = "bottom_pane",
         wrap_results = true,
-        border = false,
+        border = true,
         sorting_strategy = "ascending",
-        winblend = 10,
     },
 })
 
@@ -20,7 +19,11 @@ vim.keymap.set("n", "<leader>b", builtin.buffers, { desc = "[tele] buffers" })
 vim.keymap.set("n", "<leader>d", builtin.diagnostics, { desc = "[tele] diagnostics" })
 vim.keymap.set("n", "<leader>f", builtin.find_files, { desc = "[tele] find_files" })
 vim.keymap.set("n", "<leader>g", builtin.live_grep, { desc = "[tele] live_grep" })
-vim.keymap.set("n", "<leader>s", builtin.lsp_workspace_symbols, { desc = "[tele] lsp_workspace_symbols" })
 vim.keymap.set("n", "<leader>M", builtin.man_pages, { desc = "[tele] man_pages" })
 vim.keymap.set("n", "<leader>p", builtin.registers, { desc = "[tele] registers" })
-vim.keymap.set("n", "<leader>R", builtin.lsp_references, { desc = "[tele] references" })
+
+vim.keymap.set("n", "<leader>st", builtin.lsp_type_definitions, { desc = "[tele] type defs" })
+vim.keymap.set("n", "<leader>sd", builtin.lsp_document_symbols, { desc = "[tele] document symbols" })
+vim.keymap.set("n", "<leader>sw", builtin.lsp_workspace_symbols, { desc = "[tele] lsp_workspace_symbols" })
+vim.keymap.set("n", "<leader>sr", builtin.lsp_references, { desc = "[tele] references" })
+

@@ -21,6 +21,8 @@ local function harp(num)
     harpoon_ui.nav_file(num)
 end
 
+vim.keymap.set("n", "gC", "<cmd>tab Git<cr>", { desc = "Git in tab" })
+vim.keymap.set("n", "gc", "<cmd>vert Git<cr>", { desc = "Get in vertical" })
 vim.keymap.set("n", "gj", function() harp(1) end, { desc = "[harp] nav 1" })
 vim.keymap.set("n", "gk", function() harp(2) end, { desc = "[harp] nav 2" })
 vim.keymap.set("n", "gl", function() harp(3) end, { desc = "[harp] nav 3" })

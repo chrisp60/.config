@@ -25,7 +25,6 @@ local handle_formatting = function()
         end
     end
 
-    local filetype = vim.filetype.match({ buf = 0 })
     if filetype == "rust" and utils.buf_has_str(0, "leptos") then
         vim.cmd.write()
         vim.cmd([[silent !leptosfmt % -t 2]])
@@ -43,6 +42,8 @@ local on_attach = function(client, bufnr)
     vim.keymap.set("n", "<leader>o", handle_formatting, { desc = "handle formatting" })
     vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, { desc = "rename" })
     vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "hover" })
+    vim.keymap.set("n", "gS", vim.lsp.buf.workspace_symbol, { desc = "workspace_symbol" })
+    vim.keymap.set("n", "gs", vim.lsp.buf.document_symbol, { desc = "document_symbol" })
     vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "definition" })
     vim.keymap.set({ "n", "v", "x" }, "ga", vim.lsp.buf.code_action, { desc = "code_action" })
 
@@ -64,8 +65,8 @@ local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
 local mason = require("mason")
 local mason_lspconfig = require("mason-lspconfig")
-mason.setup({})
-mason_lspconfig.setup({})
+mason.setup()
+mason_lspconfig.setup()
 mason_lspconfig.setup_handlers({
     function(server_name)
         require("lspconfig")[server_name].setup({
@@ -111,9 +112,6 @@ mason_lspconfig.setup_handlers({
                         },
                         prefix = "crate",
                     },
-                    interpret = {
-                        tests = true,
-                    },
                     cargo = {
                         buildScripts = {
                             enable = true,
@@ -123,43 +121,13 @@ mason_lspconfig.setup_handlers({
                     check = {
                         command = "clippy",
                     },
-                    completion = {
-                        callable = {
-                            snippets = "fill_arguments",
-                        },
-                        postfix = {
-                            enable = true,
-                        },
-                    },
                     references = {
                         excludeImports = {
                             enable = true,
                         },
                     },
-                    hover = {
-                        actions = {
-                            enable = true,
-                            run = {
-                                enable = true,
-                            },
-                            debug = {
-                                enable = true,
-                            },
-                        },
-                        links = {
-                            enable = true,
-                        },
-                        memoryLayout = {
-                            size = "both",
-                            enable = true,
-                            niches = true,
-                        },
-                    },
                     diagnostics = {
                         disabled = { "inactive-code" },
-                        experimental = {
-                            enable = true,
-                        },
                     },
                     procMacro = {
                         ignored = {
@@ -170,16 +138,6 @@ mason_lspconfig.setup_handlers({
                         enable = true,
                         attributes = {
                             enable = true,
-                        },
-                    },
-                    semanticHighlighting = {
-                        punctuation = {
-                            enable = true,
-                            separate = {
-                                macro = {
-                                    bang = true,
-                                },
-                            },
                         },
                     },
                 },
