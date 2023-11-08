@@ -12,26 +12,5 @@ function M.buf_has_str(bufnr, lit)
     end)
 end
 
-M.handle_formatting = function()
-    local filetype = vim.filetype.match({ buf = 0 })
-    if filetype == "rust" and M.buf_has_str(0, "leptos") then
-        vim.cmd.write()
-        vim.cmd([[silent! leptosfmt % -t 2]])
-        vim.notify("using leptos", vim.log.levels.INFO)
-    elseif filetype == "lua" then
-        require("stylua").format()
-    elseif filetype == "lua" then
-    else
-        vim.lsp.buf.format()
-    end
-end
-
-function M.handle_diagnostics()
-    vim.keymap.set({ "n", "v" }, "<leader>D", vim.diagnostic.setqflist, { desc = "[qflist] next" })
-    vim.keymap.set({ "n", "v" }, "gn", "<cmd>cn<CR>", { desc = "[qflist] next" })
-    vim.keymap.set({ "n", "v" }, "gp", "<cmd>cp<CR>", { desc = "[qflist] pref" })
-end
-
-M.handle_diagnostics()
 
 return M

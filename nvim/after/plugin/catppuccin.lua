@@ -49,5 +49,5 @@ require("catppuccin").setup({
 })
 
 vim.cmd.colorscheme "catppuccin"
-vim.cmd [[:highlight MatchParen cterm=bold ctermbg=red ctermfg=black]]
-vim.cmd [[:highlight MatchParen gui=bold guibg=red guifg=black]]
+vim.cmd [[:highlight MatchParen cterm=bold ctermbg=gray ctermfg=red]]
+vim.cmd [[:highlight MatchParen gui=bold guibg=gray guifg=red]]

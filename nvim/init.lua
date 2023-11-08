@@ -44,45 +44,7 @@ local plugins = {
     },
     {
         "nvim-telescope/telescope.nvim",
-        lazy = false,
         dependencies = { "nvim-lua/plenary.nvim" },
-    },
-    {
-        "folke/zen-mode.nvim",
-        opts = {
-            window = {
-                backdrop = 0.95, -- shade the backdrop of the Zen window. Set to 1 to keep the same as Normal
-                -- height and width can be:
-                -- * an absolute number of cells when > 1
-                -- * a percentage of the width / height of the editor when <= 1
-                -- * a function that returns the width or the height
-                width = 120, -- width of the Zen window
-                height = 1,  -- height of the Zen window
-                -- by default, no options are changed for the Zen window
-                -- uncomment any of the options below, or add other vim.wo options you want to apply
-                options = {
-                    signcolumn = "no",     -- disable signcolumn
-                    number = true,         -- disable number column
-                    relativenumber = true, -- disable relative numbers
-                    cursorline = true,     -- disable cursorline
-                    cursorcolumn = false,  -- disable cursor column
-                },
-            },
-            plugins = {
-                options = {
-                    enabled = true,
-                    ruler = false,   -- disables the ruler text in the cmd line area
-                    showcmd = false, -- disables the command in the last line of the screen
-                    laststatus = 0,  -- turn off the statusline in zen mode
-                },
-                twilight = { enabled = false },
-                tmux = { enabled = true }, -- disables the tmux statusline
-                wezterm = {
-                    enabled = true,
-                    font = "+20", -- (10% increase per step)
-                },
-            },
-        },
     },
     {
         "lukas-reineke/indent-blankline.nvim",
@@ -90,39 +52,6 @@ local plugins = {
             require("ibl").setup({
                 scope = { enabled = true, char = "╎", show_start = true },
                 indent = { char = "╎" },
-            })
-        end,
-    },
-    {
-        "nvim-treesitter/nvim-treesitter-textobjects",
-        dependencies = { "nvim-treesitter", "nvim-treesitter/nvim-treesitter" },
-    },
-    {
-        "nvim-neorg/neorg",
-        build = ":Neorg sync-parsers",
-        dependencies = { "nvim-lua/plenary.nvim" },
-        config = function()
-            require("neorg").setup({
-                load = {
-                    ["core.summary"] = { config = { stragegy = "default" } },
-                    ["core.completion"] = { config = { engine = "nvim-cmp" } },
-                    ["core.concealer"] = {},
-                    ["core.ui.calendar"] = {},
-                    ["core.export"] = {
-                        config = {
-                            export_dir = "exports/<export-dir>/<language>",
-                        },
-                    },
-                    ["core.export.markdown"] = {},
-                    ["core.defaults"] = {},
-                    ["core.dirman"] = { -- Manages Neorg workspaces
-                        config = {
-                            workspaces = {
-                                notes = "~/notes",
-                            },
-                        },
-                    },
-                },
             })
         end,
     },
@@ -142,25 +71,24 @@ local plugins = {
         end,
     },
 
-    "brenoprata10/nvim-highlight-colors",
+    { "hrsh7th/cmp-nvim-lsp",     lazy = false },
+    { "hrsh7th/cmp-path",         lazy = false },
+    { "hrsh7th/nvim-cmp",         lazy = false },
+    { "saadparwaiz1/cmp_luasnip", lazy = false },
+
     "L3MON4D3/LuaSnip",
+    "brenoprata10/nvim-highlight-colors",
     "christoomey/vim-tmux-navigator",
     "folke/neodev.nvim",
     "lukas-reineke/lsp-format.nvim",
-    "mbbill/undotree",
     "neovim/nvim-lspconfig",
     "nvim-treesitter/playground",
-    "saadparwaiz1/cmp_luasnip",
     "theprimeagen/harpoon",
     "tpope/vim-fugitive",
     "tpope/vim-surround",
     "wesleimp/stylua.nvim",
     "williamboman/mason-lspconfig.nvim",
     "williamboman/mason.nvim",
-
-    "hrsh7th/nvim-cmp",
-    "hrsh7th/cmp-path",
-    "hrsh7th/cmp-nvim-lsp",
 }
 
 require("lazy").setup(plugins)

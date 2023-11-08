@@ -8,15 +8,17 @@ cmp.setup({
     preselect = "none",
     completion = { completeopt = "menu,menuone,noselectpreview" },
     mapping = {
-        ["<CR>"] = cmp.mapping.confirm({ select = false }),
         ["<C-l>"] = cmp.mapping.confirm({ select = true }),
-        ["<C-k>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
-        ["<C-j>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
+        ["<C-k>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
+        ["<C-j>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
     },
     sources = {
-        { name = "neorg" },
-        { name = "luasnip" },
-        { name = "nvim_lsp" },
+        {
+            name = "nvim_lsp",
+            entry_filter = function(entry)
+                return require("cmp.types").lsp.CompletionItemKind[entry:get_kind()] ~= "Snippet"
+            end,
+        },
         { name = "path" },
     },
     experimental = { ghost_text = false },

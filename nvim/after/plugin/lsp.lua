@@ -27,7 +27,7 @@ local handle_formatting = function()
 
     if filetype == "rust" and utils.buf_has_str(0, "leptos") then
         vim.cmd.write()
-        vim.cmd([[silent !leptosfmt % -t 2]])
+        vim.cmd([[silent !leptosfmt % -t 2 -m 80]])
         vim.notify("using leptos", vim.log.levels.INFO)
     elseif filetype == "lua" then
         require("stylua").format()
@@ -36,14 +36,26 @@ local handle_formatting = function()
     end
 end
 
+--- @diagnostic disable:unused-local
+local WARN = vim.diagnostic.severity.WARN
+local ERROR = vim.diagnostic.severity.ERROR
+local INFO = vim.diagnostic.severity.INFO
+local HINT = vim.diagnostic.severity.HINT
+
 local on_attach = function(client, bufnr)
-    vim.keymap.set("n", "gn", vim.diagnostic.goto_next, { desc = "goto_next" })
-    vim.keymap.set("n", "gp", vim.diagnostic.goto_prev, { desc = "goto_prev" })
+    vim.keymap.set("n", "gn", function()
+        vim.diagnostic.goto_next()
+    end, { desc = "goto_next" })
+    vim.keymap.set("n", "gp", function()
+        vim.diagnostic.goto_prev()
+    end, { desc = "goto_prev" })
+
     vim.keymap.set("n", "<leader>o", handle_formatting, { desc = "handle formatting" })
     vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, { desc = "rename" })
     vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "hover" })
-    vim.keymap.set("n", "gS", vim.lsp.buf.workspace_symbol, { desc = "workspace_symbol" })
-    vim.keymap.set("n", "gs", vim.lsp.buf.document_symbol, { desc = "document_symbol" })
+    vim.keymap.set("n", "<leader>D", function()
+        vim.diagnostic.setqflist({ open = true, title = "big dumb" })
+    end, { desc = "definition" })
     vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "definition" })
     vim.keymap.set({ "n", "v", "x" }, "ga", vim.lsp.buf.code_action, { desc = "code_action" })
 
@@ -53,8 +65,12 @@ local on_attach = function(client, bufnr)
     -- Reduce noise from lsp diagnostics
     vim.diagnostic.config({
         update_in_insert = true,
-        -- Virtual text should only include ERROR level diagnostics
-        virtual_text = { severity = { min = vim.diagnostic.severity.ERROR } },
+        virtual_text = {
+            severity = {
+                WARN,
+                ERROR,
+            },
+        },
         signs = true,
         float = true,
         underline = false,
@@ -112,6 +128,11 @@ mason_lspconfig.setup_handlers({
                         },
                         prefix = "crate",
                     },
+                    completion = {
+                        postfix = {
+                            enable = false,
+                        },
+                    },
                     cargo = {
                         buildScripts = {
                             enable = true,
@@ -128,6 +149,11 @@ mason_lspconfig.setup_handlers({
                     },
                     diagnostics = {
                         disabled = { "inactive-code" },
+                    },
+                    hover = {
+                        links = {
+                            enable = false,
+                        },
                     },
                     procMacro = {
                         ignored = {
