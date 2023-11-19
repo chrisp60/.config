@@ -1,7 +1,7 @@
 summary = true
 wrap = true
 reverse = false
-export_locations = true
+export_locations = false
 
 
 [keybindings]
