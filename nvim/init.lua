@@ -1,5 +1,5 @@
+vim.lsp.set_log_level("ERROR")
 vim.g.mapleader = " "
-vim.opt.cmdwinheight = 7
 vim.opt.backup = false
 vim.opt.colorcolumn = "80,100"
 vim.opt.cursorcolumn = false
@@ -69,21 +69,23 @@ require("lazy").setup({
         config = function()
             require("catppuccin").setup({
                 integrations = {
-                    cmp = true,
                     leap = true,
                     native_lsp = { enabled = true },
                     harpoon = true,
                     cmp = true,
                     telescope = true,
-                    semantic_tokens = true
-                }
+                    semantic_tokens = true,
+                },
             })
         end,
     },
     {
         "zbirenbaum/copilot-cmp",
         config = function()
-            require("copilot_cmp").setup()
+            require("copilot_cmp").setup({
+                event = { "InsertEnter", "LspAttach" },
+                fix_pairs = true,
+            })
         end,
     },
     {
@@ -93,14 +95,14 @@ require("lazy").setup({
         config = function()
             require("copilot").setup({
                 panel = {
-                    auto_refresh = true,
                     enabled = true,
-                    keymap = { open = "<C-D>", refresh = "<C-F>" },
-                    layout = { position = "right", ratio = 0.45 },
+                    auto_refresh = true,
+                    layout = {
+                        position = "right",
+                        ratio = 0.45,
+                    },
                 },
-                suggestion = {
-                    enabled = false,
-                },
+                suggestion = { enabled = false },
             })
         end,
     },
@@ -136,11 +138,11 @@ require("lazy").setup({
         build = ":Neorg sync-parsers",
         dependencies = { "nvim-lua/plenary.nvim" },
         config = function()
-            require("neorg").setup {
+            require("neorg").setup({
                 load = {
-                    ["core.defaults"] = {},  -- Loads default behaviour
-                    ["core.concealer"] = {}, -- Adds pretty icons to your documents
-                    ["core.dirman"] = {      -- Manages Neorg workspaces
+                    ["core.defaults"] = {},
+                    ["core.concealer"] = {},
+                    ["core.dirman"] = {
                         config = {
                             workspaces = {
                                 notes = "~/notes",
@@ -149,29 +151,23 @@ require("lazy").setup({
                         },
                     },
                 },
-            }
+            })
         end,
     },
     {
         "pwntester/octo.nvim",
         dependencies = {
-            'nvim-lua/plenary.nvim',
-            'nvim-telescope/telescope.nvim',
-            'nvim-tree/nvim-web-devicons',
+            "nvim-lua/plenary.nvim",
+            "nvim-telescope/telescope.nvim",
+            -- 'nvim-tree/nvim-web-devicons',
         },
         config = function()
             require("octo").setup({
                 file_panel = {
                     use_icons = false,
-                }
+                },
             })
         end,
-    },
-    { "folke/zen-mode.nvim" },
-    {
-        "ellisonleao/glow.nvim",
-        config = true,
-        cmd = "Glow",
     },
     { "folke/neodev.nvim" },
     { "theprimeagen/harpoon" },
@@ -183,20 +179,36 @@ require("lazy").setup({
         lazy = false,
         dependencies = "tpope/vim-repeat",
         config = function()
-            require('leap').add_default_mappings()
-        end
+            require("leap").add_default_mappings()
+        end,
     },
     { "wesleimp/stylua.nvim" },
+    {
+        "folke/todo-comments.nvim",
+        dependencies = { "nvim-lua/plenary.nvim" },
+        opts = {},
+    },
 })
 
-vim.cmd.colorscheme("catppuccin-" .. os.getenv("CATPPUCCIN_FLAVOUR") or "mocha")
+local flavor = os.getenv("CATPPUCCIN_FLAVOUR") or "mocha"
+vim.cmd.colorscheme("catppuccin-" .. flavor)
 
 local lsp_zero = require("lsp-zero")
 lsp_zero.on_attach(function()
     lsp_zero.buffer_autoformat()
+
     vim.keymap.set("n", "<leader>o", function()
         vim.cmd([[silent ! leptosfmt % -t 2 -m 80]])
+        vim.cmd([[e %]])
     end)
+
+    vim.keymap.set("n", "<leader>cfr", function()
+        vim.lsp.buf.references()
+    end)
+    vim.keymap.set("n", "<leader>cst", function()
+        vim.lsp.semantic_tokens.force_refresh()
+    end)
+
     local builtin = require("telescope.builtin")
     vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help)
     vim.keymap.set("n", "<leader>R", builtin.lsp_references)
@@ -205,9 +217,31 @@ lsp_zero.on_attach(function()
     vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename)
     vim.keymap.set("n", "<leader>s", builtin.lsp_dynamic_workspace_symbols)
     vim.keymap.set("n", "K", vim.lsp.buf.hover)
+
     vim.keymap.set("n", "gd", vim.lsp.buf.definition)
-    vim.keymap.set("n", "gn", vim.diagnostic.goto_next)
-    vim.keymap.set("n", "gp", vim.diagnostic.goto_prev)
+
+    vim.keymap.set("n", "<leader>D", function()
+        vim.diagnostic.open_float({ scope = "buffer" })
+    end)
+
+    local MIN_ERROR = { severity = { min = vim.diagnostic.severity.ERROR } }
+
+    vim.keymap.set("n", "gn", function()
+        vim.diagnostic.goto_next(MIN_ERROR)
+    end)
+
+    vim.keymap.set("n", "<leader>n", function()
+        vim.diagnostic.goto_next()
+    end)
+
+    vim.keymap.set("n", "gp", function()
+        vim.diagnostic.goto_prev(MIN_ERROR)
+    end)
+
+    vim.keymap.set("n", "<leader>P", function()
+        vim.diagnostic.goto_prev(MIN_ERROR)
+    end)
+
     vim.keymap.set({ "n", "v", "x" }, "ga", vim.lsp.buf.code_action)
 
     vim.keymap.set({ "n", "v", "x" }, "<leader>i", function()
@@ -215,18 +249,26 @@ lsp_zero.on_attach(function()
     end)
 end)
 
-vim.diagnostic.config({ signs = false, virtual_text = false, underline = false })
+vim.diagnostic.config({
+    virtual_text = { severity = { min = vim.diagnostic.severity.ERROR } },
+    underline = false,
+    update_in_insert = true,
+    signs = true,
+})
 
 local function rust_analyzer_config()
     require("lspconfig")["rust_analyzer"].setup({
         settings = {
             ["rust-analyzer"] = {
                 cargo = { features = "all" },
+                diagnostics = {
+                    disabled = { "inactive-code", "unlinked-file" },
+                },
                 check = {
                     features = "all",
-                    ignore = { "inactive-code", "unlinked-file" },
                     command = "clippy",
                 },
+                completion = { postfix = { enable = false } },
             },
         },
     })
@@ -247,14 +289,6 @@ require("mason-lspconfig").setup({
 -- nvim cmp
 local cmp = require("cmp")
 local cmp_select = { behavior = cmp.SelectBehavior.Select }
-local comp = {
-    config = {
-        sources = {
-            { name = "copilot" },
-            { name = "nvim_lsp" },
-        },
-    },
-}
 cmp.setup({
     snippet = {
         expand = function(args)
@@ -262,19 +296,32 @@ cmp.setup({
         end,
     },
     sources = {
-        { name = "copilot" },
         { name = "luasnip" },
         { name = "nvim_lsp" },
         { name = "nvim_lua" },
     },
     mapping = cmp.mapping.preset.insert({
         -- select cmp options
+        ["<C-d>"] = cmp.mapping.scroll_docs(-4),
+        ["<C-f>"] = cmp.mapping.scroll_docs(4),
         ["<C-k>"] = cmp.mapping.select_prev_item(cmp_select),
         ["<C-j>"] = cmp.mapping.select_next_item(cmp_select),
         ["<C-l>"] = cmp.mapping.confirm({ select = true }),
-        ["<C-t>"] = cmp.mapping.complete(comp),
+        ["<C-s>"] = cmp.mapping.complete({
+            config = {
+                sources = {
+                    { name = "copilot" },
+                    { name = "luasnip" },
+                    { name = "nvim_lsp" },
+                    { name = "nvim_lua" },
+                },
+            },
+        }),
     }),
     formatting = require("lsp-zero").cmp_format(),
+    experimental = {
+        ghost_text = false,
+    },
 })
 
 -- Telescope
@@ -295,7 +342,7 @@ vim.keymap.set("n", "<leader>H", function()
     builtin.find_files({
         hidden = true,
         no_ignore = true,
-        no_ignore_parent = true
+        no_ignore_parent = true,
     })
 end)
 vim.keymap.set("n", "<leader>?", builtin.keymaps)
@@ -319,5 +366,7 @@ end)
 vim.keymap.set("n", "gA", harpoon_mark.add_file)
 vim.keymap.set("n", "gm", harpoon_ui.toggle_quick_menu)
 
--- Zen
-vim.keymap.set("n", "<leader>z", require("zen-mode").toggle)
+vim.keymap.set("n", "<leader>p", function()
+    require("copilot.panel").open({ "right", 0.5 })
+    vim.cmd([[wincmd h]])
+end)

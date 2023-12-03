@@ -3,6 +3,9 @@ wrap = true
 reverse = false
 export_locations = false
 
+[jobs.test]
+command = ["cargo", "test", "--", "--nocapture"]
+need_stdout = true
 
 [keybindings]
 q = "quit"
