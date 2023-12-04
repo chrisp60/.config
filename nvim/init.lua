@@ -87,7 +87,6 @@ require("lazy").setup({
             })
         end,
     },
-
     { "folke/neodev.nvim" },
     { "theprimeagen/harpoon" },
     { "tpope/vim-fugitive" },
@@ -183,7 +182,6 @@ cmp.setup({
     formatting = require("lsp-zero").cmp_format(),
 })
 
-
 -- Telescope
 local builtin = require("telescope.builtin")
 require("telescope").setup({
@@ -223,8 +221,6 @@ vim.keymap.set("n", "<leader>4", function()
 end)
 vim.keymap.set("n", "gA", harpoon_mark.add_file)
 vim.keymap.set("n", "gm", harpoon_ui.toggle_quick_menu)
-vim.keymap.set("n", "<C-n>", harpoon_ui.nav_next)
-vim.keymap.set("n", "<C-p>", harpoon_ui.nav_prev)
 
 -- Copilot
 vim.keymap.set("i", "<C-F>", "<Plug>(copilot-next)")
