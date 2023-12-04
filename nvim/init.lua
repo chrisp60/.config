@@ -1,6 +1,9 @@
 vim.g.mapleader = " "
+vim.opt.cmdwinheight = 12
+vim.opt.autowriteall = true
 vim.opt.backup = false
 vim.opt.colorcolumn = "80,100"
+vim.opt.inccommand = "split"
 vim.opt.cursorline = true
 vim.opt.expandtab = true
 vim.opt.hlsearch = false
