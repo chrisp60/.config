@@ -93,7 +93,8 @@ require("lazy").setup({
     { "wesleimp/stylua.nvim" },
 })
 
-vim.cmd.colorscheme("catppuccin")
+local flavor = os.getenv("CATPPUCCIN_FLAVOUR")
+vim.cmd.colorscheme("catppuccin" .. "-" .. flavor)
 
 -- LSP config stolen directly from
 -- https://github.com/VonHeikemen/lsp-zero.nvim/blob/v3.x/doc/md/configuration-templates.md#primes-config
