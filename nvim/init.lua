@@ -13,6 +13,7 @@ vim.opt.showmode = false
 vim.opt.signcolumn = "yes"
 vim.opt.smartindent = true
 vim.opt.softtabstop = 4
+vim.opt.autoindent = true
 vim.opt.splitright = true
 vim.opt.swapfile = false
 vim.opt.tabstop = 4
