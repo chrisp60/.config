@@ -1,8 +1,8 @@
 vim.g.mapleader = " "
-vim.opt.cmdwinheight = 12
-vim.opt.autowriteall = true
+vim.opt.cmdwinheight = 7
 vim.opt.backup = false
 vim.opt.colorcolumn = "80,100"
+vim.opt.cursorcolumn = false
 vim.opt.inccommand = "split"
 vim.opt.cursorline = true
 vim.opt.expandtab = true
@@ -40,16 +40,23 @@ end
 
 vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
-    --- Uncomment these if you want to manage LSP servers from neovim
     { "williamboman/mason.nvim" },
     { "williamboman/mason-lspconfig.nvim" },
-    { "github/copilot.vim" },
-    { "VonHeikemen/lsp-zero.nvim",        branch = "v3.x" },
+    {
+        "VonHeikemen/lsp-zero.nvim",
+        branch = "v3.x",
+    },
     { "neovim/nvim-lspconfig" },
     { "hrsh7th/cmp-nvim-lsp" },
     { "hrsh7th/nvim-cmp" },
-    { "L3MON4D3/LuaSnip",                 lazy = false },
-    { "saadparwaiz1/cmp_luasnip",         lazy = false },
+    {
+        "L3MON4D3/LuaSnip",
+        lazy = false,
+    },
+    {
+        "saadparwaiz1/cmp_luasnip",
+        lazy = false,
+    },
     {
         "nvim-telescope/telescope.nvim",
         tag = "0.1.4",
@@ -59,6 +66,56 @@ require("lazy").setup({
         "catppuccin/nvim",
         name = "catppuccin",
         priority = 1000,
+        config = function()
+            require("catppuccin").setup({
+                integrations = {
+                    cmp = true,
+                    leap = true,
+                    native_lsp = { enabled = true },
+                    harpoon = true,
+                    cmp = true,
+                    telescope = true,
+                    semantic_tokens = true
+                }
+            })
+        end,
+    },
+    {
+        "zbirenbaum/copilot-cmp",
+        config = function()
+            require("copilot_cmp").setup()
+        end,
+    },
+    {
+        "zbirenbaum/copilot.lua",
+        cmd = "Copilot",
+        event = "InsertEnter",
+        config = function()
+            require("copilot").setup({
+                panel = {
+                    auto_refresh = true,
+                    enabled = true,
+                    keymap = { open = "<C-D>", refresh = "<C-F>" },
+                    layout = { position = "right", ratio = 0.45 },
+                },
+                suggestion = {
+                    enabled = false,
+                },
+            })
+        end,
+    },
+    {
+        "lukas-reineke/indent-blankline.nvim",
+        config = function()
+            require("ibl").setup({
+                scope = {
+                    enabled = true,
+                    char = "╎",
+                    show_start = true,
+                },
+                indent = { char = "╎" },
+            })
+        end,
     },
     {
         "nvim-treesitter/nvim-treesitter",
@@ -67,47 +124,75 @@ require("lazy").setup({
             require("nvim-treesitter.configs").setup({
                 auto_install = true,
                 sync_install = false,
-                highlight = { enable = true },
-                additional_vim_regex_highlighting = false,
+                highlight = {
+                    enable = true,
+                    additional_vim_regex_highlighting = false,
+                },
             })
         end,
     },
     {
-        "lukas-reineke/indent-blankline.nvim",
-        init = function()
-            require("ibl").setup({
-                scope = {
-                    enabled = true,
-                    char = "╎",
-                    show_start = true,
+        "nvim-neorg/neorg",
+        build = ":Neorg sync-parsers",
+        dependencies = { "nvim-lua/plenary.nvim" },
+        config = function()
+            require("neorg").setup {
+                load = {
+                    ["core.defaults"] = {},  -- Loads default behaviour
+                    ["core.concealer"] = {}, -- Adds pretty icons to your documents
+                    ["core.dirman"] = {      -- Manages Neorg workspaces
+                        config = {
+                            workspaces = {
+                                notes = "~/notes",
+                                projects = "~/projects",
+                            },
+                        },
+                    },
                 },
-                indent = {
-                    char = "╎",
-                },
+            }
+        end,
+    },
+    {
+        "pwntester/octo.nvim",
+        dependencies = {
+            'nvim-lua/plenary.nvim',
+            'nvim-telescope/telescope.nvim',
+            'nvim-tree/nvim-web-devicons',
+        },
+        config = function()
+            require("octo").setup({
+                file_panel = {
+                    use_icons = false,
+                }
             })
         end,
+    },
+    { "folke/zen-mode.nvim" },
+    {
+        "ellisonleao/glow.nvim",
+        config = true,
+        cmd = "Glow",
     },
     { "folke/neodev.nvim" },
     { "theprimeagen/harpoon" },
     { "tpope/vim-fugitive" },
     { "tpope/vim-surround" },
-    { "wesleimp/stylua.nvim" },
     { "christoomey/vim-tmux-navigator" },
+    {
+        "ggandor/leap.nvim",
+        lazy = false,
+        dependencies = "tpope/vim-repeat",
+        config = function()
+            require('leap').add_default_mappings()
+        end
+    },
     { "wesleimp/stylua.nvim" },
 })
 
-local flavor = os.getenv("CATPPUCCIN_FLAVOUR")
-vim.cmd.colorscheme("catppuccin" .. "-" .. flavor)
-
--- LSP config stolen directly from
--- https://github.com/VonHeikemen/lsp-zero.nvim/blob/v3.x/doc/md/configuration-templates.md#primes-config
-if vim.bo.filetype == "lua" then
-    vim.cmd([[autocmd BufWritePre *.lua lua require("stylua").format()]])
-end
+vim.cmd.colorscheme("catppuccin-" .. os.getenv("CATPPUCCIN_FLAVOUR") or "mocha")
 
 local lsp_zero = require("lsp-zero")
----@diagnostic disable-next-line: unused-local
-lsp_zero.on_attach(function(client, bufnr)
+lsp_zero.on_attach(function()
     lsp_zero.buffer_autoformat()
     vim.keymap.set("n", "<leader>o", function()
         vim.cmd([[silent ! leptosfmt % -t 2 -m 80]])
@@ -130,7 +215,7 @@ lsp_zero.on_attach(function(client, bufnr)
     end)
 end)
 
-vim.diagnostic.config({ virtual_text = true, underline = false })
+vim.diagnostic.config({ signs = false, virtual_text = false, underline = false })
 
 local function rust_analyzer_config()
     require("lspconfig")["rust_analyzer"].setup({
@@ -162,6 +247,14 @@ require("mason-lspconfig").setup({
 -- nvim cmp
 local cmp = require("cmp")
 local cmp_select = { behavior = cmp.SelectBehavior.Select }
+local comp = {
+    config = {
+        sources = {
+            { name = "copilot" },
+            { name = "nvim_lsp" },
+        },
+    },
+}
 cmp.setup({
     snippet = {
         expand = function(args)
@@ -169,6 +262,7 @@ cmp.setup({
         end,
     },
     sources = {
+        { name = "copilot" },
         { name = "luasnip" },
         { name = "nvim_lsp" },
         { name = "nvim_lua" },
@@ -178,6 +272,7 @@ cmp.setup({
         ["<C-k>"] = cmp.mapping.select_prev_item(cmp_select),
         ["<C-j>"] = cmp.mapping.select_next_item(cmp_select),
         ["<C-l>"] = cmp.mapping.confirm({ select = true }),
+        ["<C-t>"] = cmp.mapping.complete(comp),
     }),
     formatting = require("lsp-zero").cmp_format(),
 })
@@ -192,15 +287,17 @@ require("telescope").setup({
     },
 })
 
-local hidden_files = function()
-    builtin.find_files({ hidden = true, no_ignore = true, no_ignore_parent = true })
-end
-
 vim.keymap.set("n", "<leader>f", builtin.find_files)
 vim.keymap.set("n", "<leader>g", builtin.live_grep)
 vim.keymap.set("n", "<leader>b", builtin.buffers)
 vim.keymap.set("n", "<leader>h", builtin.help_tags)
-vim.keymap.set("n", "<leader>H", hidden_files)
+vim.keymap.set("n", "<leader>H", function()
+    builtin.find_files({
+        hidden = true,
+        no_ignore = true,
+        no_ignore_parent = true
+    })
+end)
 vim.keymap.set("n", "<leader>?", builtin.keymaps)
 
 -- Harpoon
@@ -222,10 +319,5 @@ end)
 vim.keymap.set("n", "gA", harpoon_mark.add_file)
 vim.keymap.set("n", "gm", harpoon_ui.toggle_quick_menu)
 
--- Copilot
-vim.keymap.set("i", "<C-F>", "<Plug>(copilot-next)")
-vim.keymap.set("i", "<C-D>", 'copilot#Accept("<CR>")', {
-    expr = true,
-    replace_keycodes = false,
-})
-
+-- Zen
+vim.keymap.set("n", "<leader>z", require("zen-mode").toggle)
