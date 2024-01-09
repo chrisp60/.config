@@ -2,20 +2,33 @@ return {
     {
         "catppuccin/nvim",
         name = "catppuccin",
-        priority = 1000
+        priority = 1000,
+        opts = {
+            integrations = {
+                harpoon = true,
+                gitgutter = true,
+                leap = true,
+                mason = true,
+                indent_blankline = {
+                    enabled = true,
+                },
+                gitsigns = true,
+            },
+        },
     },
 
     {
         "lukas-reineke/indent-blankline.nvim",
-        name = "ibl",
-        opts = {
-            scope = {
-                enabled = true,
-                char = "╎",
-                show_start = true,
-            },
-            indent = { char = "╎" },
-        },
+        config = function()
+            require('ibl').setup({
+                scope = {
+                    enabled = true,
+                    char = "╎",
+                    show_start = true,
+                },
+                indent = { char = "╎" },
+            })
+        end
     },
 
     {
