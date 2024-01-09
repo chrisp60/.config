@@ -23,6 +23,10 @@ vim.opt.termguicolors = true
 vim.opt.updatetime = 10
 vim.opt.wrap = false
 
+local catppuccin_flavor = function()
+    local flavor = os.getenv("CATPPUCCIN_FLAVOUR") or "mocha"
+    return "catppuccin-" .. flavor
+end
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 ---@diagnostic disable-next-line: undefined-field
@@ -36,13 +40,17 @@ if not vim.loop.fs_stat(lazypath) then
         lazypath,
     })
 end
-
 vim.opt.rtp:prepend(lazypath)
-require("lazy").setup("plugins")
 
+local lazy_opts = {
+    change_detection = {
+        notify = false,
+    },
+}
 
-local flavor = os.getenv("CATPPUCCIN_FLAVOUR") or "mocha"
-vim.cmd.colorscheme("catppuccin-" .. flavor)
+require("lazy").setup("plugins", lazy_opts)
+
+vim.cmd.colorscheme(catppuccin_flavor())
 
 vim.diagnostic.config({
     virtual_text = true,
@@ -50,44 +58,3 @@ vim.diagnostic.config({
     update_in_insert = true,
     signs = false,
 })
-
--- nvim cmp
-local cmp = require("cmp")
-local cmp_select = { behavior = cmp.SelectBehavior.Select }
-cmp.setup({
-    snippet = {
-        expand = function(args)
-            require("luasnip").lsp_expand(args.body)
-        end,
-    },
-    sources = {
-        { name = "nvim_lsp" },
-        { name = "copilot" },
-        { name = "luasnip" },
-        { name = "nvim_lua" },
-    },
-    mapping = cmp.mapping.preset.insert({
-        -- select cmp options
-        ["<C-d>"] = cmp.mapping.scroll_docs(-4),
-        ["<C-f>"] = cmp.mapping.scroll_docs(4),
-        ["<C-k>"] = cmp.mapping.select_prev_item(cmp_select),
-        ["<C-j>"] = cmp.mapping.select_next_item(cmp_select),
-        ["<C-l>"] = cmp.mapping.confirm({ select = true }),
-    }),
-    formatting = require("lsp-zero").cmp_format(),
-    experimental = { ghost_text = false, },
-})
-
-local builtin = require('telescope.builtin')
-vim.keymap.set("n", "<leader>f", builtin.find_files)
-vim.keymap.set("n", "<leader>g", builtin.live_grep)
-vim.keymap.set("n", "<leader>b", builtin.buffers)
-vim.keymap.set("n", "<leader>h", builtin.help_tags)
-vim.keymap.set("n", "<leader>H", function()
-    builtin.find_files({
-        hidden = true,
-        no_ignore = true,
-        no_ignore_parent = true,
-    })
-end)
-vim.keymap.set("n", "<leader>?", builtin.keymaps)

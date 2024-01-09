@@ -3,9 +3,44 @@ return {
     { "wesleimp/stylua.nvim", ft = "lua" },
 
     "hrsh7th/cmp-nvim-lsp",
-    "hrsh7th/nvim-cmp",
     "L3MON4D3/LuaSnip",
     "saadparwaiz1/cmp_luasnip",
+
+    {
+        "hrsh7th/nvim-cmp",
+        dependencies = {
+            { "VonHeikemen/lsp-zero.nvim", },
+        },
+        config = function()
+            -- nvim cmp
+            local cmp = require("cmp")
+            local select = { behavior = cmp.SelectBehavior.Select }
+            local map = cmp.mapping
+            cmp.setup({
+                snippet = {
+                    expand = function(args)
+                        require("luasnip").lsp_expand(args.body)
+                    end,
+                },
+                sources = {
+                    { name = "nvim_lsp" },
+                    { name = "copilot" },
+                    { name = "luasnip" },
+                    { name = "nvim_lua" },
+                },
+                mapping = map.preset.insert({
+                    -- select cmp options
+                    ["<C-d>"] = map.scroll_docs(-4),
+                    ["<C-f>"] = map.scroll_docs(4),
+                    ["<C-k>"] = map.select_prev_item(select),
+                    ["<C-j>"] = map.select_next_item(select),
+                    ["<C-l>"] = map.confirm({ select = true }),
+                }),
+                formatting = require("lsp-zero").cmp_format(),
+                experimental = { ghost_text = false, },
+            })
+        end,
+    },
 
     {
         "VonHeikemen/lsp-zero.nvim",

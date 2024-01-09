@@ -27,10 +27,10 @@ return {
         end,
     },
 
-
     {
         "nvim-telescope/telescope.nvim",
         tag = "0.1.4",
+        dependencies = { "nvim-lua/plenary.nvim" },
         opts = {
             defaults = {
                 layout_strategy = "horizontal",
@@ -43,25 +43,42 @@ return {
                         prompt_position = "top",
                         width = 0.9,
                     },
-                }
-            }
+                },
+            },
         },
-        dependencies = { "nvim-lua/plenary.nvim" },
+        config = function(_, opts)
+            require("telescope").setup(opts)
+            local builtin = require("telescope.builtin")
+
+            local hidden_files = function()
+                builtin.find_files({
+                    hidden = true,
+                    no_ignore = true,
+                    no_ignore_parent = true,
+                })
+            end
+
+            vim.keymap.set("n", "<leader>f", builtin.find_files)
+            vim.keymap.set("n", "<leader>g", builtin.live_grep)
+            vim.keymap.set("n", "<leader>b", builtin.buffers)
+            vim.keymap.set("n", "<leader>h", builtin.help_tags)
+            vim.keymap.set("n", "<leader>H", hidden_files)
+            vim.keymap.set("n", "<leader>?", builtin.keymaps)
+        end,
     },
 
     {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
         config = function(_, _)
-            require("nvim-treesitter.configs").setup(
-                {
-                    auto_install = true,
-                    sync_install = false,
-                    highlight = {
-                        enable = true,
-                        additional_vim_regex_highlighting = false,
-                    },
-                })
+            require("nvim-treesitter.configs").setup({
+                auto_install = true,
+                sync_install = false,
+                highlight = {
+                    enable = true,
+                    additional_vim_regex_highlighting = false,
+                },
+            })
         end,
     },
 
@@ -71,5 +88,13 @@ return {
         config = function()
             require("leap").add_default_mappings()
         end,
+    },
+
+    {
+        "stevearc/oil.nvim",
+        opts = {},
+        keys = {
+            { "-", "<cmd>Oil<cr>", desc = "Open parent directory" },
+        },
     },
 }
