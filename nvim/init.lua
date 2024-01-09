@@ -60,6 +60,12 @@ cmp.setup({
             require("luasnip").lsp_expand(args.body)
         end,
     },
+    sources = {
+        { name = "nvim_lsp" },
+        { name = "copilot" },
+        { name = "luasnip" },
+        { name = "nvim_lua" },
+    },
     mapping = cmp.mapping.preset.insert({
         -- select cmp options
         ["<C-d>"] = cmp.mapping.scroll_docs(-4),
