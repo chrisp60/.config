@@ -1,4 +1,28 @@
 return {
+    {
+        "NvChad/nvim-colorizer.lua",
+        opts = {
+            user_default_options = {
+                css = true,          -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
+                -- foreground, background,  virtualtext
+                mode = "background", -- Set the display mode.
+                virtualtext = "~",
+            }
+        },
+        keys = {
+            {
+                "<leader>css",
+                function()
+                    local colorizer = require("colorizer")
+                    if colorizer.is_buffer_attached() then
+                        colorizer.detach_from_buffer()
+                    else
+                        colorizer.attach_to_buffer()
+                    end
+                end
+            },
+        },
+    },
     "folke/neodev.nvim",
     {
         "tpope/vim-fugitive",
