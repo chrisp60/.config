@@ -1,6 +1,11 @@
 return {
     "folke/neodev.nvim",
-    "tpope/vim-fugitive",
+    {
+        "tpope/vim-fugitive",
+        keys = {
+            { "<leader>t", "<cmd>:vertical :Git<cr>" },
+        },
+    },
     "tpope/vim-surround",
     "christoomey/vim-tmux-navigator",
     "tpope/vim-repeat",
