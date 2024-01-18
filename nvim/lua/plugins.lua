@@ -26,6 +26,7 @@ return {
     "folke/neodev.nvim",
     {
         "tpope/vim-fugitive",
+        lazy = false,
         keys = {
             { "<leader>t", "<cmd>:vertical :Git<cr>" },
         },
