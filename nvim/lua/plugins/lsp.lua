@@ -9,7 +9,7 @@ return {
     {
         "hrsh7th/nvim-cmp",
         dependencies = {
-            { "VonHeikemen/lsp-zero.nvim", },
+            { "VonHeikemen/lsp-zero.nvim" },
         },
         config = function()
             -- nvim cmp
@@ -37,7 +37,7 @@ return {
                     ["<C-l>"] = map.confirm({ select = true }),
                 }),
                 formatting = require("lsp-zero").cmp_format(),
-                experimental = { ghost_text = false, },
+                experimental = { ghost_text = false },
             })
         end,
     },
@@ -50,7 +50,7 @@ return {
         },
         branch = "v3.x",
         config = function()
-            require('lsp-zero').on_attach(function()
+            require("lsp-zero").on_attach(function()
                 require("lsp-zero").buffer_autoformat()
                 local tele = require("telescope.builtin")
 
@@ -84,7 +84,7 @@ return {
 
     {
         "williamboman/mason.nvim",
-        opts = {}
+        opts = {},
     },
 
     {
@@ -98,21 +98,30 @@ return {
             require("mason-lspconfig").setup({
                 ensure_installed = {},
                 handlers = {
-                    require('lsp-zero').default_setup,
+                    require("lsp-zero").default_setup,
                     lua_ls = function()
-                        require("lspconfig").lua_ls.setup(require('lsp-zero').nvim_lua_ls({}))
+                        require("lspconfig").lua_ls.setup(require("lsp-zero").nvim_lua_ls({}))
                     end,
                     rust_analyzer = function()
                         require("lspconfig")["rust_analyzer"].setup({
                             settings = {
                                 ["rust-analyzer"] = {
                                     cargo = {
-                                        features = "all"
+                                        features = "all",
                                     },
                                     diagnostics = {
                                         disabled = {
                                             "inactive-code",
-                                            "unlinked-file"
+                                            "unlinked-file",
+                                        },
+                                    },
+                                    rustfmt = {
+                                        overrideCommand = {
+                                            "leptosfmt",
+                                            "--stdin",
+                                            "--rustfmt",
+                                            "--max-width=100",
+                                            "--tab-spaces=2",
                                         },
                                     },
                                     check = {
@@ -121,12 +130,11 @@ return {
                                     },
                                     -- completion = { postfix = { enable = false } },
                                 },
-                            }
+                            },
                         })
                     end,
                 },
             })
         end,
-
     },
 }
