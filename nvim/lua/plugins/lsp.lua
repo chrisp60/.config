@@ -1,4 +1,51 @@
 -- lsp
+local rust_analyzer_settings = {
+    cargo = {
+        features = "all",
+        buildScripts = {
+            rebuildOnSave = true,
+
+        },
+    },
+    diagnostics = {
+        disabled = {
+            "inactive-code",
+            "unlinked-file",
+        },
+        experimental = {
+            enable = true,
+        },
+
+    },
+    rustfmt = {
+        overrideCommand = {
+            "leptosfmt",
+            "--stdin",
+            "--rustfmt",
+            "--max-width=80",
+            "--tab-spaces=2",
+        },
+    },
+    check = {
+        features = "all",
+        command = "clippy",
+    },
+    completion = {
+        fullFunctionSignatures = true,
+        postfix = {
+            enable = true,
+        }
+    },
+    inlayHints = {
+        bindingModeHints = { enable = true },
+        closureCaptureHints = { enable = true },
+        closureReturnTypes = { enable = true },
+        implicitDrops = { enable = true },
+        liftetimeElisionHints = { enable = "always" },
+
+    }
+}
+
 return {
     { "wesleimp/stylua.nvim", ft = "lua" },
 
@@ -105,31 +152,7 @@ return {
                     rust_analyzer = function()
                         require("lspconfig")["rust_analyzer"].setup({
                             settings = {
-                                ["rust-analyzer"] = {
-                                    cargo = {
-                                        features = "all",
-                                    },
-                                    diagnostics = {
-                                        disabled = {
-                                            "inactive-code",
-                                            "unlinked-file",
-                                        },
-                                    },
-                                    rustfmt = {
-                                        overrideCommand = {
-                                            "leptosfmt",
-                                            "--stdin",
-                                            "--rustfmt",
-                                            "--max-width=100",
-                                            "--tab-spaces=2",
-                                        },
-                                    },
-                                    check = {
-                                        features = "all",
-                                        command = "clippy",
-                                    },
-                                    -- completion = { postfix = { enable = false } },
-                                },
+                                ["rust-analyzer"] = rust_analyzer_settings,
                             },
                         })
                     end,
