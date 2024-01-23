@@ -1,4 +1,9 @@
 return {
+
+    {
+        "NoahTheDuke/vim-just",
+        ft = { "just" },
+    },
     {
         "NvChad/nvim-colorizer.lua",
         opts = {
@@ -67,6 +72,8 @@ return {
                 })
             end
 
+            vim.keymap.set("n", "<leader>f", builtin.lsp_outgoing_calls)
+            vim.keymap.set("n", "<leader>f", builtin.lsp_outgoing_calls)
             vim.keymap.set("n", "<leader>f", builtin.find_files)
             vim.keymap.set("n", "<leader>g", builtin.live_grep)
             vim.keymap.set("n", "<leader>b", builtin.buffers)
@@ -88,14 +95,6 @@ return {
                     additional_vim_regex_highlighting = false,
                 },
             })
-        end,
-    },
-
-    {
-        "ggandor/leap.nvim",
-        dependencies = "tpope/vim-repeat",
-        config = function()
-            require("leap").add_default_mappings()
         end,
     },
 
