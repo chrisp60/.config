@@ -35,27 +35,6 @@ return {
     "christoomey/vim-tmux-navigator",
     "tpope/vim-repeat",
 
-    {
-        "saecki/crates.nvim",
-        event = { "BufRead Cargo.toml" },
-        dependencies = { "nvim-lua/plenary.nvim" },
-        opts = {
-            popup = { autofocus = true },
-        },
-        config = function(_, opts)
-            local c = require("crates")
-            c.setup(opts)
-            vim.keymap.set("n", "<leader>ct", c.toggle)
-            vim.keymap.set("n", "<leader>cr", c.reload)
-            vim.keymap.set("n", "<leader>cv", c.show_versions_popup)
-            vim.keymap.set("n", "<leader>cf", c.show_features_popup)
-            vim.keymap.set("n", "<leader>ce", c.expand_plain_crate_to_inline_table)
-            vim.keymap.set("n", "<leader>cE", c.extract_crate_into_table)
-            vim.keymap.set("n", "<leader>cg", c.open_repository)
-            vim.keymap.set("n", "<leader>cd", c.open_documentation)
-            vim.keymap.set("n", "<leader>cc", c.open_crates_io)
-        end,
-    },
 
     {
         "nvim-telescope/telescope.nvim",
