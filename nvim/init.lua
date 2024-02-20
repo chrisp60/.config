@@ -1,4 +1,17 @@
+-- Reinstalling neovim
+-- https://github.com/neovim/neovim/blob/master/INSTALL.md#pre-built-archives-2
+-- -----------------------------------------------------------------------
+-- curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
+-- sudo rm -rf /opt/nvim
+-- sudo tar -C /opt -xzf nvim-linux64.tar.gz
+--
+-- add to .zshrc
+-- export PATH="$PATH:/opt/nvim/"
+
 vim.g.mapleader = " "
+
+-- Lsp clients are noisy
+vim.lsp.set_log_level("ERROR")
 
 vim.opt.undofile = true
 vim.opt.backup = false
