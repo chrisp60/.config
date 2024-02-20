@@ -35,6 +35,8 @@ local rust_analyzer_settings = {
             "leptosfmt",
             "--stdin",
             "--rustfmt",
+            "--max-width=90",
+            "--tab-spaces=2",
         },
     },
     check = {
