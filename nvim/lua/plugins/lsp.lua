@@ -35,7 +35,6 @@ local rust_analyzer_settings = {
             "leptosfmt",
             "--stdin",
             "--rustfmt",
-            "-t=2",
         },
     },
     check = {
