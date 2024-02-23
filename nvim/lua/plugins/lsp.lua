@@ -128,11 +128,6 @@ return {
                 vim.keymap.set("n", "gp", vim.diagnostic.goto_prev)
 
                 vim.keymap.set({ "n", "v", "x" }, "ga", vim.lsp.buf.code_action)
-
-                vim.keymap.set({ "n", "v", "x" }, "<leader>i", function()
-                    local current = vim.lsp.inlay_hint.is_enabled(0)
-                    vim.lsp.inlay_hint.enable(0, not current)
-                end)
             end)
         end,
     },
