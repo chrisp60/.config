@@ -1,19 +1,4 @@
 -- lsp
-local function inspect_token()
-    local token = vim.lsp.semantic_tokens.get_at_pos()[1]
-    local LEVEL = vim.log.levels.INFO
-    if token ~= nil then
-        local msg = vim.inspect({
-            token.type,
-            token.modifiers,
-        })
-        vim.notify(msg, LEVEL)
-    else
-        vim.notify("No token under cursor", LEVEL)
-    end
-end
-
-
 local rust_analyzer_settings = {
     cargo = {
         features = "all",
@@ -113,7 +98,6 @@ return {
                 require("lsp-zero").buffer_autoformat()
                 local tele = require("telescope.builtin")
 
-                vim.keymap.set("n", "<leader>e", inspect_token)
                 vim.keymap.set("n", "<leader>R", tele.lsp_references)
                 vim.keymap.set("n", "<leader>S", tele.lsp_document_symbols)
                 vim.keymap.set("n", "<leader>d", tele.diagnostics)

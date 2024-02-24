@@ -65,6 +65,22 @@ require("lazy").setup("plugins", lazy_opts)
 
 vim.cmd.colorscheme(catppuccin_flavor())
 
+local function inspect_token()
+    local token = vim.lsp.semantic_tokens.get_at_pos()[1]
+    local captures = vim.treesitter.get_captures_at_cursor()
+    local LEVEL = vim.log.levels.INFO
+    local msg = vim.inspect({
+        type = token.type,
+        modifiers = token.modifiers,
+        ts_captures = captures,
+    })
+    vim.notify(msg, LEVEL)
+end
+
+
+vim.keymap.set("n", "<leader>e", inspect_token)
+vim.keymap.set("n", "<leader>i", "<cmd>:TSToggle highlight<cr>")
+
 vim.diagnostic.config({
     virtual_text = true,
     underline = false,
