@@ -1,0 +1,19 @@
+[core]
+	editor = nvim
+[user]
+	name = chrisp60
+	email = 89366859+chrisp60@users.noreply.github.com
+[credential "https://github.com"]
+	helper = !/usr/bin/gh auth git-credential
+[diff]
+	tool = nvimdiff
+[pull]
+	rebase = true
+	ff = false
+[init]
+	defaultBranch = main
+[rebase]
+	autosquash = true
+[alias]
+	s = status --short
+	l = log --oneline
