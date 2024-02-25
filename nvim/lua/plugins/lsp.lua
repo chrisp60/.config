@@ -1,4 +1,30 @@
 -- lsp
+
+-- TODO: it would be very nice to see path names for rust completions when dealing
+-- with workspaces where the containing module provides context for the struct.
+-- i.e `std::io::Error` and `crate::my_module::Error` will both show as `Error`,
+-- It would be preferable to see `std::io::Error` and `my_module::Error` in the
+-- suggestion list.
+--
+-- I borrowed (stole) this from the below repo
+-- and need to get around to actually understanding more about nvim-cmp
+--
+-- https://github.com/ditsuke/nvim-config \
+-- /blob/de9782ada805649cb397fc492aabfe32552c1796 \
+-- /lua/ditsuke/plugins/editor/cmp.lua#L40C1-L63C4
+
+---@diagnostic disable-next-line: unused-local, unused-function
+local function get_lsp_completion_context(completion, source)
+    local ok, source_name = pcall(function() return source.source.client.config.name end)
+    if not ok then
+        return nil
+    end
+    if source_name == "rust_analyzer" then
+        vim.print(completion.detail)
+        -- return completion.detail
+    end
+end
+
 local rust_analyzer_settings = {
     cargo = {
         features = "all",
