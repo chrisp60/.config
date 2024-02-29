@@ -81,8 +81,20 @@ end
 vim.keymap.set("n", "<leader>e", inspect_token)
 vim.keymap.set("n", "<leader>i", "<cmd>:TSToggle highlight<cr>")
 
+
+
+vim.keymap.set("n", "<leader>q", function()
+    vim.diagnostic.config({ virtual_text = { severity = { min = vim.diagnostic.severity.ERROR } }, })
+    vim.notify("Set diganostics to ERROR", vim.log.levels.INFO)
+end)
+vim.keymap.set("n", "<leader>Q", function()
+    vim.diagnostic.config({ virtual_text = { severity = { min = vim.diagnostic.severity.WARN } }, })
+    vim.notify("Set diganostics to WARN", vim.log.levels.INFO)
+end)
+
+
 vim.diagnostic.config({
-    virtual_text = true,
+    virtual_text = { severity = { min = vim.diagnostic.severity.ERROR } },
     underline = false,
     update_in_insert = true,
     signs = false,

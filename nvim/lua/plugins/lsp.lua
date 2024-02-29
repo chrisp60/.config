@@ -37,9 +37,6 @@ local rust_analyzer_settings = {
             "inactive-code",
             "unlinked-file",
         },
-        experimental = {
-            enable = true,
-        },
     },
     rustfmt = {
         overrideCommand = {
