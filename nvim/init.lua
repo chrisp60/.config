@@ -65,36 +65,28 @@ require("lazy").setup("plugins", lazy_opts)
 
 vim.cmd.colorscheme(catppuccin_flavor())
 
-local function inspect_token()
-    local token = vim.lsp.semantic_tokens.get_at_pos()[1]
-    local captures = vim.treesitter.get_captures_at_cursor()
-    local LEVEL = vim.log.levels.INFO
-    local msg = vim.inspect({
-        type = token.type,
-        modifiers = token.modifiers,
-        ts_captures = captures,
-    })
-    vim.notify(msg, LEVEL)
-end
-
-
-vim.keymap.set("n", "<leader>e", inspect_token)
 vim.keymap.set("n", "<leader>i", "<cmd>:TSToggle highlight<cr>")
 
+---@param level integer|nil One of the values from |vim.log.levels|.
+local function set_severity(level)
+    vim.diagnostic.config({
+        virtual_text = { severity = { min = level } },
+    })
+    vim.keymap.set('n', "<leader>n", function()
+        vim.diagnostic.goto_next({ severity = { min = level } })
+    end)
+    vim.keymap.set('n', "<leader>p", function()
+        vim.diagnostic.goto_prev({ severity = { min = level } })
+    end)
+    vim.notify("Diagnostics set to " .. level, vim.log.levels.INFO)
+end
 
-
-vim.keymap.set("n", "<leader>q", function()
-    vim.diagnostic.config({ virtual_text = { severity = { min = vim.diagnostic.severity.ERROR } }, })
-    vim.notify("Set diganostics to ERROR", vim.log.levels.INFO)
-end)
-vim.keymap.set("n", "<leader>Q", function()
-    vim.diagnostic.config({ virtual_text = { severity = { min = vim.diagnostic.severity.WARN } }, })
-    vim.notify("Set diganostics to WARN", vim.log.levels.INFO)
-end)
+vim.keymap.set("n", "<leader>q", function() set_severity(vim.log.levels.ERROR) end)
+vim.keymap.set("n", "<leader>Q", function() set_severity(vim.log.levels.WARN) end)
 
 
 vim.diagnostic.config({
-    virtual_text = { severity = { min = vim.diagnostic.severity.ERROR } },
+    virtual_text = true,
     underline = false,
     update_in_insert = true,
     signs = false,

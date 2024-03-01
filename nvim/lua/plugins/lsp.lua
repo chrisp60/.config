@@ -131,8 +131,22 @@ return {
                 vim.keymap.set("n", "K", vim.lsp.buf.hover)
                 vim.keymap.set("n", "gd", vim.lsp.buf.definition)
 
-                vim.keymap.set("n", "gn", vim.diagnostic.goto_next)
-                vim.keymap.set("n", "gp", vim.diagnostic.goto_prev)
+                vim.keymap.set("n", "gn",
+                    function()
+                        vim.diagnostic.goto_next({
+                            severity = {
+                                min = vim.diagnostic.severity.ERROR
+                            }
+                        })
+                    end
+                )
+                vim.keymap.set("n", "gp", function()
+                    vim.diagnostic.goto_prev({
+                        severity = {
+                            min = vim.diagnostic.severity.ERROR
+                        }
+                    })
+                end)
 
                 vim.keymap.set({ "n", "v", "x" }, "ga", vim.lsp.buf.code_action)
             end)
