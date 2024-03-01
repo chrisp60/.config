@@ -131,6 +131,10 @@ return {
                 vim.keymap.set("n", "K", vim.lsp.buf.hover)
                 vim.keymap.set("n", "gd", vim.lsp.buf.definition)
 
+                vim.keymap.set({ "n", "v", "x" }, "<leader>I", function()
+                    vim.lsp.inlay_hint.enable(0, not vim.lsp.inlay_hint.is_enabled(0))
+                end)
+
                 vim.keymap.set("n", "gn",
                     function()
                         vim.diagnostic.goto_next({
