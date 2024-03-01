@@ -1,0 +1,59 @@
+{
+  "parser-directories": [
+    "/home/chris/github",
+    "/home/chris/src",
+    "/home/chris/source",
+    "/home/chris/projects",
+    "/home/chris/dev",
+    "/home/chris/git"
+  ],
+  "theme": {
+    "string.special": 30,
+    "type.builtin": {
+      "color": 23,
+      "bold": true
+    },
+    "property": 124,
+    "module": 136,
+    "keyword": 56,
+    "type": 23,
+    "function": 26,
+    "constant": 94,
+    "embedded": null,
+    "punctuation.bracket": 239,
+    "operator": {
+      "bold": true,
+      "color": 239
+    },
+    "number": {
+      "color": 94,
+      "bold": true
+    },
+    "punctuation.delimiter": 239,
+    "string": 28,
+    "attribute": {
+      "color": 124,
+      "italic": true
+    },
+    "comment": {
+      "italic": true,
+      "color": 245
+    },
+    "tag": 18,
+    "constant.builtin": {
+      "color": 94,
+      "bold": true
+    },
+    "function.builtin": {
+      "bold": true,
+      "color": 26
+    },
+    "variable.builtin": {
+      "bold": true
+    },
+    "variable.parameter": {
+      "underline": true
+    },
+    "constructor": 136
+  }
+}
