@@ -89,6 +89,9 @@ return {
         config = function(_, _)
             require("nvim-treesitter.configs").setup({
                 auto_install = true,
+                ensure_installed = {
+                    "c", "vim", "lua",
+                },
                 sync_install = false,
                 highlight = {
                     enable = true,

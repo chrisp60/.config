@@ -119,8 +119,16 @@ return {
         config = function()
             require("lsp-zero").on_attach(function()
                 require("lsp-zero").buffer_autoformat()
-                local tele = require("telescope.builtin")
 
+                vim.api.nvim_set_hl(0, "@lsp.type.decorator.rust", {
+                    link = "@lsp.type.function"
+                })
+                vim.api.nvim_set_hl(0, "@lsp.type.decorator.rust", {
+                    link = "@lsp.type.function"
+                })
+                vim.api.nvim_set_hl_ns(0)
+
+                local tele = require("telescope.builtin")
                 vim.keymap.set("n", "<leader>R", tele.lsp_references)
                 vim.keymap.set("n", "<leader>S", tele.lsp_document_symbols)
                 vim.keymap.set("n", "<leader>d", tele.diagnostics)
