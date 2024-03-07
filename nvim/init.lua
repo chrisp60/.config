@@ -67,27 +67,34 @@ vim.cmd.colorscheme(catppuccin_flavor())
 
 vim.keymap.set("n", "<leader>i", "<cmd>:TSToggle highlight<cr>")
 
----@param level integer|nil One of the values from |vim.log.levels|.
-local function set_severity(level)
+-- I like to dynamically change diagnostic levels depending on what is being
+-- done. i.e. refactoring is just ERRORs, implementing includes WARN.
+local ERROR = vim.diagnostic.severity.ERROR
+local WARN = vim.diagnostic.severity.WARN
+
+-- Update severity for virtual text and keymaps.
+local function update_diagnostic_mapping(level)
+    local min = { severity = { min = level } }
     vim.diagnostic.config({
-        virtual_text = { severity = { min = level } },
+        virtual_text = min,
+        update_in_insert = true,
+        signs = false,
+        underline = false,
     })
-    vim.keymap.set('n', "<leader>n", function()
-        vim.diagnostic.goto_next({ severity = { min = level } })
+    vim.keymap.set("n", "gn", function()
+        vim.diagnostic.goto_next(min)
     end)
-    vim.keymap.set('n', "<leader>p", function()
-        vim.diagnostic.goto_prev({ severity = { min = level } })
+    vim.keymap.set("n", "gp", function()
+        vim.diagnostic.goto_prev(min)
     end)
-    vim.notify("Diagnostics set to " .. level, vim.log.levels.INFO)
+    vim.notify("Diagnostics set to " .. level, 1)
 end
 
-vim.keymap.set("n", "<leader>q", function() set_severity(vim.log.levels.ERROR) end)
-vim.keymap.set("n", "<leader>Q", function() set_severity(vim.log.levels.WARN) end)
+update_diagnostic_mapping(ERROR)
 
-
-vim.diagnostic.config({
-    virtual_text = true,
-    underline = false,
-    update_in_insert = true,
-    signs = false,
-})
+vim.keymap.set("n", "<leader>q", function()
+    update_diagnostic_mapping(ERROR)
+end)
+vim.keymap.set("n", "<leader>Q", function()
+    update_diagnostic_mapping(WARN)
+end)

@@ -143,22 +143,6 @@ return {
                     vim.lsp.inlay_hint.enable(0, not vim.lsp.inlay_hint.is_enabled(0))
                 end)
 
-                vim.keymap.set("n", "gn",
-                    function()
-                        vim.diagnostic.goto_next({
-                            severity = {
-                                min = vim.diagnostic.severity.ERROR
-                            }
-                        })
-                    end
-                )
-                vim.keymap.set("n", "gp", function()
-                    vim.diagnostic.goto_prev({
-                        severity = {
-                            min = vim.diagnostic.severity.ERROR
-                        }
-                    })
-                end)
 
                 vim.keymap.set({ "n", "v", "x" }, "ga", vim.lsp.buf.code_action)
             end)
