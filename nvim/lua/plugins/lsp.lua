@@ -43,7 +43,6 @@ local rust_analyzer_settings = {
             "leptosfmt",
             "--stdin",
             "--rustfmt",
-            "--max-width=90",
             "--tab-spaces=2",
         },
     },
@@ -90,7 +89,13 @@ return {
                     end,
                 },
                 sources = {
-                    { name = "nvim_lsp" },
+                    {
+                        name = "nvim_lsp",
+                        entry_filter = function(entry, ctx)
+                            -- snippets take up a ton of space for some reason
+                            return require('cmp.types').lsp.CompletionItemKind[entry:get_kind()] ~= 'snippet'
+                        end
+                    },
                     { name = "copilot" },
                     { name = "luasnip" },
                     { name = "nvim_lua" },
@@ -117,8 +122,18 @@ return {
         },
         branch = "v3.x",
         config = function()
-            require("lsp-zero").on_attach(function()
-                require("lsp-zero").buffer_autoformat()
+            require("lsp-zero").on_attach(function(client, bufnr)
+                if client.name == "html" then
+                    vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+                        pattern = { "*.html" },
+                        callback = function(ev)
+                            vim.cmd([[%!prettierd %]])
+                        end
+                    })
+                else
+                    require("lsp-zero").buffer_autoformat()
+                end
+
 
                 vim.api.nvim_set_hl(0, "@lsp.type.decorator.rust", {
                     link = "@lsp.type.function"
