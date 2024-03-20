@@ -1,5 +1,9 @@
 return {
     {
+        "freitass/todo.txt-vim",
+    },
+
+    {
         "NoahTheDuke/vim-just",
         ft = { "just" },
     },

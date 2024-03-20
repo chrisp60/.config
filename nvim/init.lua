@@ -9,6 +9,7 @@
 -- export PATH="$PATH:/opt/nvim/"
 
 vim.g.mapleader = " "
+vim.g.maplocalleader = "_"
 
 -- Lsp clients are noisy
 vim.lsp.set_log_level("ERROR")
