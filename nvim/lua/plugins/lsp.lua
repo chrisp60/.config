@@ -38,14 +38,6 @@ local rust_analyzer_settings = {
             "unlinked-file",
         },
     },
-    rustfmt = {
-        overrideCommand = {
-            "leptosfmt",
-            "--stdin",
-            "--rustfmt",
-            "--tab-spaces=2",
-        },
-    },
     check = {
         features = "all",
         command = "clippy",
@@ -91,10 +83,6 @@ return {
                 sources = {
                     {
                         name = "nvim_lsp",
-                        entry_filter = function(entry, ctx)
-                            -- snippets take up a ton of space for some reason
-                            return require('cmp.types').lsp.CompletionItemKind[entry:get_kind()] ~= 'snippet'
-                        end
                     },
                     { name = "copilot" },
                     { name = "luasnip" },
@@ -108,7 +96,7 @@ return {
                     ["<C-j>"] = map.select_next_item(select),
                     ["<C-l>"] = map.confirm({ select = true }),
                 }),
-                formatting = require("lsp-zero").cmp_format(),
+                formatting = require("lsp-zero").cmp_format({ details = true }),
                 experimental = { ghost_text = false },
             })
         end,
@@ -135,26 +123,30 @@ return {
                 end
 
 
-                vim.api.nvim_set_hl(0, "@lsp.type.decorator.rust", {
-                    link = "@lsp.type.function"
-                })
-                vim.api.nvim_set_hl(0, "@lsp.type.decorator.rust", {
-                    link = "@lsp.type.function"
-                })
-                vim.api.nvim_set_hl_ns(0)
+                -- vim.api.nvim_set_hl(0, "@lsp.type.decorator.rust", {
+                --     link = "@lsp.type.function"
+                -- })
+                -- vim.api.nvim_set_hl(0, "@lsp.type.decorator.rust", {
+                --     link = "@lsp.type.function"
+                -- })
+                -- vim.api.nvim_set_hl_ns(0)
+
+                vim.keymap.set("n", "gn", vim.diagnostic.goto_next)
+                vim.keymap.set("n", "gp", vim.diagnostic.goto_prev)
 
                 local tele = require("telescope.builtin")
+                vim.keymap.set("n", "<leader>I", tele.lsp_incoming_calls)
                 vim.keymap.set("n", "<leader>R", tele.lsp_references)
                 vim.keymap.set("n", "<leader>S", tele.lsp_document_symbols)
                 vim.keymap.set("n", "<leader>d", tele.diagnostics)
-                vim.keymap.set("n", "<leader>s", tele.lsp_dynamic_workspace_symbols)
+                vim.keymap.set("n", "<leader>s", tele.lsp_workspace_symbols)
 
                 vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help)
                 vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename)
                 vim.keymap.set("n", "K", vim.lsp.buf.hover)
                 vim.keymap.set("n", "gd", vim.lsp.buf.definition)
 
-                vim.keymap.set({ "n", "v", "x" }, "<leader>I", function()
+                vim.keymap.set({ "n", "v", "x" }, "<leader>i", function()
                     vim.lsp.inlay_hint.enable(0, not vim.lsp.inlay_hint.is_enabled(0))
                 end)
 
