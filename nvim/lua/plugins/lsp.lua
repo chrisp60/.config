@@ -28,9 +28,6 @@ end
 local rust_analyzer_settings = {
     cargo = {
         features = "all",
-        buildScripts = {
-            rebuildOnSave = true,
-        },
     },
     diagnostics = {
         disabled = {
@@ -42,18 +39,14 @@ local rust_analyzer_settings = {
         features = "all",
         command = "clippy",
     },
-    completion = {
-        fullFunctionSignatures = true,
-        postfix = {
+    hover = {
+        memoryLayout = {
             enable = true,
+            alignment = "both",
+            niches = true,
+            offset = "both",
+            size = "both",
         },
-    },
-    inlayHints = {
-        bindingModeHints = { enable = true },
-        closureCaptureHints = { enable = true },
-        closureReturnTypes = { enable = true },
-        implicitDrops = { enable = true },
-        liftetimeElisionHints = { enable = "always" },
     },
 }
 
