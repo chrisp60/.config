@@ -1,4 +1,5 @@
 -- lsp
+
 local rust_analyzer_settings = {
     cargo = {
         features = "all",
@@ -27,14 +28,14 @@ local rust_analyzer_settings = {
 return {
     { "wesleimp/stylua.nvim", ft = "lua" },
 
-    "hrsh7th/cmp-nvim-lsp",
-    "L3MON4D3/LuaSnip",
-    "saadparwaiz1/cmp_luasnip",
 
     {
         "hrsh7th/nvim-cmp",
         dependencies = {
-            { "VonHeikemen/lsp-zero.nvim" },
+            "hrsh7th/cmp-nvim-lsp",
+            "saadparwaiz1/cmp_luasnip",
+            "VonHeikemen/lsp-zero.nvim",
+            "L3MON4D3/LuaSnip",
         },
         config = function()
             -- nvim cmp
@@ -82,7 +83,7 @@ return {
                     vim.api.nvim_create_autocmd({ "BufWritePre" }, {
                         pattern = { "*.html" },
                         callback = function(ev)
-                            vim.cmd([[%!prettierd %]])
+                            -- vim.cmd([[%!prettierd %]])
                         end
                     })
                 else

@@ -31,7 +31,7 @@ return {
             },
         },
     },
-    "folke/neodev.nvim",
+    { "folke/neodev.nvim", opts = {} },
     {
         "tpope/vim-fugitive",
         lazy = false,
