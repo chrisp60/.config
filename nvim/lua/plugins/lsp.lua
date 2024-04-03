@@ -1,5 +1,7 @@
 -- lsp
 
+local div_bar = "////////////////////////////////////////////////////////////////////////////////"
+
 local rust_analyzer_settings = {
     cargo = {
         features = "all",
@@ -26,75 +28,73 @@ local rust_analyzer_settings = {
 }
 
 return {
-    { "wesleimp/stylua.nvim", ft = "lua" },
-
-
+    { "wesleimp/stylua.nvim" },
+    {
+        "L3MON4D3/LuaSnip",
+        opts = function()
+            local ls = require("luasnip")
+            local snippet = ls.snippet
+            local text = ls.text_node
+            ls.add_snippets("all", {
+                snippet({ trig = "//" }, {
+                    text({ div_bar, "//", div_bar }),
+                })
+            })
+        end
+    },
     {
         "hrsh7th/nvim-cmp",
         dependencies = {
-            "hrsh7th/cmp-nvim-lsp",
             "saadparwaiz1/cmp_luasnip",
             "VonHeikemen/lsp-zero.nvim",
+            "hrsh7th/cmp-nvim-lsp",
             "L3MON4D3/LuaSnip",
         },
-        config = function()
-            -- nvim cmp
+        opts = function()
             local cmp = require("cmp")
-            local select = { behavior = cmp.SelectBehavior.Select }
-            local map = cmp.mapping
-            cmp.setup({
+            return {
                 snippet = {
                     expand = function(args)
                         require("luasnip").lsp_expand(args.body)
                     end,
                 },
                 sources = {
-                    {
-                        name = "nvim_lsp",
-                    },
+                    { name = "nvim_lsp" },
                     { name = "copilot" },
                     { name = "luasnip" },
                     { name = "nvim_lua" },
                 },
-                mapping = map.preset.insert({
+                mapping = cmp.mapping.preset.insert({
                     -- select cmp options
-                    ["<C-d>"] = map.scroll_docs(-4),
-                    ["<C-f>"] = map.scroll_docs(4),
-                    ["<C-k>"] = map.select_prev_item(select),
-                    ["<C-j>"] = map.select_next_item(select),
-                    ["<C-l>"] = map.confirm({ select = true }),
+                    ["<C-d>"] = cmp.mapping.scroll_docs(-4),
+                    ["<C-f>"] = cmp.mapping.scroll_docs(4),
+                    ["<C-k>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
+                    ["<C-j>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
+                    ["<C-l>"] = cmp.mapping.confirm({ select = true }),
                 }),
                 formatting = require("lsp-zero").cmp_format({ details = true }),
-                experimental = { ghost_text = false },
-            })
+                experimental = {
+                    ghost_text = false,
+                },
+            }
         end,
     },
 
     {
         "VonHeikemen/lsp-zero.nvim",
-        lazy = true,
         dependencies = {
             "neovim/nvim-lspconfig",
         },
         branch = "v3.x",
         config = function()
-            require("lsp-zero").on_attach(function(client, bufnr)
-                if client.name == "html" then
-                    vim.api.nvim_create_autocmd({ "BufWritePre" }, {
-                        pattern = { "*.html" },
-                        callback = function(ev)
-                            -- vim.cmd([[%!prettierd %]])
-                        end
-                    })
-                else
-                    require("lsp-zero").buffer_autoformat()
-                end
+            require("lsp-zero").on_attach(function()
+                require("lsp-zero").buffer_autoformat()
 
                 -- the semantic tokens for decorators became ugly for some
                 -- reason, so we're linking it to the function token
                 -- (the superior pretty one).
                 vim.api.nvim_set_hl(0, "@lsp.type.decorator.rust", {
-                    link = "@lsp.type.function"
+                    link = "@lsp.type.function",
                 })
                 vim.api.nvim_set_hl_ns(0)
 
@@ -117,7 +117,6 @@ return {
                     vim.lsp.inlay_hint.enable(0, not vim.lsp.inlay_hint.is_enabled(0))
                 end)
 
-
                 vim.keymap.set({ "n", "v", "x" }, "ga", vim.lsp.buf.code_action)
             end)
         end,
@@ -127,7 +126,6 @@ return {
         "neovim/nvim-lspconfig",
         lazy = false,
     },
-
     {
         "williamboman/mason.nvim",
         opts = {},
