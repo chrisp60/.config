@@ -87,8 +87,17 @@ return {
         },
         branch = "v3.x",
         config = function()
-            require("lsp-zero").on_attach(function()
-                require("lsp-zero").buffer_autoformat()
+            require("lsp-zero").on_attach(function(client, _)
+                if client.name == "html" then
+                    vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+                        pattern = { "*.html" },
+                        callback = function()
+                            vim.cmd([[%!prettierd %]])
+                        end
+                    })
+                else
+                    require("lsp-zero").buffer_autoformat()
+                end
 
                 -- the semantic tokens for decorators became ugly for some
                 -- reason, so we're linking it to the function token
@@ -158,3 +167,4 @@ return {
         end,
     },
 }
+
