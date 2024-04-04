@@ -64,6 +64,7 @@ return {
     {
         "VonHeikemen/lsp-zero.nvim",
         dependencies = {
+            "folke/neodev.nvim",
             "neovim/nvim-lspconfig",
         },
         branch = "v3.x",
@@ -115,6 +116,9 @@ return {
     {
         "neovim/nvim-lspconfig",
         lazy = false,
+        dependencies = {
+            "folke/neodev.nvim",
+        },
     },
     {
         "williamboman/mason.nvim",

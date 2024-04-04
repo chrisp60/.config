@@ -4,7 +4,6 @@ return {
     "tpope/vim-repeat",
     "wesleimp/stylua.nvim",
     "freitass/todo.txt-vim",
-    "folke/neodev.nvim",
     {
         "tpope/vim-fugitive",
         lazy = false,
