@@ -2,33 +2,17 @@
 
 local div_bar = "////////////////////////////////////////////////////////////////////////////////"
 
-local rust_analyzer_settings = {
-    cargo = {
-        features = "all",
-    },
-    diagnostics = {
-        disabled = {
-            "inactive-code",
-            "unlinked-file",
-        },
-    },
-    check = {
-        features = "all",
-        command = "clippy",
-    },
-    hover = {
-        memoryLayout = {
-            enable = true,
-            alignment = "both",
-            niches = true,
-            offset = "both",
-            size = "both",
-        },
-    },
-}
-
 return {
-    { "wesleimp/stylua.nvim" },
+    {
+        "wesleimp/stylua.nvim",
+        ft = "lua",
+        config = function()
+            vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+                pattern = { "*.lua" },
+                callback = require("stylua").format,
+            })
+        end,
+    },
     {
         "L3MON4D3/LuaSnip",
         opts = function()
@@ -38,9 +22,9 @@ return {
             ls.add_snippets("all", {
                 snippet({ trig = "//" }, {
                     text({ div_bar, "//", div_bar }),
-                })
+                }),
             })
-        end
+        end,
     },
     {
         "hrsh7th/nvim-cmp",
@@ -65,17 +49,14 @@ return {
                     { name = "nvim_lua" },
                 },
                 mapping = cmp.mapping.preset.insert({
-                    -- select cmp options
                     ["<C-d>"] = cmp.mapping.scroll_docs(-4),
                     ["<C-f>"] = cmp.mapping.scroll_docs(4),
-                    ["<C-k>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
-                    ["<C-j>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
+                    ["<C-k>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
+                    ["<C-j>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
                     ["<C-l>"] = cmp.mapping.confirm({ select = true }),
                 }),
                 formatting = require("lsp-zero").cmp_format({ details = true }),
-                experimental = {
-                    ghost_text = false,
-                },
+                experimental = { ghost_text = false },
             }
         end,
     },
@@ -93,7 +74,7 @@ return {
                         pattern = { "*.html" },
                         callback = function()
                             vim.cmd([[%!prettierd %]])
-                        end
+                        end,
                     })
                 else
                     require("lsp-zero").buffer_autoformat()
@@ -158,7 +139,30 @@ return {
                     rust_analyzer = function()
                         require("lspconfig")["rust_analyzer"].setup({
                             settings = {
-                                ["rust-analyzer"] = rust_analyzer_settings,
+                                ["rust-analyzer"] = {
+                                    cargo = {
+                                        features = "all",
+                                    },
+                                    diagnostics = {
+                                        disabled = {
+                                            "inactive-code",
+                                            "unlinked-file",
+                                        },
+                                    },
+                                    check = {
+                                        features = "all",
+                                        command = "clippy",
+                                    },
+                                    hover = {
+                                        memoryLayout = {
+                                            enable = true,
+                                            alignment = "both",
+                                            niches = true,
+                                            offset = "both",
+                                            size = "both",
+                                        },
+                                    },
+                                },
                             },
                         })
                     end,
@@ -167,4 +171,3 @@ return {
         end,
     },
 }
-

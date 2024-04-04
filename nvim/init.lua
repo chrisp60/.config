@@ -8,7 +8,6 @@
 -- add to .zshrc
 -- export PATH="$PATH:/opt/nvim/"
 
-
 vim.g.mapleader = " "
 vim.g.maplocalleader = "_"
 

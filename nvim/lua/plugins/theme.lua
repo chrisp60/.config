@@ -20,7 +20,7 @@ return {
     {
         "lukas-reineke/indent-blankline.nvim",
         config = function()
-            require('ibl').setup({
+            require("ibl").setup({
                 scope = {
                     enabled = true,
                     char = "╎",
@@ -28,7 +28,7 @@ return {
                 },
                 indent = { char = "╎" },
             })
-        end
+        end,
     },
 
     {
@@ -40,7 +40,7 @@ return {
     },
 
     {
-        'stevearc/dressing.nvim',
+        "stevearc/dressing.nvim",
         opts = {},
-    }
+    },
 }
