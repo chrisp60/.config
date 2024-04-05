@@ -42,12 +42,17 @@ return {
                         require("luasnip").lsp_expand(args.body)
                     end,
                 },
+                window = {
+                    completion = nil,
+                    documentation = nil,
+                },
                 sources = {
                     { name = "nvim_lsp" },
                     { name = "copilot" },
                     { name = "luasnip" },
                     { name = "nvim_lua" },
                 },
+                preselect = cmp.PreselectMode.None,
                 mapping = cmp.mapping.preset.insert({
                     ["<C-d>"] = cmp.mapping.scroll_docs(-4),
                     ["<C-f>"] = cmp.mapping.scroll_docs(4),
@@ -64,7 +69,6 @@ return {
     {
         "VonHeikemen/lsp-zero.nvim",
         dependencies = {
-            "folke/neodev.nvim",
             "neovim/nvim-lspconfig",
         },
         branch = "v3.x",
@@ -117,7 +121,7 @@ return {
         "neovim/nvim-lspconfig",
         lazy = false,
         dependencies = {
-            "folke/neodev.nvim",
+            { "folke/neodev.nvim", opts = {} },
         },
     },
     {
