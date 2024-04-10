@@ -1,7 +1,5 @@
 -- lsp
 
-local div_bar = "////////////////////////////////////////////////////////////////////////////////"
-
 return {
     {
         "wesleimp/stylua.nvim",
@@ -13,22 +11,11 @@ return {
             })
         end,
     },
-    {
-        "L3MON4D3/LuaSnip",
-        opts = function()
-            local ls = require("luasnip")
-            local snippet = ls.snippet
-            local text = ls.text_node
-            ls.add_snippets("all", {
-                snippet({ trig = "//" }, {
-                    text({ div_bar, "//", div_bar }),
-                }),
-            })
-        end,
-    },
 
-    "saadparwaiz1/cmp_luasnip",
-    "hrsh7th/cmp-nvim-lsp",
+    { "L3MON4D3/LuaSnip" },
+    { "saadparwaiz1/cmp_luasnip" },
+    { "hrsh7th/cmp-nvim-lsp" },
+
     {
         "hrsh7th/nvim-cmp",
         dependencies = {
@@ -100,7 +87,6 @@ return {
                 vim.keymap.set("n", "gp", vim.diagnostic.goto_prev)
 
                 local tele = require("telescope.builtin")
-                vim.keymap.set("n", "<leader>I", tele.lsp_incoming_calls)
                 vim.keymap.set("n", "<leader>R", tele.lsp_references)
                 vim.keymap.set("n", "<leader>S", tele.lsp_document_symbols)
                 vim.keymap.set("n", "<leader>d", tele.diagnostics)

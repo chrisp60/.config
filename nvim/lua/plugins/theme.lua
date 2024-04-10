@@ -2,19 +2,9 @@ return {
     {
         "catppuccin/nvim",
         name = "catppuccin",
-        priority = 1000,
-        opts = {
-            integrations = {
-                harpoon = true,
-                gitgutter = true,
-                leap = true,
-                mason = true,
-                indent_blankline = {
-                    enabled = true,
-                },
-                gitsigns = true,
-            },
-        },
+        init = function()
+            vim.cmd.colorscheme("catppuccin")
+        end,
     },
 
     {

@@ -1,19 +1,10 @@
--- Reinstalling neovim
--- https://github.com/neovim/neovim/blob/master/INSTALL.md#pre-built-archives-2
--- -----------------------------------------------------------------------
--- curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
--- sudo rm -rf /opt/nvim
--- sudo tar -C /opt -xzf nvim-linux64.tar.gz
---
--- add to .zshrc
--- export PATH="$PATH:/opt/nvim/"
+-- Update with nightly release: sudo update.sh
 
+-- Leader keys must come before plugins
 vim.g.mapleader = " "
 vim.g.maplocalleader = "_"
 
--- Lsp clients are noisy
-vim.lsp.set_log_level("ERROR")
-
+vim.lsp.set_log_level("ERROR") -- Lsp clients are noisy
 vim.opt.undofile = true
 vim.opt.backup = false
 vim.opt.colorcolumn = "80,100"
@@ -37,13 +28,8 @@ vim.opt.termguicolors = true
 vim.opt.updatetime = 10
 vim.opt.wrap = false
 
-local catppuccin_flavor = function()
-    local flavor = os.getenv("CATPPUCCIN_FLAVOUR") or "mocha"
-    return "catppuccin-" .. flavor
-end
-
+-- Bootstrap Lazy
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
----@diagnostic disable-next-line: undefined-field
 if not vim.loop.fs_stat(lazypath) then
     vim.fn.system({
         "git",
@@ -54,17 +40,15 @@ if not vim.loop.fs_stat(lazypath) then
         lazypath,
     })
 end
+---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
 
-local lazy_opts = {
+-- Do not show hot-reload messages from Lazy
+require("lazy").setup("plugins", {
     change_detection = {
         notify = false,
     },
-}
-
-require("lazy").setup("plugins", lazy_opts)
-
-vim.cmd.colorscheme(catppuccin_flavor())
+})
 
 vim.diagnostic.config({
     virtual_text = true,
