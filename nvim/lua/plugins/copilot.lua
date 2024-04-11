@@ -4,13 +4,13 @@ return {
     {
         "zbirenbaum/copilot-cmp",
         lazy = false,
-        enabled = false,
+        enabled = true,
         opts = {},
     },
     {
         "zbirenbaum/copilot.lua",
         lazy = false,
-        enabled = false,
+        enabled = true,
         opts = {
             panel = { enabled = false },
             suggestion = { enabled = false },

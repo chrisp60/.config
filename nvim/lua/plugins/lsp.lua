@@ -37,8 +37,12 @@ return {
                     documentation = nil,
                 },
                 sources = {
-                    { name = "nvim_lsp" },
-                    { name = "copilot" },
+                    {
+                        name = "nvim_lsp",
+                        entry_filter = function(entry, _)
+                            return require("cmp.types").lsp.CompletionItemKind[entry:get_kind()] ~= "Snippet"
+                        end,
+                    },
                     { name = "luasnip" },
                     { name = "nvim_lua" },
                 },
@@ -49,6 +53,10 @@ return {
                     ["<C-k>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
                     ["<C-j>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
                     ["<C-l>"] = cmp.mapping.confirm({ select = true }),
+                    -- Only show copilot on bind, stop the dreaded "copilot pause".
+                    ["<C-h>"] = cmp.mapping.complete({
+                        config = { sources = { { name = "copilot" } } },
+                    }),
                 }),
                 formatting = require("lsp-zero").cmp_format({ details = true }),
                 experimental = { ghost_text = false },
@@ -75,13 +83,13 @@ return {
                     require("lsp-zero").buffer_autoformat()
                 end
 
-                -- the semantic tokens for decorators became ugly for some
-                -- reason, so we're linking it to the function token
-                -- (the superior pretty one).
-                vim.api.nvim_set_hl(0, "@lsp.type.decorator.rust", {
-                    link = "@lsp.type.function",
-                })
-                vim.api.nvim_set_hl_ns(0)
+                -- -- the semantic tokens for decorators became ugly for some
+                -- -- reason, so we're linking it to the function token
+                -- -- (the superior pretty one).
+                -- vim.api.nvim_set_hl(0, "@lsp.type.decorator.rust", {
+                --     link = "@lsp.type.function",
+                -- })
+                -- vim.api.nvim_set_hl_ns(0)
 
                 vim.keymap.set("n", "gn", vim.diagnostic.goto_next)
                 vim.keymap.set("n", "gp", vim.diagnostic.goto_prev)
@@ -144,6 +152,13 @@ return {
                                         disabled = {
                                             "inactive-code",
                                             "unlinked-file",
+                                        },
+                                    },
+                                    procMacro = {
+                                        ignored = {
+                                            tracing_attributes = {
+                                                "instrument",
+                                            },
                                         },
                                     },
                                     check = {
