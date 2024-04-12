@@ -6,7 +6,7 @@ return {
         ft = "lua",
         config = function()
             vim.api.nvim_create_autocmd({ "BufWritePre" }, {
-                pattern = { "*.lua" },
+                pattern = ".lua",
                 callback = require("stylua").format,
             })
         end,
@@ -94,15 +94,6 @@ return {
                 else
                     require("lsp-zero").buffer_autoformat()
                 end
-
-                -- -- the semantic tokens for decorators became ugly for some
-                -- -- reason, so we're linking it to the function token
-                -- -- (the superior pretty one).
-                -- vim.api.nvim_set_hl(0, "@lsp.type.decorator.rust", {
-                --     link = "@lsp.type.function",
-                -- })
-                -- vim.api.nvim_set_hl_ns(0)
-
                 vim.keymap.set("n", "gn", vim.diagnostic.goto_next)
                 vim.keymap.set("n", "gp", vim.diagnostic.goto_prev)
 
