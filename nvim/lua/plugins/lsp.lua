@@ -39,13 +39,25 @@ return {
                 sources = {
                     {
                         name = "nvim_lsp",
-                        entry_filter = function(entry, _)
-                            return require("cmp.types").lsp.CompletionItemKind[entry:get_kind()] ~= "Snippet"
-                        end,
+                        priority_weight = 2,
+                        max_item_count = 10,
                     },
-                    { name = "luasnip" },
+                    {
+                        name = "luasnip",
+                        priority_weight = 2,
+                    },
                     { name = "nvim_lua" },
+                    {
+                        priority_weight = 1,
+                        name = "copilot",
+                    },
                 },
+                view = {
+                    entries = {
+                        selection_order = "near_cursor",
+                    },
+                },
+
                 preselect = cmp.PreselectMode.None,
                 mapping = cmp.mapping.preset.insert({
                     ["<C-d>"] = cmp.mapping.scroll_docs(-4),
@@ -53,10 +65,6 @@ return {
                     ["<C-k>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
                     ["<C-j>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
                     ["<C-l>"] = cmp.mapping.confirm({ select = true }),
-                    -- Only show copilot on bind, stop the dreaded "copilot pause".
-                    ["<C-h>"] = cmp.mapping.complete({
-                        config = { sources = { { name = "copilot" } } },
-                    }),
                 }),
                 formatting = require("lsp-zero").cmp_format({ details = true }),
                 experimental = { ghost_text = false },
@@ -70,6 +78,10 @@ return {
             "neovim/nvim-lspconfig",
         },
         branch = "v3.x",
+        setup = function()
+            vim.g.lsp_zero_ui_float_border = "none"
+            vim.g.lsp_zero_extend_cmp = 0
+        end,
         config = function()
             require("lsp-zero").on_attach(function(client, _)
                 if client.name == "html" then
