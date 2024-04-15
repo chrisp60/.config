@@ -4,7 +4,7 @@ return {
     {
         "zbirenbaum/copilot-cmp",
         lazy = false,
-        enabled = true,
+        enabled = false,
         opts = {},
     },
     {
@@ -12,8 +12,17 @@ return {
         lazy = false,
         enabled = true,
         opts = {
-            panel = { enabled = false },
+            panel = {
+                enabled = true,
+                auto_refresh = true,
+                layout = {
+                    position = "right", ratio = 0.3
+                }
+            },
             suggestion = { enabled = false },
         },
+        keys = {
+            { "<leader>P", "<cmd>Copilot panel<cr>", desc = "Copilot Panel" },
+        }
     },
 }

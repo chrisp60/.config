@@ -1,6 +1,16 @@
--- lsp
-
 return {
+    { "williamboman/mason.nvim",  opts = {} },
+    { "L3MON4D3/LuaSnip", },
+    { "saadparwaiz1/cmp_luasnip", },
+    { "hrsh7th/cmp-nvim-lsp", },
+
+    {
+        "neovim/nvim-lspconfig",
+        lazy = false,
+        dependencies = {
+            { "folke/neodev.nvim", opts = {} },
+        },
+    },
     {
         "wesleimp/stylua.nvim",
         ft = "lua",
@@ -12,9 +22,6 @@ return {
         end,
     },
 
-    { "L3MON4D3/LuaSnip" },
-    { "saadparwaiz1/cmp_luasnip" },
-    { "hrsh7th/cmp-nvim-lsp" },
 
     {
         "hrsh7th/nvim-cmp",
@@ -32,24 +39,18 @@ return {
                         require("luasnip").lsp_expand(args.body)
                     end,
                 },
-                window = {
-                    completion = nil,
-                    documentation = nil,
-                },
                 sources = {
                     {
                         name = "nvim_lsp",
-                        priority_weight = 2,
-                        max_item_count = 10,
+                        priority_weight = 1,
                     },
                     {
                         name = "luasnip",
-                        priority_weight = 2,
-                    },
-                    { name = "nvim_lua" },
-                    {
                         priority_weight = 1,
-                        name = "copilot",
+                    },
+                    {
+                        name = "nvim_lua",
+                        priority_weight = 1
                     },
                 },
                 view = {
@@ -57,15 +58,15 @@ return {
                         selection_order = "near_cursor",
                     },
                 },
-
                 preselect = cmp.PreselectMode.None,
-                mapping = cmp.mapping.preset.insert({
-                    ["<C-d>"] = cmp.mapping.scroll_docs(-4),
-                    ["<C-f>"] = cmp.mapping.scroll_docs(4),
+                mapping = {
+                    ["<C-y>"] = cmp.mapping.complete({ config = { sources = { { name = "nvim_lsp" } } } }),
+                    ["<C-p>"] = cmp.mapping.scroll_docs(-4),
+                    ["<C-n>"] = cmp.mapping.scroll_docs(4),
                     ["<C-k>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
                     ["<C-j>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
                     ["<C-l>"] = cmp.mapping.confirm({ select = true }),
-                }),
+                },
                 formatting = require("lsp-zero").cmp_format({ details = true }),
                 experimental = { ghost_text = false },
             }
@@ -78,12 +79,9 @@ return {
             "neovim/nvim-lspconfig",
         },
         branch = "v3.x",
-        setup = function()
-            vim.g.lsp_zero_ui_float_border = "none"
-            vim.g.lsp_zero_extend_cmp = 0
-        end,
         config = function()
-            require("lsp-zero").on_attach(function(client, _)
+            local lsp_zero = require("lsp-zero")
+            lsp_zero.on_attach(function(client, _)
                 if client.name == "html" then
                     vim.api.nvim_create_autocmd({ "BufWritePre" }, {
                         pattern = { "*.html" },
@@ -92,7 +90,7 @@ return {
                         end,
                     })
                 else
-                    require("lsp-zero").buffer_autoformat()
+                    lsp_zero.buffer_autoformat()
                 end
                 vim.keymap.set("n", "gn", vim.diagnostic.goto_next)
                 vim.keymap.set("n", "gp", vim.diagnostic.goto_prev)
@@ -117,17 +115,6 @@ return {
         end,
     },
 
-    {
-        "neovim/nvim-lspconfig",
-        lazy = false,
-        dependencies = {
-            { "folke/neodev.nvim", opts = {} },
-        },
-    },
-    {
-        "williamboman/mason.nvim",
-        opts = {},
-    },
 
     {
         "williamboman/mason-lspconfig.nvim",
@@ -136,53 +123,49 @@ return {
             "williamboman/mason.nvim",
             "neovim/nvim-lspconfig",
         },
-        config = function()
-            require("mason-lspconfig").setup({
-                ensure_installed = {},
-                handlers = {
-                    require("lsp-zero").default_setup,
-                    lua_ls = function()
-                        require("lspconfig").lua_ls.setup(require("lsp-zero").nvim_lua_ls({}))
-                    end,
-                    rust_analyzer = function()
-                        require("lspconfig")["rust_analyzer"].setup({
-                            settings = {
-                                ["rust-analyzer"] = {
-                                    cargo = {
-                                        features = "all",
+        opts = {
+            handlers = {
+                lua_ls = function()
+                    require("lspconfig").lua_ls.setup(require("lsp-zero").nvim_lua_ls({}))
+                end,
+                rust_analyzer = function()
+                    require("lspconfig")["rust_analyzer"].setup({
+                        settings = {
+                            ["rust-analyzer"] = {
+                                cargo = {
+                                    features = "all",
+                                },
+                                diagnostics = {
+                                    disabled = {
+                                        "inactive-code",
+                                        "unlinked-file",
                                     },
-                                    diagnostics = {
-                                        disabled = {
-                                            "inactive-code",
-                                            "unlinked-file",
-                                        },
-                                    },
-                                    procMacro = {
-                                        ignored = {
-                                            tracing_attributes = {
-                                                "instrument",
-                                            },
-                                        },
-                                    },
-                                    check = {
-                                        features = "all",
-                                        command = "clippy",
-                                    },
-                                    hover = {
-                                        memoryLayout = {
-                                            enable = true,
-                                            alignment = "both",
-                                            niches = true,
-                                            offset = "both",
-                                            size = "both",
+                                },
+                                procMacro = {
+                                    ignored = {
+                                        tracing_attributes = {
+                                            "instrument",
                                         },
                                     },
                                 },
+                                check = {
+                                    features = "all",
+                                    command = "clippy",
+                                },
+                                hover = {
+                                    memoryLayout = {
+                                        enable = true,
+                                        alignment = "both",
+                                        niches = true,
+                                        offset = "both",
+                                        size = "both",
+                                    },
+                                },
                             },
-                        })
-                    end,
-                },
-            })
-        end,
+                        },
+                    })
+                end,
+            },
+        },
     },
 }

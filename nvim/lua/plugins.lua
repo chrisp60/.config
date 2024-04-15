@@ -1,5 +1,6 @@
 return {
 
+    { "j-hui/fidget.nvim", opts = {} },
     "tpope/vim-surround",
     "christoomey/vim-tmux-navigator",
     "tpope/vim-repeat",
