@@ -4,7 +4,6 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = "_"
 vim.g.lsp_zero_extend_cmp = 0
-vim.g.lsp_zero_ui_float_border = "none"
 
 vim.lsp.set_log_level("ERROR") -- Lsp clients are noisy
 vim.opt.undofile = true
