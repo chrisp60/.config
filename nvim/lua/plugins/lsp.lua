@@ -145,6 +145,15 @@ return {
                                         "unlinked-file",
                                     },
                                 },
+                                rustfmt = {
+                                    overrideCommand = {
+                                        "leptosfmt",
+                                        "--stdin",
+                                        "--rustfmt",
+                                        "--max-width=100",
+                                        "--tab-spaces=2",
+                                    },
+                                },
                                 procMacro = {
                                     ignored = {
                                         tracing_attributes = {
