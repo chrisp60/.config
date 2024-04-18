@@ -1,8 +1,11 @@
+local util = require("util")
+
 return {
-    { "williamboman/mason.nvim",  opts = {} },
-    { "L3MON4D3/LuaSnip", },
-    { "saadparwaiz1/cmp_luasnip", },
-    { "hrsh7th/cmp-nvim-lsp", },
+
+    { "williamboman/mason.nvim", opts = {} },
+    { "saadparwaiz1/cmp_luasnip" },
+    { "hrsh7th/cmp-nvim-lsp" },
+    { "wesleimp/stylua.nvim" },
 
     {
         "neovim/nvim-lspconfig",
@@ -11,17 +14,6 @@ return {
             { "folke/neodev.nvim", opts = {} },
         },
     },
-    {
-        "wesleimp/stylua.nvim",
-        ft = "lua",
-        config = function()
-            vim.api.nvim_create_autocmd({ "BufWritePre" }, {
-                pattern = ".lua",
-                callback = require("stylua").format,
-            })
-        end,
-    },
-
 
     {
         "hrsh7th/nvim-cmp",
@@ -33,45 +25,29 @@ return {
         },
         opts = function()
             local cmp = require("cmp")
+            local lsp_zero = require("lsp-zero")
+            local just_lsp = { config = { sources = { { name = "nvim_lsp" } } } }
             return {
                 snippet = {
                     expand = function(args)
                         require("luasnip").lsp_expand(args.body)
                     end,
                 },
-                window = {
-                    completion = cmp.config.window.bordered(),
-                    documentation = cmp.config.window.bordered(),
-                },
                 sources = {
-                    {
-                        name = "nvim_lsp",
-                        priority_weight = 1,
-                    },
-                    {
-                        name = "luasnip",
-                        priority_weight = 1,
-                    },
-                    {
-                        name = "nvim_lua",
-                        priority_weight = 1
-                    },
-                },
-                view = {
-                    entries = {
-                        selection_order = "near_cursor",
-                    },
+                    { name = "nvim_lsp" },
+                    { name = "luasnip" },
+                    { name = "nvim_lua" },
                 },
                 preselect = cmp.PreselectMode.None,
                 mapping = {
-                    ["<C-y>"] = cmp.mapping.complete({ config = { sources = { { name = "nvim_lsp" } } } }),
-                    ["<C-p>"] = cmp.mapping.scroll_docs(-4),
-                    ["<C-n>"] = cmp.mapping.scroll_docs(4),
+                    ["<C-y>"] = cmp.mapping.complete(just_lsp),
+                    ["<C-n>"] = lsp_zero.cmp_action().luasnip_jump_forward(),
+                    ["<C-p>"] = lsp_zero.cmp_action().luasnip_jump_backward(),
                     ["<C-k>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
                     ["<C-j>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
                     ["<C-l>"] = cmp.mapping.confirm({ select = true }),
                 },
-                formatting = require("lsp-zero").cmp_format({ details = true }),
+                formatting = lsp_zero.cmp_format({ details = true }),
                 experimental = { ghost_text = false },
             }
         end,
@@ -85,40 +61,43 @@ return {
         branch = "v3.x",
         config = function()
             local lsp_zero = require("lsp-zero")
-            lsp_zero.on_attach(function(client, _)
-                if client.name == "html" then
-                    vim.api.nvim_create_autocmd({ "BufWritePre" }, {
-                        pattern = { "*.html" },
+            lsp_zero.format_on_save({
+                format_opts = {
+                    async = false,
+                    timeout_ms = 10000,
+                },
+                servers = {
+                    ["taplo"] = { "toml" },
+                    ["rust_analyzer"] = { "rust" },
+                    ["lua_ls"] = { "lua" },
+                },
+            })
+            lsp_zero.on_attach(function(client, bufnr)
+                local opts = { buffer = bufnr }
+
+                if client.name == "lua_ls" then
+                    vim.api.nvim_create_autocmd({ "BufWritePre", "BufWrite" }, {
+                        pattern = "*.lua",
                         callback = function()
-                            vim.cmd([[%!prettierd %]])
+                            require("stylua").format()
                         end,
                     })
-                else
-                    lsp_zero.buffer_autoformat()
                 end
-                vim.keymap.set("n", "gn", vim.diagnostic.goto_next)
-                vim.keymap.set("n", "gp", vim.diagnostic.goto_prev)
 
-                local tele = require("telescope.builtin")
-                vim.keymap.set("n", "<leader>R", tele.lsp_references)
-                vim.keymap.set("n", "<leader>S", tele.lsp_document_symbols)
-                vim.keymap.set("n", "<leader>d", tele.diagnostics)
-                vim.keymap.set("n", "<leader>s", tele.lsp_workspace_symbols)
+                util.normal_leader("r", vim.lsp.buf.rename)
 
-                vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help)
-                vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename)
-                vim.keymap.set("n", "K", vim.lsp.buf.hover)
-                vim.keymap.set("n", "gd", vim.lsp.buf.definition)
-
-                vim.keymap.set({ "n", "v", "x" }, "<leader>i", function()
-                    vim.lsp.inlay_hint.enable(0, not vim.lsp.inlay_hint.is_enabled(0))
-                end)
-
-                vim.keymap.set({ "n", "v", "x" }, "ga", vim.lsp.buf.code_action)
+                vim.keymap.set("n", "gn", vim.diagnostic.goto_next, opts)
+                vim.keymap.set("n", "gp", vim.diagnostic.goto_prev, opts)
+                vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help, opts)
+                vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+                vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+                vim.keymap.set("n", "<leader>i", function()
+                    vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled(0))
+                end, opts)
+                vim.keymap.set({ "n", "v", "x" }, "ga", vim.lsp.buf.code_action, opts)
             end)
         end,
     },
-
 
     {
         "williamboman/mason-lspconfig.nvim",
@@ -127,58 +106,49 @@ return {
             "williamboman/mason.nvim",
             "neovim/nvim-lspconfig",
         },
-        opts = {
-            handlers = {
-                lua_ls = function()
-                    require("lspconfig").lua_ls.setup(require("lsp-zero").nvim_lua_ls({}))
-                end,
-                rust_analyzer = function()
-                    require("lspconfig")["rust_analyzer"].setup({
-                        settings = {
-                            ["rust-analyzer"] = {
-                                cargo = {
-                                    features = "all",
-                                },
-                                diagnostics = {
-                                    disabled = {
-                                        "inactive-code",
-                                        "unlinked-file",
-                                    },
-                                },
-                                rustfmt = {
-                                    overrideCommand = {
-                                        "leptosfmt",
-                                        "--stdin",
-                                        "--rustfmt",
-                                        "--max-width=100",
-                                        "--tab-spaces=2",
-                                    },
-                                },
-                                procMacro = {
-                                    ignored = {
-                                        tracing_attributes = {
-                                            "instrument",
-                                        },
-                                    },
-                                },
-                                check = {
-                                    features = "all",
-                                    command = "clippy",
-                                },
-                                hover = {
-                                    memoryLayout = {
-                                        enable = true,
-                                        alignment = "both",
-                                        niches = true,
-                                        offset = "both",
-                                        size = "both",
+        opts = function()
+            local lsp_zero = require("lsp-zero")
+            local lsp_config = require("lspconfig")
+            return {
+                handlers = {
+                    -- Handlers for everything else
+                    lsp_zero.default_setup,
+                    lua_ls = function()
+                        lsp_config.lua_ls.setup({
+                            settings = {
+                                Lua = {
+                                    completion = {
+                                        callSnippet = "Replace",
+                                        displayContext = 4,
+                                        keywordSnippet = "Both",
                                     },
                                 },
                             },
-                        },
-                    })
-                end,
-            },
-        },
+                        })
+                    end,
+                    rust_analyzer = function()
+                        lsp_config.rust_analyzer.setup({
+                            settings = {
+                                ["rust-analyzer"] = {
+                                    cargo = {},
+                                    diagnostics = {},
+                                    rustfmt = {},
+                                    procMacro = {
+                                        ignored = {
+                                            tracing_attributes = {
+                                                "instrument",
+                                            },
+                                        },
+                                    },
+                                    check = {
+                                        command = "clippy",
+                                    },
+                                },
+                            },
+                        })
+                    end,
+                },
+            }
+        end,
     },
 }
