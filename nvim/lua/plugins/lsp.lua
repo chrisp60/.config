@@ -72,17 +72,8 @@ return {
                     ["lua_ls"] = { "lua" },
                 },
             })
-            lsp_zero.on_attach(function(client, bufnr)
+            lsp_zero.on_attach(function(_, bufnr)
                 local opts = { buffer = bufnr }
-
-                if client.name == "lua_ls" then
-                    vim.api.nvim_create_autocmd({ "BufWritePre", "BufWrite" }, {
-                        pattern = "*.lua",
-                        callback = function()
-                            require("stylua").format()
-                        end,
-                    })
-                end
 
                 util.normal_leader("r", vim.lsp.buf.rename)
 

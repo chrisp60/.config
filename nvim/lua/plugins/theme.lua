@@ -5,6 +5,22 @@ return {
         init = function()
             vim.cmd.colorscheme("catppuccin")
         end,
+        config = function()
+            require("catppuccin").setup({
+                integrations = {
+                    gitsigns = true,
+                    mason = true,
+                    notify = true,
+                    markdown = true,
+                    indent_blankline = true,
+                    harpoon = true,
+                    telescope = true,
+                    treesitter = true,
+                    native_lsp = true,
+                    semantic_tokens = true,
+                },
+            })
+        end,
     },
 
     {
