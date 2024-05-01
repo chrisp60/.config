@@ -7,32 +7,6 @@ local spec = {
     "tpope/vim-repeat",
 
     {
-        "lewis6991/gitsigns.nvim",
-        config = function()
-            local gitsigns = require("gitsigns")
-            gitsigns.setup({
-                on_attach = function()
-                    util.normal_leader("Gs", function()
-                        gitsigns.stage_hunk()
-                    end)
-                    util.normal_leader("Gu", function()
-                        gitsigns.undo_stage_hunk()
-                    end)
-                    util.normal_leader("Gb", function()
-                        gitsigns.stage_buffer()
-                    end)
-                    util.normal_leader("Gn", function()
-                        gitsigns.nav_hunk("next")
-                    end)
-                    util.normal_leader("Gp", function()
-                        gitsigns.nav_hunk("prev")
-                    end)
-                end,
-            })
-        end,
-    },
-
-    {
         "tpope/vim-fugitive",
         lazy = false,
         keys = {
