@@ -1,5 +1,49 @@
 local util = require("util")
 
+---@param client vim.lsp.Client
+---@param bufnr integer
+local on_attach = function(client, bufnr)
+    local opts = { buffer = bufnr }
+    local toks = vim.lsp.semantic_tokens
+    local toks_supp = client.server_capabilities.semanticTokensProvider ~= nil
+    local toks_on = toks_supp
+
+    util.leader("S", function()
+        if not toks_supp then
+            vim.notify(client.name .. " does not support semantic tokens")
+        elseif toks_on then
+            vim.notify("disabling tokens")
+            toks.stop(bufnr, client.id)
+        else
+            vim.notify("enabling tokens")
+            toks.start(bufnr, client.id)
+        end
+        toks_on = not toks_on
+    end)
+
+    util.leader("i", function()
+        if client.server_capabilities.inlayHintProvider ~= nil then
+            local hints_on = vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr })
+            if hints_on then
+                vim.notify("hiding inlay hints")
+            else
+                vim.notify("showing inlay hints")
+            end
+            vim.lsp.inlay_hint.enable(not hints_on)
+        else
+            vim.notify(client.name .. " lsp does not support inlay hints")
+        end
+    end)
+    util.leader("r", vim.lsp.buf.rename)
+
+    vim.keymap.set("n", "gn", vim.diagnostic.goto_next, opts)
+    vim.keymap.set("n", "gp", vim.diagnostic.goto_prev, opts)
+    vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help, opts)
+    vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+    vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+    vim.keymap.set({ "n", "v", "x" }, "ga", vim.lsp.buf.code_action, opts)
+end
+
 return {
 
     { "williamboman/mason.nvim", opts = {} },
@@ -62,32 +106,13 @@ return {
         config = function()
             local lsp_zero = require("lsp-zero")
             lsp_zero.format_on_save({
-                format_opts = {
-                    async = false,
-                    timeout_ms = 10000,
-                },
                 servers = {
                     ["taplo"] = { "toml" },
                     ["rust_analyzer"] = { "rust" },
                     ["lua_ls"] = { "lua" },
                 },
             })
-            lsp_zero.on_attach(function(_, bufnr)
-                local opts = { buffer = bufnr }
-
-
-                util.normal_leader("r", vim.lsp.buf.rename)
-
-                vim.keymap.set("n", "gn", vim.diagnostic.goto_next, opts)
-                vim.keymap.set("n", "gp", vim.diagnostic.goto_prev, opts)
-                vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help, opts)
-                vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-                vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-                vim.keymap.set("n", "<leader>i", function()
-                    vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled(0))
-                end, opts)
-                vim.keymap.set({ "n", "v", "x" }, "ga", vim.lsp.buf.code_action, opts)
-            end)
+            lsp_zero.on_attach(on_attach)
         end,
     },
 
@@ -130,6 +155,9 @@ return {
                                             tracing_attributes = {
                                                 "instrument",
                                             },
+                                            serde_with_macros = {
+                                                "serde_as",
+                                            }
                                         },
                                     },
                                     check = {

@@ -23,17 +23,17 @@ return {
                         information = { "underline" },
                     },
                     inlay_hints = {
-                        background = true,
+                        background = false,
                     },
                 },
             },
             highlight_overrides = {
                 all = function(colors)
                     return {
-                        ["@function.builtin"] = { fg = colors.maroon },
+                        ["@lsp.typemod.function.defaultLibrary.rust"] = { fg = colors.sapphire },
                         ["@lsp.type.decorator"] = { fg = colors.blue },
                         ["@lsp.type.unresolvedReference"] = {
-                            fg = colors.rosewater
+                            fg = colors.red
                         },
                     }
                 end,

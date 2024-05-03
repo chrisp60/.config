@@ -1,16 +1,16 @@
 local util = require("util")
 
----@type LazyPluginSpec
-local spec = {
-    "tpope/vim-surround",
-    "christoomey/vim-tmux-navigator",
-    "tpope/vim-repeat",
+---@type LazyPluginSpec[]
+return {
+    { "tpope/vim-surround" },
+    { "christoomey/vim-tmux-navigator", },
+    { "tpope/vim-repeat", },
 
     {
         dir = "~/projects/cargo-expand-nvim",
         config = function()
             local Expand = require("cargo-expand")
-            util.normal_leader("E", function()
+            util.leader("E", function()
                 Expand:expand()
             end)
         end
@@ -46,7 +46,7 @@ local spec = {
         config = function(_, opts)
             require("telescope").setup(opts)
             local b = require("telescope.builtin")
-            local leader = util.normal_leader
+            local leader = util.leader
 
             leader("=", b.spell_suggest)
             leader("T", b.treesitter)
@@ -99,5 +99,3 @@ local spec = {
         },
     },
 }
-
-return spec

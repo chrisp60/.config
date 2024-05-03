@@ -63,7 +63,7 @@ vim.diagnostic.config({
     underline = false,
 })
 
-util.normal_leader("L", "<cmd>luafile %<cr>", "run the buffer as lua")
+util.leader("L", "<cmd>luafile %<cr>", "run the buffer as lua")
 
 vim.keymap.set("n", "<C-c>n", "<cmd>cn<cr>")
 vim.keymap.set("n", "<C-c>p", "<cmd>cp<cr>")
@@ -73,7 +73,7 @@ vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter" }, {
     pattern = "*.html",
     callback = function()
         vim.cmd([[set ft=htmldjango]])
-        util.normal_leader("e", function()
+        util.leader("e", function()
             vim.cmd([[silent !djlint % --quiet --reformat]])
             vim.cmd([[edit]])
             vim.cmd([[set ft=htmldjango]])

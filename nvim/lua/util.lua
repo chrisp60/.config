@@ -6,7 +6,7 @@ local M = {}
 --- @param rhs string|function right hand side of the mapping.
 --- @param desc? string a description (merged with opts when provided).
 --- @param opts? vim.keymap.set.Opts
-function M.normal_leader(lhs, rhs, desc, opts)
+function M.leader(lhs, rhs, desc, opts)
     if opts ~= nil then
         opts.desc = desc
     else
