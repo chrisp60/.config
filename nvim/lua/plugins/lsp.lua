@@ -1,4 +1,4 @@
-local util = require("util")
+local set = vim.keymap.set
 
 ---@param client vim.lsp.Client
 ---@param bufnr integer
@@ -8,7 +8,7 @@ local on_attach = function(client, bufnr)
     local toks_supp = client.server_capabilities.semanticTokensProvider ~= nil
     local toks_on = toks_supp
 
-    util.leader("S", function()
+    set("n", "<leader>S", function()
         if not toks_supp then
             vim.notify(client.name .. " does not support semantic tokens")
         elseif toks_on then
@@ -19,9 +19,9 @@ local on_attach = function(client, bufnr)
             toks.start(bufnr, client.id)
         end
         toks_on = not toks_on
-    end)
+    end, opts)
 
-    util.leader("i", function()
+    set("n", "<leader>i", function()
         if client.server_capabilities.inlayHintProvider ~= nil then
             local hints_on = vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr })
             if hints_on then
@@ -33,15 +33,15 @@ local on_attach = function(client, bufnr)
         else
             vim.notify(client.name .. " lsp does not support inlay hints")
         end
-    end)
-    util.leader("r", vim.lsp.buf.rename)
+    end, opts)
 
-    vim.keymap.set("n", "gn", vim.diagnostic.goto_next, opts)
-    vim.keymap.set("n", "gp", vim.diagnostic.goto_prev, opts)
-    vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help, opts)
-    vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-    vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-    vim.keymap.set({ "n", "v", "x" }, "ga", vim.lsp.buf.code_action, opts)
+    set("i", "<C-h>", vim.lsp.buf.signature_help, opts)
+    set("n", "<leader>r", vim.lsp.buf.rename, opts)
+    set("n", "K", vim.lsp.buf.hover, opts)
+    set("n", "gd", vim.lsp.buf.definition, opts)
+    set("n", "gn", vim.diagnostic.goto_next, opts)
+    set("n", "gp", vim.diagnostic.goto_prev, opts)
+    set({ "n", "v", "x" }, "ga", vim.lsp.buf.code_action, opts)
 end
 
 return {
@@ -70,7 +70,6 @@ return {
         opts = function()
             local cmp = require("cmp")
             local lsp_zero = require("lsp-zero")
-            local just_lsp = { config = { sources = { { name = "nvim_lsp" } } } }
             return {
                 snippet = {
                     expand = function(args)
@@ -84,7 +83,13 @@ return {
                 },
                 preselect = cmp.PreselectMode.None,
                 mapping = {
-                    ["<C-y>"] = cmp.mapping.complete(just_lsp),
+                    ["<C-y>"] = cmp.mapping.complete({
+                        config = {
+                            sources = {
+                                { name = "nvim_lsp" }
+                            }
+                        }
+                    }),
                     ["<C-n>"] = lsp_zero.cmp_action().luasnip_jump_forward(),
                     ["<C-p>"] = lsp_zero.cmp_action().luasnip_jump_backward(),
                     ["<C-k>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
@@ -157,7 +162,7 @@ return {
                                             },
                                             serde_with_macros = {
                                                 "serde_as",
-                                            }
+                                            },
                                         },
                                     },
                                     check = {

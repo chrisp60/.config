@@ -1,19 +1,16 @@
-local util = require("util")
-
 ---@type LazyPluginSpec[]
 return {
     { "tpope/vim-surround" },
-    { "christoomey/vim-tmux-navigator", },
-    { "tpope/vim-repeat", },
+    { "christoomey/vim-tmux-navigator" },
+    { "tpope/vim-repeat" },
 
     {
         dir = "~/projects/cargo-expand-nvim",
         config = function()
-            local Expand = require("cargo-expand")
-            util.leader("E", function()
-                Expand:expand()
+            vim.keymap.set("n", "<leader>E", function()
+                require("cargo-expand"):expand()
             end)
-        end
+        end,
     },
 
     {
@@ -45,26 +42,26 @@ return {
         },
         config = function(_, opts)
             require("telescope").setup(opts)
-            local b = require("telescope.builtin")
-            local leader = util.leader
+            local tele = require("telescope.builtin")
 
-            leader("=", b.spell_suggest)
-            leader("T", b.treesitter)
-            leader("a", b.autocommands)
-            leader("b", b.buffers)
-            leader("d", b.diagnostics)
-            leader("f", b.find_files)
-            leader("g", b.live_grep)
-            leader("h", b.help_tags)
-            leader('"', b.registers)
-            leader("m", b.marks)
+            local setnl = function(arg, f)
+                vim.keymap.set("n", "<leader>" .. arg, f)
+            end
 
-            -- LSP
-            leader("R", b.lsp_references)
-            leader("s", b.lsp_dynamic_workspace_symbols)
-
-            leader("H", function()
-                b.find_files({
+            setnl("=", tele.spell_suggest)
+            setnl("T", tele.treesitter)
+            setnl("a", tele.autocommands)
+            setnl("b", tele.buffers)
+            setnl("d", tele.diagnostics)
+            setnl("f", tele.find_files)
+            setnl("g", tele.live_grep)
+            setnl("h", tele.help_tags)
+            setnl('"', tele.registers)
+            setnl("m", tele.marks)
+            setnl("R", tele.lsp_references)
+            setnl("s", tele.lsp_dynamic_workspace_symbols)
+            setnl("H", function()
+                tele.find_files({
                     hidden = true,
                     no_ignore = true,
                     no_ignore_parent = true,
