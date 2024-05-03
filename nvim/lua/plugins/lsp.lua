@@ -75,6 +75,7 @@ return {
             lsp_zero.on_attach(function(_, bufnr)
                 local opts = { buffer = bufnr }
 
+
                 util.normal_leader("r", vim.lsp.buf.rename)
 
                 vim.keymap.set("n", "gn", vim.diagnostic.goto_next, opts)

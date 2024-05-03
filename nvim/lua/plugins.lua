@@ -7,6 +7,16 @@ local spec = {
     "tpope/vim-repeat",
 
     {
+        dir = "~/projects/cargo-expand-nvim",
+        config = function()
+            local Expand = require("cargo-expand")
+            util.normal_leader("E", function()
+                Expand:expand()
+            end)
+        end
+    },
+
+    {
         "tpope/vim-fugitive",
         lazy = false,
         keys = {

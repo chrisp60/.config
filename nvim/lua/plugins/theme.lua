@@ -1,3 +1,4 @@
+---@type LazyPluginSpec[]
 return {
     {
         "catppuccin/nvim",
@@ -5,22 +6,39 @@ return {
         init = function()
             vim.cmd.colorscheme("catppuccin")
         end,
-        config = function()
-            require("catppuccin").setup({
-                integrations = {
-                    gitsigns = true,
-                    mason = true,
-                    notify = true,
-                    markdown = true,
-                    indent_blankline = true,
-                    harpoon = true,
-                    telescope = true,
-                    treesitter = true,
-                    native_lsp = true,
-                    semantic_tokens = true,
+        opts = {
+            integrations = {
+                native_lsp = {
+                    enabled = true,
+                    virtual_text = {
+                        errors = { "italic" },
+                        hints = { "italic" },
+                        warnings = { "italic" },
+                        information = { "italic" },
+                    },
+                    underlines = {
+                        errors = { "underline" },
+                        hints = { "underline" },
+                        warnings = { "underline" },
+                        information = { "underline" },
+                    },
+                    inlay_hints = {
+                        background = true,
+                    },
                 },
-            })
-        end,
+            },
+            highlight_overrides = {
+                all = function(colors)
+                    return {
+                        ["@function.builtin"] = { fg = colors.maroon },
+                        ["@lsp.type.decorator"] = { fg = colors.blue },
+                        ["@lsp.type.unresolvedReference"] = {
+                            fg = colors.rosewater
+                        },
+                    }
+                end,
+            },
+        },
     },
 
     {

@@ -31,14 +31,14 @@ vim.opt.wrap = false
 -- Bootstrap Lazy
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
-	vim.fn.system({
-		"git",
-		"clone",
-		"--filter=blob:none",
-		"https://github.com/folke/lazy.nvim.git",
-		"--branch=stable", -- latest stable release
-		lazypath,
-	})
+    vim.fn.system({
+        "git",
+        "clone",
+        "--filter=blob:none",
+        "https://github.com/folke/lazy.nvim.git",
+        "--branch=stable", -- latest stable release
+        lazypath,
+    })
 end
 ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
@@ -46,39 +46,37 @@ vim.opt.rtp:prepend(lazypath)
 -- Do not show hot-reload messages from Lazy
 require("lazy").setup("plugins", {
 
-	dev = {
-		path = "~/projects",
-		patterns = { "chrisp60" },
-		fallback = false,
-	},
-	change_detection = {
-		notify = false,
-	},
+    dev = {
+        path = "~/projects",
+        patterns = { "chrisp60" },
+        fallback = false,
+    },
+    change_detection = {
+        notify = false,
+    },
 })
 
 vim.diagnostic.config({
-	virtual_text = true,
-	update_in_insert = true,
-	signs = false,
-	underline = false,
+    virtual_text = true,
+    update_in_insert = true,
+    signs = false,
+    underline = false,
 })
 
 util.normal_leader("L", "<cmd>luafile %<cr>", "run the buffer as lua")
 
--- Clear the jumplist when opening.
-vim.api.nvim_create_autocmd({ "VimEnter" }, {
-	pattern = "*",
-	command = "clearjumps",
-})
+vim.keymap.set("n", "<C-c>n", "<cmd>cn<cr>")
+vim.keymap.set("n", "<C-c>p", "<cmd>cp<cr>")
+vim.keymap.set("n", "<C-c>o", "<cmd>cope<cr>")
 
 vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter" }, {
-	pattern = "*.html",
-	callback = function()
-		vim.cmd([[set ft=htmldjango]])
-		util.normal_leader("e", function()
-			vim.cmd([[silent !djlint % --quiet --reformat]])
-			vim.cmd([[edit]])
-			vim.cmd([[set ft=htmldjango]])
-		end)
-	end,
+    pattern = "*.html",
+    callback = function()
+        vim.cmd([[set ft=htmldjango]])
+        util.normal_leader("e", function()
+            vim.cmd([[silent !djlint % --quiet --reformat]])
+            vim.cmd([[edit]])
+            vim.cmd([[set ft=htmldjango]])
+        end)
+    end,
 })
