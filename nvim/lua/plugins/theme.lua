@@ -1,5 +1,6 @@
 ---@type LazyPluginSpec[]
 return {
+    { "NvChad/nvim-colorizer.lua", opts = {} },
     {
         "catppuccin/nvim",
         name = "catppuccin",
@@ -24,11 +25,7 @@ return {
             highlight_overrides = {
                 all = function(colors)
                     return {
-                        ["@lsp.typemod.function.defaultLibrary.rust"] = { fg = colors.sapphire },
                         ["@lsp.type.decorator"] = { fg = colors.blue },
-                        ["@lsp.type.unresolvedReference"] = {
-                            fg = colors.red
-                        },
                     }
                 end,
             },

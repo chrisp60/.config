@@ -1,4 +1,5 @@
 vim.g.mapleader = " "
+vim.g.zig_fmt_autosave = false
 
 -- Bootstrap Lazy
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"

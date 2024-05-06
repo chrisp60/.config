@@ -46,7 +46,7 @@ end
 
 return {
 
-    { "j-hui/fidget.nvim",       opts = {} },
+    { "j-hui/fidget.nvim",       opts = {}, enabled = false, },
     { "williamboman/mason.nvim", opts = {} },
     { "saadparwaiz1/cmp_luasnip" },
     { "hrsh7th/cmp-nvim-lsp" },
@@ -113,8 +113,7 @@ return {
             local lsp_zero = require("lsp-zero")
             lsp_zero.format_on_save({
                 servers = {
-                    ["taplo"] = { "toml" },
-                    ["rust_analyzer"] = { "rust" },
+                    ["rust_analyzer"] = { "rust", "toml" },
                     ["lua_ls"] = { "lua" },
                 },
             })
