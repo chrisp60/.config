@@ -46,6 +46,7 @@ end
 
 return {
 
+    { "j-hui/fidget.nvim",       opts = {} },
     { "williamboman/mason.nvim", opts = {} },
     { "saadparwaiz1/cmp_luasnip" },
     { "hrsh7th/cmp-nvim-lsp" },
