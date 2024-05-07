@@ -157,6 +157,9 @@ return {
                                     rustfmt = {},
                                     procMacro = {
                                         ignored = {
+                                            tokio_macros = {
+                                                "main", "test",
+                                            },
                                             tracing_attributes = {
                                                 "instrument",
                                             },
