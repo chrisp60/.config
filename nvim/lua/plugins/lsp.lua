@@ -45,7 +45,14 @@ local on_attach = function(client, bufnr)
 end
 
 return {
-
+    {
+        "rayliwell/tree-sitter-rstml",
+        dependencies = { "nvim-treesitter" },
+        ft = "rust",
+        build = ":TSUpdate",
+        name = "tree-sitter-rstml",
+        opts = {}
+    },
     {
         "j-hui/fidget.nvim",
         opts = {},
@@ -158,7 +165,9 @@ return {
                         lsp_config.rust_analyzer.setup({
                             settings = {
                                 ["rust-analyzer"] = {
-                                    cargo = {},
+                                    cargo = {
+                                        features = "all",
+                                    },
                                     diagnostics = {
                                         disabled = { "inactive-code", "unlinked-file" },
                                     },
@@ -166,10 +175,8 @@ return {
                                         overrideCommand = { "leptosfmt", "--stdin", "--rustfmt" },
                                     },
                                     procMacro = {
+                                        enabled = true,
                                         ignored = {
-                                            leptos_macros = {
-                                                "component"
-                                            },
                                             tokio_macros = {
                                                 "main", "test",
                                             },
