@@ -1,21 +1,40 @@
-summary = true
+# More info at https://github.com/Canop/bacon
+summary = false
 wrap = true
-reverse = false
-export_locations = false
+reverse = true
+grace_period = "5ms"
+help_line = false
+show_changes_count = true
+on_change_strategy = "kill_then_restart"
+# on_change_strategy = "wait_then_restart"
 
-[jobs.test]
-command = ["cargo", "test", "--", "--nocapture"]
-need_stdout = true
-
+# Uncomment and change the key-bindings you want to define
+# (some of those ones are the defaults and are just here for illustration)
 [keybindings]
-q = "quit"
-s = "toggle-summary"
-w = "toggle-wrap"
-ctrl-t = "toggle-backtrace"
+# esc = "back"
+# g = "scroll-to-top"
+# shift-g = "scroll-to-bottom"
+# k = "scroll-lines(-1)"
+# j = "scroll-lines(1)"
+# ctrl-c = "quit"
+# ctrl-q = "quit"
+# q = "quit"
+# F5 = "rerun"
 o = "toggle-raw-output"
-ctrl-d = "scroll-pages(-1)"
-ctrl-u = "scroll-pages(1)"
-g = "scroll-to-top"
-shift-g = "scroll-to-bottom"
-k = "scroll-lines(-1)"
-j = "scroll-lines(1)"
+# alt-w = "toggle-wrap"
+# alt-b = "toggle-backtrace"
+# Home = "scroll-to-top"
+# End = "scroll-to-bottom"
+# Up = "scroll-lines(-1)"
+# Down = "scroll-lines(1)"
+# PageUp = "scroll-pages(-1)"
+# PageDown = "scroll-pages(1)"
+# Space = "scroll-pages(1)"
+# a = "job:check-all"
+# i = "job:initial"
+# c = "job:clippy"
+# c = "job:clippy-all"
+# d = "job:doc-open"
+# t = "job:test"
+# r = "job:run"
+# ctrl-e = "export:analysis"
