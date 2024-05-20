@@ -188,8 +188,30 @@ return {
                                             },
                                         },
                                     },
+                                    imports = {
+                                        prefix = "crate",
+                                        granularity = {
+                                            enforce = true,
+                                        },
+                                    },
+                                    hover = {
+                                        show = {
+                                            enumVariants = 20,
+                                            fields = 20,
+                                        },
+                                        documentation = {
+                                            keywords = {
+                                                enable = false,
+                                            },
+                                        },
+                                        actions = {
+                                            debug = {
+                                                enable = false,
+                                            },
+                                        },
+                                    },
                                     check = {
-                                        command = "clippy",
+                                        features = "all",
                                     },
                                 },
                             },
