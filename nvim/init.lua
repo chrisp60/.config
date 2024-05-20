@@ -1,5 +1,6 @@
 vim.g.mapleader = " "
 vim.g.zig_fmt_autosave = false
+vim.opt.conceallevel = 1
 
 -- Bootstrap Lazy
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -55,6 +56,7 @@ vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter" }, {
     callback = function()
         vim.cmd([[set ft=htmldjango]])
         set("n", "<leader>e", function()
+            vim.cmd([[write]])
             vim.cmd([[silent !djlint % --quiet --reformat]])
             vim.cmd([[edit]])
             vim.cmd([[set ft=htmldjango]])

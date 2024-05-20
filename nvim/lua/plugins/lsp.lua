@@ -46,8 +46,15 @@ end
 
 return {
 
-    { "j-hui/fidget.nvim",       opts = {}, enabled = false, },
-    { "williamboman/mason.nvim", opts = {} },
+    {
+        "j-hui/fidget.nvim",
+        opts = {},
+        enabled = false,
+    },
+    {
+        "williamboman/mason.nvim",
+        opts = {}
+    },
     { "saadparwaiz1/cmp_luasnip" },
     { "hrsh7th/cmp-nvim-lsp" },
     { "wesleimp/stylua.nvim" },
@@ -91,8 +98,6 @@ return {
                             }
                         }
                     }),
-                    ["<C-n>"] = lsp_zero.cmp_action().luasnip_jump_forward(),
-                    ["<C-p>"] = lsp_zero.cmp_action().luasnip_jump_backward(),
                     ["<C-k>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
                     ["<C-j>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
                     ["<C-l>"] = cmp.mapping.confirm({ select = true }),
@@ -113,7 +118,8 @@ return {
             local lsp_zero = require("lsp-zero")
             lsp_zero.format_on_save({
                 servers = {
-                    ["rust_analyzer"] = { "rust", "toml" },
+                    ["taplo"] = { "toml" },
+                    ["rust_analyzer"] = { "rust" },
                     ["lua_ls"] = { "lua" },
                 },
             })
@@ -153,10 +159,17 @@ return {
                             settings = {
                                 ["rust-analyzer"] = {
                                     cargo = {},
-                                    diagnostics = {},
-                                    rustfmt = {},
+                                    diagnostics = {
+                                        disabled = { "inactive-code", "unlinked-file" },
+                                    },
+                                    rustfmt = {
+                                        overrideCommand = { "leptosfmt", "--stdin", "--rustfmt" },
+                                    },
                                     procMacro = {
                                         ignored = {
+                                            leptos_macros = {
+                                                "component"
+                                            },
                                             tokio_macros = {
                                                 "main", "test",
                                             },
