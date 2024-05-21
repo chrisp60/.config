@@ -172,7 +172,14 @@ return {
                                         disabled = { "inactive-code", "unlinked-file" },
                                     },
                                     rustfmt = {
-                                        overrideCommand = { "leptosfmt", "--stdin", "--rustfmt" },
+                                        overrideCommand = {
+                                            "leptosfmt",
+                                            "--max-width=80",
+                                            "--tab-spaces=2",
+                                            "--stdin",
+                                            "--rustfmt"
+                                        },
+
                                     },
                                     procMacro = {
                                         enabled = true,
@@ -197,7 +204,7 @@ return {
                                     hover = {
                                         show = {
                                             enumVariants = 20,
-                                            fields = 20,
+                                            fields = 5,
                                         },
                                         documentation = {
                                             keywords = {
@@ -211,6 +218,7 @@ return {
                                         },
                                     },
                                     check = {
+                                        command = "clippy",
                                         features = "all",
                                     },
                                 },
