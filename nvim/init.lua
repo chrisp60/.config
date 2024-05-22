@@ -45,11 +45,23 @@ vim.opt.updatetime = 10
 vim.opt.wrap = false
 
 vim.diagnostic.config({
-    virtual_text = true,
-    update_in_insert = true,
-    signs = false,
+    virtual_text = false,
+    update_in_insert = false,
+    signs = true,
     underline = false,
 })
+
+local showing_virtual_text = false
+local updating_on_insert = true
+
+vim.keymap.set("n", "gvt", function()
+    showing_virtual_text = not showing_virtual_text
+    vim.diagnostic.config({ virtual_text = showing_virtual_text })
+end)
+vim.keymap.set("n", "goi", function()
+    updating_on_insert = not updating_on_insert
+    vim.diagnostic.config({ update_in_insert = updating_on_insert })
+end)
 
 vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter" }, {
     pattern = "*.html",
