@@ -4,14 +4,6 @@ return {
     { "christoomey/vim-tmux-navigator" },
     { "tpope/vim-repeat" },
 
-    {
-        dir = "~/projects/cargo-expand-nvim",
-        config = function()
-            vim.keymap.set("n", "<leader>E", function()
-                require("cargo-expand"):expand()
-            end)
-        end,
-    },
 
     {
         "tpope/vim-fugitive",

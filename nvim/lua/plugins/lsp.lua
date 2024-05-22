@@ -46,6 +46,12 @@ end
 
 return {
     {
+        "j-hui/fidget.nvim",
+        opts = {
+            -- options
+        },
+    },
+    {
         "rayliwell/tree-sitter-rstml",
         dependencies = { "nvim-treesitter" },
         ft = "rust",
@@ -56,7 +62,7 @@ return {
     {
         "j-hui/fidget.nvim",
         opts = {},
-        enabled = false,
+        enabled = true,
     },
     {
         "williamboman/mason.nvim",
@@ -201,24 +207,7 @@ return {
                                             enforce = true,
                                         },
                                     },
-                                    hover = {
-                                        show = {
-                                            enumVariants = 20,
-                                            fields = 5,
-                                        },
-                                        documentation = {
-                                            keywords = {
-                                                enable = false,
-                                            },
-                                        },
-                                        actions = {
-                                            debug = {
-                                                enable = false,
-                                            },
-                                        },
-                                    },
                                     check = {
-                                        command = "clippy",
                                         features = "all",
                                     },
                                 },

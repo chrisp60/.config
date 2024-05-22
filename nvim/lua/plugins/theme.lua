@@ -1,6 +1,5 @@
 ---@type LazyPluginSpec[]
 return {
-    { "NvChad/nvim-colorizer.lua", opts = {} },
     {
         "catppuccin/nvim",
         name = "catppuccin",
@@ -16,9 +15,6 @@ return {
                         hints = { "bold" },
                         warnings = { "bold" },
                         information = { "bold" },
-                    },
-                    inlay_hints = {
-                        background = false,
                     },
                 },
             },
@@ -46,13 +42,6 @@ return {
         end,
     },
 
-    {
-        "folke/todo-comments.nvim",
-        dependencies = { "nvim-lua/plenary.nvim" },
-        opts = {
-            signs = false,
-        },
-    },
 
     {
         "stevearc/dressing.nvim",
