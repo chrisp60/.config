@@ -21,7 +21,7 @@ return {
             highlight_overrides = {
                 all = function(colors)
                     return {
-                        ["@lsp.type.decorator"] = { fg = colors.blue },
+                        -- ["@lsp.type.decorator"] = { fg = colors.blue },
                     }
                 end,
             },
