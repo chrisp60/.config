@@ -3,6 +3,7 @@ local set = vim.keymap.set
 ---@param client vim.lsp.Client
 ---@param bufnr integer
 local on_attach = function(client, bufnr)
+    require('lsp-zero').buffer_autoformat()
     local opts = { buffer = bufnr }
     local toks = vim.lsp.semantic_tokens
     local toks_supp = client.server_capabilities.semanticTokensProvider ~= nil
@@ -58,11 +59,6 @@ return {
         build = ":TSUpdate",
         name = "tree-sitter-rstml",
         opts = {}
-    },
-    {
-        "j-hui/fidget.nvim",
-        opts = {},
-        enabled = true,
     },
     {
         "williamboman/mason.nvim",
@@ -128,15 +124,7 @@ return {
         },
         branch = "v3.x",
         config = function()
-            local lsp_zero = require("lsp-zero")
-            lsp_zero.format_on_save({
-                servers = {
-                    ["taplo"] = { "toml" },
-                    ["rust_analyzer"] = { "rust" },
-                    ["lua_ls"] = { "lua" },
-                },
-            })
-            lsp_zero.on_attach(on_attach)
+            require('lsp-zero').on_attach(on_attach)
         end,
     },
 

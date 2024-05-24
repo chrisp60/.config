@@ -15,15 +15,12 @@ if not vim.loop.fs_stat(lazypath) then
     })
 end
 
-local set = vim.keymap.set
+---@diagnostic disable-next-line: undefined-field
+vim.opt.rtp:prepend(lazypath)
 
-set("n", "<leader>L", "<cmd>luafile %<cr>")
-set("n", "<C-c>n", "<cmd>cn<cr>")
-set("n", "<C-c>p", "<cmd>cp<cr>")
-set("n", "<C-c>o", "<cmd>cope<cr>")
+
 
 vim.lsp.set_log_level("ERROR")
-vim.opt.undofile = true
 vim.opt.colorcolumn = "80,100"
 vim.opt.cursorline = true
 vim.opt.expandtab = true
@@ -41,18 +38,17 @@ vim.opt.splitright = true
 vim.opt.swapfile = false
 vim.opt.tabstop = 4
 vim.opt.termguicolors = true
-vim.opt.updatetime = 10
 vim.opt.wrap = false
 
 vim.diagnostic.config({
     virtual_text = false,
-    update_in_insert = false,
+    update_in_insert = true,
     signs = true,
     underline = false,
 })
 
 local showing_virtual_text = false
-local updating_on_insert = true
+local updating_on_insert = false
 
 vim.keymap.set("n", "gvt", function()
     showing_virtual_text = not showing_virtual_text
@@ -63,24 +59,31 @@ vim.keymap.set("n", "goi", function()
     vim.diagnostic.config({ update_in_insert = updating_on_insert })
 end)
 
-vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter" }, {
-    pattern = "*.html",
-    callback = function()
-        vim.cmd([[set ft=htmldjango]])
-        set("n", "<leader>e", function()
-            vim.cmd([[write]])
-            vim.cmd([[silent !djlint % --quiet --reformat]])
-            vim.cmd([[edit]])
-            vim.cmd([[set ft=htmldjango]])
-        end)
-    end,
-})
 
----@diagnostic disable-next-line: undefined-field
-vim.opt.rtp:prepend(lazypath)
 
 -- Do not show hot-reload messages from Lazy
 require("lazy").setup("plugins", {
+    ui = {
+        icons = {
+            cmd = " ",
+            config = " ",
+            event = " ",
+            ft = " ",
+            init = " ",
+            import = " ",
+            keys = " ",
+            lazy = " ",
+            loaded = " ",
+            not_loaded = " ",
+            plugin = " ",
+            runtime = " ",
+            require = " ",
+            source = " ",
+            start = " ",
+            task = " ",
+            list = { "- ", },
+        },
+    },
     dev = {
         path = "~/projects",
         patterns = { "chrisp60" },

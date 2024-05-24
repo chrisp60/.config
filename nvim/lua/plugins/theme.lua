@@ -34,10 +34,10 @@ return {
             require("ibl").setup({
                 scope = {
                     enabled = true,
-                    char = "╎",
+                    -- char = "╎",
                     show_start = true,
                 },
-                indent = { char = "╎" },
+                -- indent = { char = "╎" },
             })
         end,
     },
