@@ -1,24 +1,26 @@
 vim.g.mapleader = " "
-vim.g.zig_fmt_autosave = false
-vim.opt.conceallevel = 1
+vim.opt.conceallevel = 0
 
--- Bootstrap Lazy
+-- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
-    vim.fn.system({
-        "git",
-        "clone",
-        "--filter=blob:none",
-        "https://github.com/folke/lazy.nvim.git",
-        "--branch=stable",
-        lazypath,
-    })
+
+---@diagnostic disable-next-line:undefined-field
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+	local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+	local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+	if vim.v.shell_error ~= 0 then
+		vim.api.nvim_echo({
+			{ "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+			{ out, "WarningMsg" },
+
+			{ "\nPress any key to exit..." },
+		}, true, {})
+		vim.fn.getchar()
+		os.exit(1)
+	end
 end
 
----@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
-
-
 
 vim.lsp.set_log_level("ERROR")
 vim.opt.colorcolumn = "80,100"
@@ -35,61 +37,44 @@ vim.opt.smartindent = true
 vim.opt.softtabstop = 4
 vim.opt.autoindent = true
 vim.opt.splitright = true
+vim.opt.undofile = true
 vim.opt.swapfile = false
 vim.opt.tabstop = 4
 vim.opt.termguicolors = true
 vim.opt.wrap = false
 
 vim.diagnostic.config({
-    virtual_text = false,
-    update_in_insert = true,
-    signs = true,
-    underline = false,
+	virtual_text = false,
+	update_in_insert = true,
+	signs = true,
+	underline = false,
 })
-
-local showing_virtual_text = false
-local updating_on_insert = false
-
-vim.keymap.set("n", "gvt", function()
-    showing_virtual_text = not showing_virtual_text
-    vim.diagnostic.config({ virtual_text = showing_virtual_text })
-end)
-vim.keymap.set("n", "goi", function()
-    updating_on_insert = not updating_on_insert
-    vim.diagnostic.config({ update_in_insert = updating_on_insert })
-end)
-
-
 
 -- Do not show hot-reload messages from Lazy
 require("lazy").setup("plugins", {
-    ui = {
-        icons = {
-            cmd = " ",
-            config = " ",
-            event = " ",
-            ft = " ",
-            init = " ",
-            import = " ",
-            keys = " ",
-            lazy = " ",
-            loaded = " ",
-            not_loaded = " ",
-            plugin = " ",
-            runtime = " ",
-            require = " ",
-            source = " ",
-            start = " ",
-            task = " ",
-            list = { "- ", },
-        },
-    },
-    dev = {
-        path = "~/projects",
-        patterns = { "chrisp60" },
-        fallback = false,
-    },
-    change_detection = {
-        notify = false,
-    },
+	rocks = { enabled = false },
+	ui = {
+		icons = {
+			cmd = " ",
+			config = " ",
+			event = " ",
+			ft = " ",
+			init = " ",
+			import = " ",
+			keys = " ",
+			lazy = " ",
+			loaded = " ",
+			not_loaded = " ",
+			plugin = " ",
+			runtime = " ",
+			require = " ",
+			source = " ",
+			start = " ",
+			task = " ",
+			list = { "- " },
+		},
+	},
+	change_detection = {
+		notify = false,
+	},
 })
