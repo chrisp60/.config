@@ -1,9 +1,48 @@
 local set = vim.keymap.set
 
----@param client vim.lsp.Client
+---@type lsp_zero.config.ClientConfig
+local ra = {
+	settings = {
+		["rust-analyzer"] = {
+			procMacro = {
+				enabled = true,
+			},
+			imports = {
+				merge = {
+					glob = false,
+				},
+				prefix = "crate",
+				granularity = {
+					enforce = true,
+					group = "crate",
+				},
+			},
+			completion = {
+				-- callable = { snippets = "none" },
+				fullFunctionSignature = { enable = true },
+			},
+			check = {
+				command = "clippy",
+			},
+		},
+	},
+}
+
+---@param _client vim.lsp.Client
 ---@param bufnr integer
-local on_attach = function(client, bufnr)
+---@diagnostic disable-next-line:unused-local
+local on_attach = function(_client, bufnr)
 	local opts = { buffer = bufnr }
+
+	for _, method in ipairs({ "textDocument/diagnostic", "workspace/diagnostic" }) do
+		local default_diagnostic_handler = vim.lsp.handlers[method]
+		vim.lsp.handlers[method] = function(err, result, context, config)
+			if err ~= nil and err.code == -32802 then
+				return
+			end
+			return default_diagnostic_handler(err, result, context, config)
+		end
+	end
 
 	set("i", "<C-h>", vim.lsp.buf.signature_help, opts)
 	set("n", "<leader>r", vim.lsp.buf.rename, opts)
@@ -17,11 +56,11 @@ local on_attach = function(client, bufnr)
 	vim.api.nvim_set_hl(0, "@lsp.type.method.rust", {})
 end
 
+---@module 'lazy'
 ---@type LazyPluginSpec[]
 return {
 	{
 		"vxpm/ferris.nvim",
-		enabled = false,
 		opts = {},
 	},
 	{
@@ -46,7 +85,7 @@ return {
 	{ "wesleimp/stylua.nvim" },
 	{
 		"folke/lazydev.nvim",
-		ft = "lua", -- only load on lua files
+		ft = "lua",
 		opts = {},
 	},
 
@@ -66,10 +105,10 @@ return {
 			"hrsh7th/cmp-nvim-lsp",
 			"L3MON4D3/LuaSnip",
 		},
-		opts = function()
+		config = function()
 			local cmp = require("cmp")
 			local lsp_zero = require("lsp-zero")
-			return {
+			cmp.setup({
 				snippet = {
 					expand = function(args)
 						require("luasnip").lsp_expand(args.body)
@@ -90,13 +129,12 @@ return {
 							},
 						},
 					}),
-					["<C-k>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
-					["<C-j>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
-					["<C-l>"] = cmp.mapping.confirm({ select = true }),
+					["<C-k>"] = lsp_zero.cmp_action().luasnip_shift_supertab(),
+					["<C-j>"] = lsp_zero.cmp_action().luasnip_supertab(),
+					["<C-l>"] = cmp.mapping.confirm(),
 				},
-				formatting = lsp_zero.cmp_format({ details = true }),
 				experimental = { ghost_text = false },
-			}
+			})
 		end,
 	},
 
@@ -153,85 +191,7 @@ return {
 						})
 					end,
 					rust_analyzer = function()
-						lsp_config.rust_analyzer.setup({
-							settings = {
-								["rust-analyzer"] = {
-									semanticHighlighting = {
-										punctuation = {
-											specialization = {
-												enable = true,
-											},
-											enable = true,
-											separate = {
-												macro = {
-													bang = false,
-												},
-											},
-										},
-										doc = {
-											comment = {
-												inject = {
-													enable = true,
-												},
-											},
-										},
-									},
-									hover = {
-										memoryLayout = {
-											niches = true,
-										},
-										show = {
-											traitAssocItems = 30,
-										},
-									},
-									completion = {
-										termSearch = {
-											enable = true,
-										},
-										callable = {
-											snippets = "add_parantheses",
-										},
-										fullFunctionSignatures = {
-											enable = true,
-										},
-										postfix = {
-											enable = false,
-										},
-									},
-									diagnostics = {
-										disabled = { "inactive-code", "unlinked-file", "macro-error" },
-									},
-									procMacro = {
-										enabled = true,
-										ignored = {
-											tokio_macros = {
-												"main",
-												"test",
-											},
-											tracing_attributes = {
-												"instrument",
-											},
-											serde_with_macros = {
-												"serde_as",
-											},
-										},
-									},
-									imports = {
-										merge = {
-											glob = false,
-										},
-										prefix = "crate",
-										granularity = {
-											enforce = true,
-											group = "crate",
-										},
-									},
-									check = {
-										command = "clippy",
-									},
-								},
-							},
-						})
+						lsp_config.rust_analyzer.setup(ra)
 					end,
 				},
 			}

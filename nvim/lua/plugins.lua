@@ -1,6 +1,7 @@
 ---@module "lazy"
 ---@type LazyPluginSpec[]
 return {
+	{ "mbbill/undotree", keys = { { "<leader>u", "<cmd>:UndotreeToggle<cr>" } } },
 	{ "lifepillar/pgsql.vim" },
 	{
 		"m4xshen/hardtime.nvim",
@@ -8,12 +9,6 @@ return {
 		opts = {},
 	},
 
-	{
-		"chrisp60/cargo_expand.nvim",
-		config = function()
-			vim.keymap.set("n", "<leader>E", require("cargo_expand").expand)
-		end,
-	},
 	{
 		"j-hui/fidget.nvim",
 		opts = {},
@@ -103,31 +98,5 @@ return {
 		keys = {
 			{ "-", "<cmd>Oil<cr>", desc = "Open parent directory" },
 		},
-	},
-
-	{
-		"debugloop/telescope-undo.nvim",
-		dependencies = {
-			{
-				"nvim-telescope/telescope.nvim",
-				dependencies = { "nvim-lua/plenary.nvim" },
-			},
-		},
-		keys = {
-			{
-				"<leader>u",
-				"<cmd>Telescope undo<cr>",
-				desc = "undo history",
-			},
-		},
-		opts = {
-			extensions = {
-				undo = {},
-			},
-		},
-		config = function(_, opts)
-			require("telescope").setup(opts)
-			require("telescope").load_extension("undo")
-		end,
 	},
 }

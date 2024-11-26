@@ -11,12 +11,6 @@ return {
 			integrations = {
 				native_lsp = {
 					enabled = true,
-					virtual_text = {
-						errors = { "bold" },
-						hints = { "bold" },
-						warnings = { "bold" },
-						information = { "bold" },
-					},
 				},
 			},
 			highlight_overrides = {

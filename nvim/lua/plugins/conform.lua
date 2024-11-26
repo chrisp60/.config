@@ -2,6 +2,7 @@
 return {
 	"stevearc/conform.nvim",
 	event = { "BufWritePre" },
+	lazy = false,
 	cmd = { "ConformInfo" },
 	keys = {
 		{
@@ -19,16 +20,14 @@ return {
 		formatters_by_ft = {
 			query = { "format-queries" },
 			lua = { "stylua" },
-			javascript = { "prettierd" },
-			html = { "prettierd" },
 			htmldjango = { "djlint" },
 			rust = { "rustfmt" },
 			toml = { "taplo" },
-			sql = { "sleek" },
+			sql = { "pg_format" },
 		},
-		format_on_save = { timeout_ms = 3000, lsp_format = "fallback" },
+		format_on_save = { timeout_ms = 1000, lsp_format = "fallback" },
 		formatters = {
-			sleek = { prepend_args = { "--uppercase", "false" } },
+			pg_format = { prepend_args = { "--keyword-case=1", "--wrap-limit=80" } },
 			djlint = {
 				htmldjango = {
 					args = { "--reformat" },
@@ -47,8 +46,4 @@ return {
 			},
 		},
 	},
-	init = function()
-		-- If you want the formatexpr, here is the place to set it
-		vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
-	end,
 }
