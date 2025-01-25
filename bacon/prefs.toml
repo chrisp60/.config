@@ -4,37 +4,47 @@ wrap = true
 reverse = true
 grace_period = "5ms"
 help_line = false
-show_changes_count = true
-on_change_strategy = "kill_then_restart"
+show_changes_count = false
+watch = ["templates", "queries", "crates/templates", "crates/queries"]
 # on_change_strategy = "wait_then_restart"
+# on_change_strategy = "kill_then_restart"
 
-# Uncomment and change the key-bindings you want to define
-# (some of those ones are the defaults and are just here for illustration)
+[jobs.test]
+command = [
+  "cargo",
+  "test",
+  "--color",
+  "always",
+  "--quiet",
+  "--",
+  "--nocapture",
+  "--color",
+  "always",
+]
+apply_gitignore = false
+allow_warnings = true
+need_stdout = true
+
+[jobs.run]
+command = ["cargo", "run", "--quiet", "--color", "always"]
+need_stdout = true
+allow_warnings = true
+background = false
+on_change_strategy = "kill_then_restart"
+
 [keybindings]
-# esc = "back"
-# g = "scroll-to-top"
-# shift-g = "scroll-to-bottom"
-# k = "scroll-lines(-1)"
-# j = "scroll-lines(1)"
-# ctrl-c = "quit"
-# ctrl-q = "quit"
-# q = "quit"
-# F5 = "rerun"
+ctrl-d = "scroll-pages(1)"
+ctrl-u = "scroll-pages(-1)"
+Space = "scroll-pages(1)"
+b = "toggle-backtrace"
+esc = "back"
+g = "scroll-to-top"
+j = "scroll-lines(1)"
+k = "scroll-lines(-1)"
 o = "toggle-raw-output"
-# alt-w = "toggle-wrap"
-# alt-b = "toggle-backtrace"
-# Home = "scroll-to-top"
-# End = "scroll-to-bottom"
-# Up = "scroll-lines(-1)"
-# Down = "scroll-lines(1)"
-# PageUp = "scroll-pages(-1)"
-# PageDown = "scroll-pages(1)"
-# Space = "scroll-pages(1)"
-# a = "job:check-all"
-# i = "job:initial"
-# c = "job:clippy"
-# c = "job:clippy-all"
-# d = "job:doc-open"
-# t = "job:test"
-# r = "job:run"
-# ctrl-e = "export:analysis"
+q = "quit"
+shift-g = "scroll-to-bottom"
+w = "toggle-wrap"
+f = "scope-to-failures"
+p = "pause"
+shift-p = "unpause"

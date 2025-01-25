@@ -44,9 +44,9 @@ vim.opt.termguicolors = true
 vim.opt.wrap = false
 
 vim.diagnostic.config({
-	virtual_text = false,
+	virtual_text = true,
 	update_in_insert = false,
-	signs = true,
+	signs = false,
 	underline = false,
 })
 
@@ -79,15 +79,22 @@ require("lazy").setup("plugins", {
 	},
 })
 
+vim.keymap.set({ "n", "v", "x" }, "<leader>yy", '"+y', { desc = "system yank" })
+vim.keymap.set({ "n", "v", "x" }, "<leader>yd", '"_d', { desc = "blackhole delete" })
+
+-- == Rinja Stuff ==
+
+-- util keymap for inlined rinja templates.
+vim.keymap.set(
+	{ "v" },
+	"<leader>z",
+	[[:'<,'>.! prettier-pnp --quiet --pn=jinja-template --parser jinja-template --single-attribute-per-line true --stdin-filepath %<cr>]],
+	{ desc = "Format rinja block", silent = true }
+)
+
 vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
 	pattern = { "*.html" },
 	callback = function()
 		vim.cmd([[set ft=htmldjango]])
 	end,
 })
-
-vim.keymap.set("n", "gx", function()
-	local word = vim.fn.expand("<cfile>")
-	vim.print(word)
-	vim.fn.system({ "wslview", word })
-end, { desc = "open <cword> in wslview" })

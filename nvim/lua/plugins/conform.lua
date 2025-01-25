@@ -1,9 +1,9 @@
+---@module "lazy"
 ---@type LazyPluginSpec
 return {
 	"stevearc/conform.nvim",
 	event = { "BufWritePre" },
 	cmd = { "ConformInfo" },
-
 	---@module "conform"
 	---@type conform.setupOpts
 	opts = {
@@ -13,24 +13,43 @@ return {
 			javascript = { "prettierd" },
 			markdown = { "prettierd" },
 			html = { "prettierd" },
-			htmldjango = { "djlint" },
-			rust = { "rustfmt", "leptosfmt" },
-			toml = { "taplo" },
-			sql = { "sqlfluff" },
-		},
-		format_on_save = { timeout_ms = 3000, lsp_format = "fallback" },
-		formatters = {
-			sqlfluff = { command = "sqlfluff", args = { "format", "--dialect=postgres", "-" }, stdin = true },
-			leptosfmt = { prepend_args = { "--tab-spaces=2", "--max-width=80" } },
-			djlint = {
-				htmldjango = {
-					args = { "--reformat" },
-				},
+			htmldjango = { "prettier_pnp", lsp_format = "never" },
+			rust = {
+				"rustfmt",
+				-- "leptosfmt"
 			},
-			-- Custom formatter definition for djhtml
-			djhtml = {
-				command = "djhtml",
-				args = { "$FILENAME" },
+			toml = { "taplo" },
+			sql = { "sqlfluff", lsp_format = "never" },
+		},
+		format_on_save = { timeout_ms = 5000, lsp_format = "fallback" },
+		formatters = {
+			sqlfluff = {
+				command = "sqlfluff",
+				args = {
+					"format",
+					"--dialect",
+					"postgres",
+					"--stdin-filename",
+					"$FILENAME",
+					"-",
+				},
+				stdin = true,
+				require_cwd = false,
+			},
+			prettier_pnp = {
+				command = "prettier-pnp",
+				args = {
+					"--quiet",
+					"--pn",
+					"jinja-template",
+					"--stdin-filepath",
+					"$FILENAME",
+					"--parser",
+					"jinja-template",
+					"--single-attribute-per-line",
+					"true",
+				},
+				stdin = true,
 			},
 		},
 	},

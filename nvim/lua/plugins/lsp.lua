@@ -7,7 +7,6 @@ end)
 local ra_config = {
 	settings = {
 		["rust-analyzer"] = {
-			-- semanticHighlighting = { strings = { enable = false } },
 			showRequestFailedErrorNotification = false,
 			completion = {
 				callable = { snippets = "add_parantheses" },
@@ -64,13 +63,22 @@ local ra_config = {
 local on_attach = function(client, bufnr)
 	local opts = { buffer = bufnr }
 
+	set("n", "gn", vim.diagnostic.goto_next, opts)
+	set("n", "<c-n>", function()
+		vim.diagnostic.goto_next({ severity = { min = "ERROR", max = "ERROR" } })
+	end, opts)
+
+	set("n", "gp", vim.diagnostic.goto_prev, opts)
+	set("n", "<c-p>", function()
+		vim.diagnostic.goto_prev({ severity = { min = "ERROR", max = "ERROR" } })
+	end, opts)
+
 	set("i", "<C-h>", vim.lsp.buf.signature_help, opts)
 	set("n", "<leader>r", vim.lsp.buf.rename, opts)
 	set("n", "K", vim.lsp.buf.hover, opts)
 	set("n", "gd", vim.lsp.buf.definition, opts)
-	set("n", "gn", vim.diagnostic.goto_next, opts)
-	set("n", "gp", vim.diagnostic.goto_prev, opts)
 	set({ "n", "v", "x" }, "ga", vim.lsp.buf.code_action, opts)
+	set({ "n", "v", "x" }, "<leader>a", vim.lsp.buf.code_action, opts)
 end
 
 ---@module "lazy"
@@ -202,15 +210,6 @@ return {
 					html = function()
 						lsp_config.html.setup({
 							filetypes = { "html", "templ", "htmldjango" },
-							settings = {
-								html = {
-									format = {
-										wrapLineLength = 80,
-										templating = true,
-										indentHandlebars = true,
-									},
-								},
-							},
 						})
 					end,
 					lua_ls = function()
