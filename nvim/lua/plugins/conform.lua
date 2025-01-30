@@ -8,6 +8,7 @@ return {
 	---@type conform.setupOpts
 	opts = {
 		formatters_by_ft = {
+			css = { "prettierd", lsp_format = "never" },
 			query = { "format-queries" },
 			lua = { "stylua" },
 			javascript = { "prettierd" },
