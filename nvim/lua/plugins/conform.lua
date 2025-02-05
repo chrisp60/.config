@@ -47,8 +47,6 @@ return {
 					"$FILENAME",
 					"--parser",
 					"jinja-template",
-					"--single-attribute-per-line",
-					"true",
 				},
 				stdin = true,
 			},

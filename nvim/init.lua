@@ -88,7 +88,7 @@ vim.keymap.set({ "n", "v", "x" }, "<leader>yd", '"_d', { desc = "blackhole delet
 vim.keymap.set(
 	{ "v" },
 	"<leader>z",
-	[[:'<,'>.! prettier-pnp --quiet --pn=jinja-template --parser jinja-template --single-attribute-per-line true --stdin-filepath %<cr>]],
+	[[:'<,'>.! prettier-pnp --quiet --pn=jinja-template --parser jinja-template --single-attribute-per-line false --stdin-filepath %<cr>]],
 	{ desc = "Format rinja block", silent = true }
 )
 
