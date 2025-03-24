@@ -1,7 +1,7 @@
+---@diagnostic disable-next-line: inject-field
 vim.g.mapleader = " "
 vim.opt.conceallevel = 0
 
--- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
 ---@diagnostic disable-next-line:undefined-field
@@ -22,6 +22,13 @@ end
 
 vim.opt.rtp:prepend(lazypath)
 
+require("lazy").setup("plugins", {
+	rocks = { enabled = false },
+	change_detection = {
+		notify = false,
+	},
+})
+
 vim.lsp.set_log_level("ERROR")
 vim.opt.colorcolumn = "80,100"
 vim.opt.cursorline = true
@@ -35,7 +42,7 @@ vim.opt.showmode = true
 vim.opt.signcolumn = "yes"
 vim.opt.smartindent = true
 vim.opt.softtabstop = 4
-vim.opt.autoindent = true
+vim.opt.autoindent = false
 vim.opt.splitright = true
 vim.opt.undofile = true
 vim.opt.swapfile = false
@@ -44,57 +51,36 @@ vim.opt.termguicolors = true
 vim.opt.wrap = false
 
 vim.diagnostic.config({
-	virtual_text = true,
-	update_in_insert = false,
+	virtual_text = { severity = "ERROR" },
+	update_in_insert = true,
 	signs = false,
 	underline = false,
 })
-
--- Do not show hot-reload messages from Lazy
-require("lazy").setup("plugins", {
-	rocks = { enabled = false },
-	ui = {
-		icons = {
-			cmd = " ",
-			config = " ",
-			event = " ",
-			ft = " ",
-			init = " ",
-			import = " ",
-			keys = " ",
-			lazy = " ",
-			loaded = " ",
-			not_loaded = " ",
-			plugin = " ",
-			runtime = " ",
-			require = " ",
-			source = " ",
-			start = " ",
-			task = " ",
-			list = { "- " },
-		},
-	},
-	change_detection = {
-		notify = false,
-	},
-})
-
-vim.keymap.set({ "n", "v", "x" }, "<leader>yy", '"+y', { desc = "system yank" })
-vim.keymap.set({ "n", "v", "x" }, "<leader>yd", '"_d', { desc = "blackhole delete" })
-
--- == Rinja Stuff ==
 
 -- util keymap for inlined rinja templates.
 vim.keymap.set(
 	{ "v" },
 	"<leader>z",
-	[[:'<,'>.! prettier-pnp --quiet --pn=jinja-template --parser jinja-template --single-attribute-per-line false --stdin-filepath %<cr>]],
-	{ desc = "Format rinja block", silent = true }
+	[[:'<,'>.! sqlfluff format --dialect postgres - <cr>]],
+	{ desc = "Format sql block", silent = true }
 )
 
 vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
 	pattern = { "*.html" },
 	callback = function()
 		vim.cmd([[set ft=htmldjango]])
+	end,
+})
+
+vim.api.nvim_create_user_command("Virt", function(opts)
+	local level = string.upper(opts.fargs[1])
+	vim.print("setting level to " .. level)
+	vim.diagnostic.config({ virtual_text = { severity = parsed } })
+	vim.diagnostic.reset()
+	vim.diagnostic.show()
+end, {
+	nargs = 1,
+	complete = function(_)
+		return { "hint", "info", "warn", "error" }
 	end,
 })

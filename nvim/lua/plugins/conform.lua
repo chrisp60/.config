@@ -1,3 +1,22 @@
+--- constructs a table for conforms custom formatters using prettier-pnp
+---@param extension string
+---@return conform.FormatterConfigOverride
+local function prettier_pnp(extension)
+	return {
+		command = "prettier-pnp",
+		args = {
+			"--quiet",
+			"--pn",
+			extension,
+			"--stdin-filepath",
+			"$FILENAME",
+			"--parser",
+			extension,
+		},
+		stdin = true,
+	}
+end
+
 ---@module "lazy"
 ---@type LazyPluginSpec
 return {
@@ -11,10 +30,15 @@ return {
 			css = { "prettierd", lsp_format = "never" },
 			query = { "format-queries" },
 			lua = { "stylua" },
-			javascript = { "prettierd" },
+			-- Why are there 3 different javascripts?
+			typescriptreact = { "prettierd", lsp_format = "fallback" },
+			typescript = { "prettierd", lsp_format = "never" },
+			svelte = { "prettier_svelte", lsp_format = "fallback" },
+			javascript = { "prettierd", lsp_format = "never" },
 			markdown = { "prettierd" },
 			html = { "prettierd" },
-			htmldjango = { "prettier_pnp", lsp_format = "never" },
+			htmldjango = { "prettier_jinja", lsp_format = "never" },
+			json = { "jq", lsp_format = "fallback" },
 			rust = {
 				"rustfmt",
 				-- "leptosfmt"
@@ -37,19 +61,8 @@ return {
 				stdin = true,
 				require_cwd = false,
 			},
-			prettier_pnp = {
-				command = "prettier-pnp",
-				args = {
-					"--quiet",
-					"--pn",
-					"jinja-template",
-					"--stdin-filepath",
-					"$FILENAME",
-					"--parser",
-					"jinja-template",
-				},
-				stdin = true,
-			},
+			prettier_jinja = prettier_pnp("jinja-template"),
+			prettier_svelte = prettier_pnp("svelte"),
 		},
 	},
 }

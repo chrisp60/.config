@@ -2,12 +2,12 @@
 summary = false
 wrap = true
 reverse = true
-grace_period = "5ms"
+grace_period = "10ms"
 help_line = false
-show_changes_count = false
-watch = ["templates", "queries", "crates/templates", "crates/queries"]
+show_changes_count = true
+watch = ["crates", "queries"]
 # on_change_strategy = "wait_then_restart"
-# on_change_strategy = "kill_then_restart"
+on_change_strategy = "kill_then_restart"
 
 [jobs.test]
 command = [
@@ -25,17 +25,9 @@ apply_gitignore = false
 allow_warnings = true
 need_stdout = true
 
-[jobs.run]
-command = ["cargo", "run", "--quiet", "--color", "always"]
-need_stdout = true
-allow_warnings = true
-background = false
-on_change_strategy = "kill_then_restart"
-
 [keybindings]
 ctrl-d = "scroll-pages(1)"
 ctrl-u = "scroll-pages(-1)"
-Space = "scroll-pages(1)"
 b = "toggle-backtrace"
 esc = "back"
 g = "scroll-to-top"

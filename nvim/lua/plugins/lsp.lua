@@ -85,24 +85,6 @@ end
 ---@type LazyPluginSpec[]
 return {
 	{
-		"folke/todo-comments.nvim",
-		dependencies = { "nvim-lua/plenary.nvim" },
-		opts = {
-			signs = false,
-			keywords = {
-				FIX = {
-					icon = "F ",
-					color = "error",
-					alt = { "FIXME", "BUG", "FIXIT", "ISSUE" },
-				},
-				TODO = { icon = "T ", color = "info" },
-				HACK = { icon = "H ", color = "warning" },
-				WARN = { icon = "W ", color = "warning", alt = { "WARNING" } },
-				PERF = { icon = "P " },
-			},
-		},
-	},
-	{
 		"vxpm/ferris.nvim",
 		opts = {},
 	},
