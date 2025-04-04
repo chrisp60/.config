@@ -7,17 +7,14 @@ end)
 local ra_config = {
 	settings = {
 		["rust-analyzer"] = {
-			showRequestFailedErrorNotification = false,
 			completion = {
 				callable = { snippets = "add_parantheses" },
 				postfix = { enable = false },
 			},
 			check = {
-				command = "clippy",
+				command = "check",
 			},
-			cargo = {
-				features = "all",
-			},
+			-- cargo = { features = "all", },
 			diagnostics = {
 				disabled = {
 					"inactive-code",
@@ -193,6 +190,9 @@ return {
 						lsp_config.html.setup({
 							filetypes = { "html", "templ", "htmldjango" },
 						})
+					end,
+					svelte = function()
+						lsp_config.svelte.setup({ settings = { enable_ts_plugin = true } })
 					end,
 					lua_ls = function()
 						lsp_config.lua_ls.setup({

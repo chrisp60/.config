@@ -66,8 +66,9 @@ return {
 		config = function(_, _)
 			require("nvim-treesitter.configs").setup({
 				matchup = { enable = true },
-				modules = {},
-				ignore_install = {},
+				incremental_selecation = { enable = true },
+				indent = { enable = true },
+				ignore_install = { enable = true },
 				auto_install = true,
 				ensure_installed = {},
 				sync_install = false,

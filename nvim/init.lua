@@ -1,6 +1,5 @@
 ---@diagnostic disable-next-line: inject-field
 vim.g.mapleader = " "
-vim.opt.conceallevel = 0
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
@@ -30,6 +29,8 @@ require("lazy").setup("plugins", {
 })
 
 vim.lsp.set_log_level("ERROR")
+vim.opt.autoindent = true
+vim.opt.conceallevel = 0
 vim.opt.colorcolumn = "80,100"
 vim.opt.cursorline = true
 vim.opt.expandtab = true
@@ -42,12 +43,11 @@ vim.opt.showmode = true
 vim.opt.signcolumn = "yes"
 vim.opt.smartindent = true
 vim.opt.softtabstop = 4
-vim.opt.autoindent = false
 vim.opt.splitright = true
-vim.opt.undofile = true
 vim.opt.swapfile = false
-vim.opt.tabstop = 4
+vim.opt.tabstop = 2
 vim.opt.termguicolors = true
+vim.opt.undofile = true
 vim.opt.wrap = false
 
 vim.diagnostic.config({
@@ -69,18 +69,5 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
 	pattern = { "*.html" },
 	callback = function()
 		vim.cmd([[set ft=htmldjango]])
-	end,
-})
-
-vim.api.nvim_create_user_command("Virt", function(opts)
-	local level = string.upper(opts.fargs[1])
-	vim.print("setting level to " .. level)
-	vim.diagnostic.config({ virtual_text = { severity = parsed } })
-	vim.diagnostic.reset()
-	vim.diagnostic.show()
-end, {
-	nargs = 1,
-	complete = function(_)
-		return { "hint", "info", "warn", "error" }
 	end,
 })
