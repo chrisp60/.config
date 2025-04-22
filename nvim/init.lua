@@ -28,7 +28,7 @@ require("lazy").setup("plugins", {
 	},
 })
 
-vim.lsp.set_log_level("ERROR")
+vim.lsp.set_log_level("OFF")
 vim.opt.autoindent = true
 vim.opt.conceallevel = 0
 vim.opt.colorcolumn = "80,100"

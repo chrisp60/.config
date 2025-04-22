@@ -7,10 +7,23 @@ end)
 local ra_config = {
 	settings = {
 		["rust-analyzer"] = {
+			showDependenciesExplorer = false,
 			completion = {
-				callable = { snippets = "add_parantheses" },
+				fullFunctionSignatures = { enable = true },
 				postfix = { enable = false },
+				limit = 20,
 			},
+			hover = {
+				memoryLayout = { niches = true },
+				show = {
+					traitAssocItems = 10,
+				},
+			},
+			inlayHints = {
+				closureCaptureHints = { enable = true },
+				discriminantHints = "always",
+			},
+			references = { excludeImports = true, excludeTests = true },
 			check = {
 				command = "check",
 			},
