@@ -71,24 +71,39 @@ local ra_config = {
 ---@param bufnr integer
 ---@diagnostic disable-next-line:unused-local
 local on_attach = function(client, bufnr)
-	local opts = { buffer = bufnr }
+	---@diagnostic disable: deprecated
 
-	set("n", "gn", vim.diagnostic.goto_next, opts)
+	local function opts(desc)
+		return { buffer = bufnr, desc = "LSP: " .. desc }
+	end
+
+	local defaults = { "grn", "gra", "grr", "gri", "gO" }
+
+	-- Remove default lsp keybinds
+	for _, value in pairs(defaults) do
+		vim.keymap.del("n", value)
+	end
+
+	vim.keymap.del("n", "grn", { buffer = bufnr })
+
+	set("n", "gn", vim.diagnostic.goto_next, opts("next diagnostic"))
 	set("n", "<c-n>", function()
 		vim.diagnostic.goto_next({ severity = { min = "ERROR", max = "ERROR" } })
-	end, opts)
+	end, opts("next ERROR diagnostic"))
 
-	set("n", "gp", vim.diagnostic.goto_prev, opts)
+	set("n", "gp", vim.diagnostic.goto_prev, opts("prev diagnostic"))
 	set("n", "<c-p>", function()
 		vim.diagnostic.goto_prev({ severity = { min = "ERROR", max = "ERROR" } })
-	end, opts)
+	end, opts("prev ERROR diagnostic"))
 
-	set("i", "<C-h>", vim.lsp.buf.signature_help, opts)
-	set("n", "<leader>r", vim.lsp.buf.rename, opts)
-	set("n", "K", vim.lsp.buf.hover, opts)
-	set("n", "gd", vim.lsp.buf.definition, opts)
-	set({ "n", "v", "x" }, "ga", vim.lsp.buf.code_action, opts)
-	set({ "n", "v", "x" }, "<leader>a", vim.lsp.buf.code_action, opts)
+	set("i", "<C-h>", vim.lsp.buf.signature_help, opts("signature help"))
+	set("n", "<leader>r", vim.lsp.buf.rename, opts("rename"))
+	set("n", "K", function()
+		vim.lsp.buf.hover({ border = "single" })
+	end, opts("hover"))
+	set("n", "gd", vim.lsp.buf.definition, opts("definition"))
+	set({ "n", "v", "x" }, "ga", vim.lsp.buf.code_action, opts("code action"))
+	set({ "n", "v", "x" }, "<leader>a", vim.lsp.buf.code_action, opts("code action"))
 end
 
 ---@module "lazy"
