@@ -47,7 +47,7 @@ vim.opt.splitright = true
 vim.opt.swapfile = false
 vim.opt.tabstop = 2
 vim.opt.termguicolors = true
-vim.opt.undofile = true
+vim.opt.undofile = false
 vim.opt.wrap = false
 
 vim.diagnostic.config({
@@ -65,9 +65,4 @@ vim.keymap.set(
 	{ desc = "Format sql block", silent = true }
 )
 
-vim.api.nvim_create_autocmd({ "BufEnter", "BufWinEnter" }, {
-	pattern = { "*.html" },
-	callback = function()
-		vim.cmd([[set ft=htmldjango]])
-	end,
-})
+vim.api.nvim_create_autocmd("BufEnter", { command = "set conceallevel=0" })

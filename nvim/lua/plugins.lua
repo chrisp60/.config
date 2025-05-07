@@ -82,9 +82,16 @@ return {
 
 	{
 		"stevearc/oil.nvim",
-		opts = {},
+		opts = { columns = { "icon", "permissions", "size" } },
 		keys = {
 			{ "-", "<cmd>Oil<cr>", desc = "Open parent directory" },
+			{
+				"_",
+				function()
+					require("oil").open_float()
+				end,
+				desc = "floating",
+			},
 		},
 	},
 }

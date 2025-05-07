@@ -77,15 +77,6 @@ local on_attach = function(client, bufnr)
 		return { buffer = bufnr, desc = "LSP: " .. desc }
 	end
 
-	local defaults = { "grn", "gra", "grr", "gri", "gO" }
-
-	-- Remove default lsp keybinds
-	for _, value in pairs(defaults) do
-		vim.keymap.del("n", value)
-	end
-
-	vim.keymap.del("n", "grn", { buffer = bufnr })
-
 	set("n", "gn", vim.diagnostic.goto_next, opts("next diagnostic"))
 	set("n", "<c-n>", function()
 		vim.diagnostic.goto_next({ severity = { min = "ERROR", max = "ERROR" } })
