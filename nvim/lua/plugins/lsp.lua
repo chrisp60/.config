@@ -9,25 +9,11 @@ local ra_config = {
 		["rust-analyzer"] = {
 			showDependenciesExplorer = false,
 			completion = {
-				fullFunctionSignatures = { enable = true },
 				postfix = { enable = false },
-				limit = 20,
-			},
-			hover = {
-				memoryLayout = { niches = true },
-				show = {
-					traitAssocItems = 10,
-				},
-			},
-			inlayHints = {
-				closureCaptureHints = { enable = true },
-				discriminantHints = "always",
+				limit = 30,
 			},
 			references = { excludeImports = true, excludeTests = true },
-			check = {
-				command = "check",
-			},
-			-- cargo = { features = "all", },
+			check = { command = "check" },
 			diagnostics = {
 				disabled = {
 					"inactive-code",
@@ -77,12 +63,10 @@ local on_attach = function(client, bufnr)
 		return { buffer = bufnr, desc = "LSP: " .. desc }
 	end
 
-	set("n", "gn", vim.diagnostic.goto_next, opts("next diagnostic"))
 	set("n", "<c-n>", function()
 		vim.diagnostic.goto_next({ severity = { min = "ERROR", max = "ERROR" } })
 	end, opts("next ERROR diagnostic"))
 
-	set("n", "gp", vim.diagnostic.goto_prev, opts("prev diagnostic"))
 	set("n", "<c-p>", function()
 		vim.diagnostic.goto_prev({ severity = { min = "ERROR", max = "ERROR" } })
 	end, opts("prev ERROR diagnostic"))
@@ -100,43 +84,29 @@ end
 ---@module "lazy"
 ---@type LazyPluginSpec[]
 return {
-	{
-		"vxpm/ferris.nvim",
-		opts = {},
-	},
+	{ "vxpm/ferris.nvim", opts = {} },
+
 	{
 		"j-hui/fidget.nvim",
-		opts = {},
-	},
-	{
-		"rayliwell/tree-sitter-rstml",
-		enabled = false,
-		dependencies = { "nvim-treesitter" },
-		ft = "rust",
-		build = ":TSUpdate",
-		name = "tree-sitter-rstml",
-		opts = {},
-	},
-	{
-		"williamboman/mason.nvim",
-		opts = {},
-	},
-	{ "saadparwaiz1/cmp_luasnip" },
-	{ "hrsh7th/cmp-nvim-lsp" },
-	{ "wesleimp/stylua.nvim" },
-	{
-		"folke/lazydev.nvim",
-		ft = "lua", -- only load on lua files
-		opts = {},
+		opts = {
+			-- Per catpuccin theme docs
+			notification = { window = { winblend = 0 } },
+		},
 	},
 
-	-- lsp stuff for config
+	{ "williamboman/mason.nvim", opts = {} },
+
+	{ "saadparwaiz1/cmp_luasnip" },
+
+	{ "hrsh7th/cmp-nvim-lsp" },
+
+	{ "wesleimp/stylua.nvim" },
+
+	{ "folke/lazydev.nvim", ft = "lua", opts = {} },
+
 	{ "Bilal2453/luvit-meta", lazy = true },
 
-	{
-		"neovim/nvim-lspconfig",
-		lazy = false,
-	},
+	{ "neovim/nvim-lspconfig", lazy = false },
 
 	{
 		"hrsh7th/nvim-cmp",

@@ -7,23 +7,27 @@ return {
 		init = function()
 			vim.cmd.colorscheme("catppuccin")
 		end,
+		---@module 'catppuccin'
+		---@type CatppuccinOptions
 		opts = {
+			no_italic = true,
 			integrations = {
+				fidget = true,
 				native_lsp = {
 					enabled = true,
-					virtual_text = {
-						errors = { "bold" },
-						hints = { "bold" },
-						warnings = { "bold" },
-						information = { "bold" },
-					},
+				},
+				mason = true,
+				harpoon = true,
+				indent_blankline = {
+					enabled = true,
+					scope_color = "rosewater",
+					colored_indent_levels = true,
 				},
 			},
 			highlight_overrides = {
 				all = function(colors)
 					return {
-						LineNr = { fg = colors.maroon, style = { "bold", "italic" } },
-						-- ["@lsp.type.decorator"] = { fg = colors.blue },
+						LineNr = { fg = colors.maroon },
 					}
 				end,
 			},
@@ -33,19 +37,25 @@ return {
 	{
 		"lukas-reineke/indent-blankline.nvim",
 		config = function()
-			require("ibl").setup({
+			---@type ibl.config
+			opts = {
+				enabled = true,
 				scope = {
 					enabled = true,
-					-- char = "╎",
 					show_start = true,
 				},
-				-- indent = { char = "╎" },
-			})
+			}
+			require("ibl").setup(opts)
 		end,
 	},
 
 	{
 		"stevearc/dressing.nvim",
-		opts = {},
+		opts = {
+			input = {
+				start_mode = "normal",
+				border = "single",
+			},
+		},
 	},
 }

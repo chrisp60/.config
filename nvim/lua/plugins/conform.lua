@@ -27,26 +27,26 @@ return {
 	---@type conform.setupOpts
 	opts = {
 		formatters_by_ft = {
-			css = { "prettierd", lsp_format = "never" },
+			css = { "prettierd" },
 			query = { "format-queries" },
 			lua = { "stylua" },
 			-- Why are there 3 different javascripts?
 			typescriptreact = { "prettierd", lsp_format = "fallback" },
-			typescript = { "prettierd", lsp_format = "never" },
+			typescript = { "prettierd" },
+			just = { "just" },
 			svelte = { "prettier_svelte", lsp_format = "fallback" },
-			javascript = { "prettierd", lsp_format = "never" },
+			javascript = { "prettierd" },
 			markdown = { "prettierd" },
 			html = { "prettierd" },
-			htmldjango = { "prettier_jinja", lsp_format = "never" },
-			json = { "jq", lsp_format = "fallback" },
-			rust = {
-				"rustfmt",
-				-- "leptosfmt"
-			},
+			htmldjango = { "prettier_jinja" },
+			json = { "jq" },
+			rust = { "rustfmt" },
 			toml = { "taplo" },
-			sql = { "sqlfluff", lsp_format = "never" },
+			sql = { "sqlfluff" },
+			gitcommit = { "commitmsgfmt" },
+			["*"] = { "trim_whitespace", "trim_newline" },
 		},
-		format_on_save = { timeout_ms = 5000, lsp_format = "fallback" },
+		format_on_save = { timeout_ms = 5000 },
 		formatters = {
 			sqlfluff = {
 				command = "sqlfluff",

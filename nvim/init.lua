@@ -47,7 +47,7 @@ vim.opt.splitright = true
 vim.opt.swapfile = false
 vim.opt.tabstop = 2
 vim.opt.termguicolors = true
-vim.opt.undofile = false
+vim.opt.undofile = true
 vim.opt.wrap = false
 
 vim.diagnostic.config({

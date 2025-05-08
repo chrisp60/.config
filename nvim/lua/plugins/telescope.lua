@@ -26,11 +26,21 @@ return {
 			{ ".", b.keymaps, "keymaps", { show_plug = false } },
 			{ "/", b.current_buffer_fuzzy_find, "fuzzy search buffer" },
 			{ "?", b.help_tags, "help tags" },
-			{ "F", b.find_files, "files (all)", { hidden = true, no_ignore = true, no_ignore_parent = true } },
+			{
+				"F",
+				b.find_files,
+				"files (all)",
+				{
+					hidden = true,
+					no_ignore = true,
+					no_ignore_parent = true,
+				},
+			},
 			{ "f", b.find_files, "files" },
 			{ "g", b.live_grep, "grep" },
 			{ "o", b.vim_options, "vim options" },
 			{ '"', b.marks, "marks" },
+			{ "b", b.jumplist, "vim options" },
 
 			-- Lsp
 			{ "ld", b.lsp_definitions, "LSP definitions" },
@@ -40,7 +50,15 @@ return {
 			{ "s", b.lsp_workspace_symbols, "LSP workspace symbols", {} },
 			{ "S", b.lsp_document_symbols, "LSP document symbols" },
 			{ "D", b.diagnostics, "all diagnostics" },
-			{ "d", b.diagnostics, "errors", { severity = vim.diagnostic.severity.ERROR } },
+			{
+				"d",
+				b.diagnostics,
+				"errors",
+				{
+					severity = vim.diagnostic.severity.ERROR,
+					no_sign = true,
+				},
+			},
 		}
 
 		for _, command in ipairs(commands) do
