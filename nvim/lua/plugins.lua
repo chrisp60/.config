@@ -45,7 +45,7 @@ return {
 		config = function(_, _)
 			require("nvim-treesitter.configs").setup({
 				matchup = { enable = true },
-				incremental_selecation = { enable = true },
+				incremental_selection = { enable = true },
 				indent = { enable = true },
 				ignore_install = { enable = true },
 				auto_install = true,
