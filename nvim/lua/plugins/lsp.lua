@@ -10,7 +10,7 @@ local ra_config = {
 			showDependenciesExplorer = false,
 			completion = {
 				postfix = { enable = false },
-				limit = 30,
+				limit = 10,
 			},
 			references = { excludeImports = true, excludeTests = true },
 			check = { command = "check" },

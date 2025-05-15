@@ -34,7 +34,7 @@ return {
 			typescriptreact = { "prettierd", lsp_format = "fallback" },
 			typescript = { "prettierd" },
 			just = { "just" },
-			svelte = { "prettier_svelte", lsp_format = "fallback" },
+			svelte = { "prettierd", lsp_format = "fallback" },
 			javascript = { "prettierd" },
 			markdown = { "prettierd" },
 			html = { "prettierd" },
@@ -42,11 +42,14 @@ return {
 			json = { "jq" },
 			rust = { "rustfmt" },
 			toml = { "taplo" },
-			sql = { "sqlfluff" },
-			gitcommit = { "commitmsgfmt" },
-			["*"] = { "trim_whitespace", "trim_newline" },
+			sql = {
+				"sqlfluff",
+				-- Can take an aggresively long time
+				timeout_ms = 5000,
+			},
+			["*"] = { "trim_whitespace", "trim_newlines" },
 		},
-		format_on_save = { timeout_ms = 5000 },
+		format_after_save = { timeout_ms = 500 },
 		formatters = {
 			sqlfluff = {
 				command = "sqlfluff",
