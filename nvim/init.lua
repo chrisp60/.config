@@ -51,7 +51,7 @@ vim.opt.undofile = true
 vim.opt.wrap = false
 
 vim.diagnostic.config({
-	virtual_text = { severity = "ERROR" },
+	virtual_text = { severity = { min = "WARN" } },
 	update_in_insert = true,
 	signs = false,
 	underline = false,

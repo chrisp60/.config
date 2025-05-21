@@ -64,11 +64,11 @@ local on_attach = function(client, bufnr)
 	end
 
 	set("n", "<c-n>", function()
-		vim.diagnostic.goto_next({ severity = { min = "ERROR", max = "ERROR" } })
+		vim.diagnostic.goto_next({ severity = { min = "WARN", max = "ERROR" } })
 	end, opts("next ERROR diagnostic"))
 
 	set("n", "<c-p>", function()
-		vim.diagnostic.goto_prev({ severity = { min = "ERROR", max = "ERROR" } })
+		vim.diagnostic.goto_prev({ severity = { min = "WARN", max = "ERROR" } })
 	end, opts("prev ERROR diagnostic"))
 
 	set("i", "<C-h>", vim.lsp.buf.signature_help, opts("signature help"))

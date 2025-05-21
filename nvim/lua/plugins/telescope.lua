@@ -55,7 +55,7 @@ return {
 				b.diagnostics,
 				"errors",
 				{
-					severity = vim.diagnostic.severity.ERROR,
+					severity = { min = "WARN" },
 					no_sign = true,
 				},
 			},
