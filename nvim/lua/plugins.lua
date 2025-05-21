@@ -7,8 +7,6 @@ return {
 		config = true,
 	},
 
-	{ "L3MON4D3/LuaSnip" },
-
 	{ "andymass/vim-matchup" },
 
 	{ "tpope/vim-surround" },
