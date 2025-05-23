@@ -11,9 +11,10 @@ local ra_config = {
 			completion = {
 				postfix = { enable = false },
 				limit = 10,
+				autoIter = { enable = false },
+				excludeTraits = { "std::iter::IntoIterator", "std::iter::Iterator" },
 			},
-			references = { excludeImports = true, excludeTests = true },
-			check = { command = "check" },
+			check = { command = "clippy" },
 			diagnostics = {
 				disabled = {
 					"inactive-code",
@@ -119,16 +120,23 @@ return {
 		opts = function()
 			local cmp = require("cmp")
 			local lsp_zero = require("lsp-zero")
-			return {
+			local select = { behavior = cmp.SelectBehavior.Select }
+
+			cmp.setup.filetype("lua", {
+				sources = {
+					{ name = "lazydev", group_index = 0 },
+				},
+			})
+
+			cmp.setup({
 				snippet = {
 					expand = function(args)
 						require("luasnip").lsp_expand(args.body)
 					end,
 				},
 				sources = {
-					{ name = "lazydev", group_index = 0 },
-					{ name = "nvim_lsp" },
-					{ name = "luasnip" },
+					{ name = "nvim_lsp", max_item_count = 20 },
+					{ name = "luasnip", group_index = 1 },
 					{ name = "nvim_lua" },
 				},
 				preselect = cmp.PreselectMode.None,
@@ -140,13 +148,20 @@ return {
 							},
 						},
 					}),
-					["<C-j>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
-					["<C-k>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
 					["<C-l>"] = cmp.mapping.confirm({ select = true }),
+					["<C-j>"] = lsp_zero.cmp_action().luasnip_next_or_expand(select),
+					["<C-k>"] = lsp_zero.cmp_action().luasnip_shift_supertab(select),
+					["<C-;>"] = cmp.mapping.close(),
+					["<C-x>"] = cmp.mapping.close(),
+
+					-- ["<C-j>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
+					-- ["<C-k>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
+					-- ["<C-n>"] = lsp_zero.cmp_action().luasnip_jump_forward(),
+					-- ["<C-p>"] = lsp_zero.cmp_action().luasnip_jump_backward(),
 				},
-				formatting = lsp_zero.cmp_format({ details = true }),
+				formatting = lsp_zero.cmp_format({ details = true, max_width = 40 }),
 				experimental = { ghost_text = false },
-			}
+			})
 		end,
 	},
 

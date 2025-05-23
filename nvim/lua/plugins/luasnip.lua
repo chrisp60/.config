@@ -1,8 +1,14 @@
-local snipet = function()
+local config = function()
 	local ls = require("luasnip")
-	local t = ls.t
+	local text = ls.t
 	local fmt = require("luasnip.extras.fmt").fmt
-	--
+	local fmta = require("luasnip.extras.fmt").fmta
+	local insert = ls.insert_node
+	local snippet = ls.snippet
+	local add_snippets = ls.add_snippets
+	local choice = ls.choice_node
+
+	local opts = { trim_empty = true, dedent = true }
 
 	local bon = fmt(
 		[[
@@ -19,9 +25,9 @@ local snipet = function()
                 )
             }}
         }}
-  ]],
+    ]],
 		{ type = ls.i(1) },
-		{ trim_empty = true, dedent = true }
+		opts
 	)
 
 	local bon_create = fmt(
@@ -43,16 +49,30 @@ local snipet = function()
       }}
   ]],
 		{ type = ls.i(1) },
-		{ trim_empty = true, dedent = true }
+		opts
 	)
-	ls.add_snippets("rust", {
-		ls.snippet("impl search", bon),
-		ls.snippet("impl create", bon_create),
-		ls.snippet("#expect", t('#[expect(dead_code, reason = "todo")]')),
+
+	add_snippets("rust", {
+		snippet("impl search", bon),
+		snippet("impl create", bon_create),
+		snippet("#expect", text('#[expect(dead_code, reason = "todo")]')),
+		snippet("#ts", fmt('#[ts(export, export_to = "{}")]', { insert(1) }, opts)),
+	})
+
+	add_snippets("svelte", {
+		snippet(
+			"let",
+			fmt("let {name} = ${kind}({expr})", {
+				name = insert(1),
+				kind = insert(2),
+				expr = insert(3),
+			}, opts)
+		),
+		snippet("<script>", fmt('<script lang="ts">{body}</script>', { body = insert(1) }, opts)),
 	})
 end
 
 return {
 	"L3MON4D3/LuaSnip",
-	config = snipet,
+	config = config,
 }
