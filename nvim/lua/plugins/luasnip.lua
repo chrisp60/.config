@@ -55,8 +55,9 @@ local config = function()
 	add_snippets("rust", {
 		snippet("impl search", bon),
 		snippet("impl create", bon_create),
-		snippet("#expect", text('#[expect(dead_code, reason = "todo")]')),
-		snippet("#ts", fmt('#[ts(export, export_to = "{}")]', { insert(1) }, opts)),
+		snippet("#[tracing::instrument]", fmt("#[tracing::instrument(skip({}), err)]", { insert(1) }, opts)),
+		snippet("#[expect", text('#[expect(dead_code, reason = "todo")]')),
+		snippet("#[ts", fmt('#[ts(export, export_to = "{}")]', { insert(1) }, opts)),
 	})
 
 	add_snippets("svelte", {
@@ -68,7 +69,7 @@ local config = function()
 				expr = insert(3),
 			}, opts)
 		),
-		snippet("<script>", fmt('<script lang="ts">{body}</script>', { body = insert(1) }, opts)),
+		snippet("<script", fmt('<script lang="ts">{}</script>', { insert(1) }), opts),
 	})
 end
 

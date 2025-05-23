@@ -122,23 +122,18 @@ return {
 			local lsp_zero = require("lsp-zero")
 			local select = { behavior = cmp.SelectBehavior.Select }
 
-			cmp.setup.filetype("lua", {
-				sources = {
-					{ name = "lazydev", group_index = 0 },
-				},
-			})
-
 			cmp.setup({
 				snippet = {
 					expand = function(args)
 						require("luasnip").lsp_expand(args.body)
 					end,
 				},
-				sources = {
-					{ name = "nvim_lsp", max_item_count = 20 },
-					{ name = "luasnip", group_index = 1 },
+				sources = cmp.config.sources({
+					{ name = "lazydev", group_index = 0 },
+					{ name = "nvim_lsp" },
+					{ name = "luasnip" },
 					{ name = "nvim_lua" },
-				},
+				}),
 				preselect = cmp.PreselectMode.None,
 				mapping = {
 					["<C-y>"] = cmp.mapping.complete({
@@ -190,27 +185,6 @@ return {
 				handlers = {
 					-- Handlers for everything else
 					lsp_zero.default_setup,
-					html = function()
-						lsp_config.html.setup({
-							filetypes = { "html", "templ", "htmldjango" },
-						})
-					end,
-					svelte = function()
-						lsp_config.svelte.setup({ settings = { enable_ts_plugin = true } })
-					end,
-					lua_ls = function()
-						lsp_config.lua_ls.setup({
-							settings = {
-								Lua = {
-									completion = {
-										callSnippet = "Replace",
-										displayContext = 4,
-										keywordSnippet = "Both",
-									},
-								},
-							},
-						})
-					end,
 					rust_analyzer = function()
 						lsp_config.rust_analyzer.setup(ra_config)
 					end,
