@@ -38,7 +38,7 @@ return {
 			},
 			{ "f", b.find_files, "files" },
 			{ "g", b.live_grep, "grep" },
-			{ "o", b.vim_options, "vim options" },
+			{ "v", b.vim_options, "vim options" },
 			{ '"', b.marks, "marks" },
 			{ "b", b.jumplist, "vim options" },
 

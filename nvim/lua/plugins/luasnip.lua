@@ -1,4 +1,8 @@
-local config = function()
+local M = {
+	"L3MON4D3/LuaSnip",
+}
+
+function M.config()
 	local ls = require("luasnip")
 	local text = ls.t
 	local fmt = require("luasnip.extras.fmt").fmt
@@ -58,6 +62,7 @@ local config = function()
 		snippet("#[tracing::instrument]", fmt("#[tracing::instrument(skip({}), err)]", { insert(1) }, opts)),
 		snippet("#[expect", text('#[expect(dead_code, reason = "todo")]')),
 		snippet("#[ts", fmt('#[ts(export, export_to = "{}")]', { insert(1) }, opts)),
+		snippet("let connection", text([[let connection = fabric::acquire!(pool);]])),
 	})
 
 	add_snippets("svelte", {
@@ -73,7 +78,4 @@ local config = function()
 	})
 end
 
-return {
-	"L3MON4D3/LuaSnip",
-	config = config,
-}
+return M
