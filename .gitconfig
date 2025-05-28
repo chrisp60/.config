@@ -29,10 +29,11 @@
     diffFilter = delta --color-only
 
 [merge]
-    # conflictstyle = zdiff3 # This is recommended by delta, but my git doesn't like it
+    conflictstyle = zdiff3
 
 [delta]
     features = arctic-fox
+    true-color = always
 
 [delta "arctic-fox"]
     # author: https://github.com/anthony-halim
