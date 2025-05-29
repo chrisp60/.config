@@ -47,7 +47,7 @@ return {
 			{ "lt", b.lsp_type_definitions, "LSP type definitions" },
 			{ "li", b.lsp_implementations, "LSP implementations" },
 			{ "R", b.lsp_references, "LSP references" },
-			{ "s", b.lsp_workspace_symbols, "LSP workspace symbols", {} },
+			{ "s", b.lsp_dynamic_workspace_symbols, "LSP dynamic workspace symbols", {} },
 			{ "S", b.lsp_document_symbols, "LSP document symbols" },
 			{ "D", b.diagnostics, "all diagnostics" },
 			{
