@@ -1,7 +1,0 @@
-import = [
-	"C:/Users/Chris/.config/alacritty/alacritty.toml",
-	"C:/Users/Chris/.config/alacritty/catppuccin-mocha.toml",
-]
-
-[shell]
-program = "pwsh.exe"
