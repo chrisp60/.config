@@ -24,6 +24,7 @@
     l = log --oneline
     rb = rebase --interactive --rerere-autoupdate --autosquash --autostash
     soft = reset --soft
+    unstage = restore --staged .
 
 [interactive]
     diffFilter = delta --color-only

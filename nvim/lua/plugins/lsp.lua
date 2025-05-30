@@ -64,9 +64,11 @@ local on_attach = function(client, bufnr)
 		return { buffer = bufnr, desc = "LSP: " .. desc }
 	end
 
-	set("n", "<leader>o", function()
-		require("ferris.methods.open_parent_module")()
-	end, opts("ferris"))
+	if client.name == "rust_analyzer" then
+		set("n", "<leader>o", function()
+			require("ferris.methods.open_parent_module")()
+		end, opts("Ferris open parent"))
+	end
 
 	set("n", "<c-n>", function()
 		vim.diagnostic.goto_next({ severity = { min = "WARN", max = "ERROR" } })
@@ -144,6 +146,7 @@ return {
 						config = {
 							sources = {
 								{ name = "nvim_lsp" },
+								{ name = "luasnip" },
 							},
 						},
 					}),
