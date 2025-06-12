@@ -31,6 +31,8 @@ require("lazy").setup("plugins", {
 vim.lsp.set_log_level("OFF")
 vim.g.clipboard = "tmux"
 vim.opt.autoindent = true
+vim.opt.smartcase = true
+vim.opt.ignorecase = true
 vim.opt.conceallevel = 0
 vim.opt.colorcolumn = "80,100"
 vim.opt.cursorline = true
