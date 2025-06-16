@@ -39,6 +39,7 @@ return {
 			markdown = { "prettierd" },
 			html = { "prettierd" },
 			htmldjango = { "prettier_jinja" },
+			c = { lsp_format = "prefer" },
 			json = { "jq" },
 			rust = { "rustfmt" },
 			toml = { "taplo" },
