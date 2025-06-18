@@ -23,6 +23,8 @@ local ra_config = {
 					"proc-macro-disabled",
 				},
 			},
+			references = { excludeImports = true },
+			workspace = { symbol = { search = { excludeImports = true } } },
 			procMacro = {
 				ignored = {
 					sqlx_macros = {
