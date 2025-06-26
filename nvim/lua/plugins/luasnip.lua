@@ -21,9 +21,10 @@ function M.config()
             #[builder(finish_fn = construct)]
             fn search<'c>(
                 #[builder(finish_fn)]
-                connection: &mut PgConnection
+                connection: fabric::Connection<'c>,
             ) -> fabric::Row<'c, Self> {{
-                sqlx::query_as_unchecked!(Self,
+                sqlx::query_as_unchecked!(
+                    Self,
                     r#"
                     "#
                 )
@@ -39,11 +40,12 @@ function M.config()
       #[bon::bon]
       impl {type} {{
           #[builder(finish_fn = construct, start_fn = new)]
-          pub async fn create(
+          async fn create(
               #[builder(finish_fn)]
-              connection: &mut PgConnection,
+              connection: fabric::Connection<'c>,
           ) -> sqlx::Result<Self> {{
-              sqlx::query_as_unchecked!(Self,
+              sqlx::query_as_unchecked!(
+                  Self,
                   r#"
                   "#
               )
