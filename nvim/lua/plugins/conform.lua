@@ -44,7 +44,7 @@ return {
 			rust = { "rustfmt" },
 			toml = { "taplo" },
 			sql = {
-				"sqlfluff",
+				"pg_format",
 				-- Can take an aggresively long time
 				timeout_ms = 5000,
 			},
@@ -52,6 +52,7 @@ return {
 		},
 		format_after_save = { timeout_ms = 500 },
 		formatters = {
+			pg_format = { command = "pg_format", append_args = { "--keyword-case=1" } },
 			sqlfluff = {
 				command = "sqlfluff",
 				args = {
