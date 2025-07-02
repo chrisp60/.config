@@ -14,14 +14,53 @@ function M.config()
 
 	local opts = { trim_empty = true, dedent = true }
 
+	local fabric_test_module = fmt(
+		[[
+        #[cfg(test)]
+        mod test {{
+            #[expect(unused_imports)]
+            use fabric::{{account::AccountId, acquire, BoxResult, Pool}};
+
+            use super::*;
+
+            #[sqlx::test(
+                migrations = "../../migrations",
+                fixtures(path = "../../fixtures", scripts("account"))
+            )]
+            async fn my_test(pool: Pool) -> BoxResult {{
+                let connection = acquire!(pool);
+                let account = AccountId::fixture();
+                {body}
+                Ok(())
+            }}
+        }}
+    ]],
+		{ body = insert(1) }
+	)
+	local fabric_test = fmt(
+		[[
+        #[sqlx::test(
+            migrations = "../../migrations",
+            fixtures(path = "../../fixtures", scripts("account"))
+        )]
+        async fn {name}(pool: Pool) -> BoxResult {{
+            let connection = acquire!(pool);
+            let account = AccountId::fixture();
+            {body}
+            Ok(())
+        }}
+    ]],
+		{ name = insert(1), body = insert(2) }
+	)
+
 	local bon = fmt(
 		[[
         #[bon::bon]
         impl {type} {{
             #[builder(finish_fn = construct)]
-            fn search<'c>(
+            fn search<'_>(
                 #[builder(finish_fn)]
-                connection: fabric::Connection<'c>,
+                connection: fabric::Connection<'_>,
             ) -> fabric::Row<'c, Self> {{
                 sqlx::query_as_unchecked!(
                     Self,
@@ -61,10 +100,13 @@ function M.config()
 	add_snippets("rust", {
 		snippet("impl search", bon),
 		snippet("impl create", bon_create),
-		snippet("#[tracing::instrument]", fmt("#[tracing::instrument(skip({}), err)]", { insert(1) }, opts)),
-		snippet("#[expect", text('#[expect(dead_code, reason = "todo")]')),
-		snippet("#[ts", fmt('#[ts(export, export_to = "{}")]', { insert(1) }, opts)),
-		snippet("let connection", text([[let connection = fabric::acquire!(pool);]])),
+		snippet({ trig = "tmfm", name = "fabric test module" }, fabric_test_module),
+		snippet({ trig = "tmf", name = "fabric test" }, fabric_test),
+		snippet(
+			{ trig = "ti", name = "instrument attribute" },
+			fmt("#[tracing::instrument(skip({}), err)]", { insert(1) }, opts)
+		),
+		snippet({ trig = "ts", name = "ts_rs export" }, fmt('#[ts(export, export_to = "{}")]', { insert(1) }, opts)),
 	})
 
 	add_snippets("svelte", {
