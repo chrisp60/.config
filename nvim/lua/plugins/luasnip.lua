@@ -103,10 +103,10 @@ function M.config()
 		snippet({ trig = "tmfm", name = "fabric test module" }, fabric_test_module),
 		snippet({ trig = "tmf", name = "fabric test" }, fabric_test),
 		snippet(
-			{ trig = "ti", name = "instrument attribute" },
+			{ trig = "#[tracing", name = "instrument attribute" },
 			fmt("#[tracing::instrument(skip({}), err)]", { insert(1) }, opts)
 		),
-		snippet({ trig = "ts", name = "ts_rs export" }, fmt('#[ts(export, export_to = "{}")]', { insert(1) }, opts)),
+		snippet({ trig = "#[ts", name = "ts_rs export" }, fmt('#[ts(export, export_to = "{}")]', { insert(1) }, opts)),
 	})
 
 	add_snippets("svelte", {
