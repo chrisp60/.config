@@ -58,15 +58,22 @@ function M.config()
         #[bon::bon]
         impl {type} {{
             #[builder(finish_fn = construct)]
-            fn search<'_>(
+            fn search<'c>(
                 #[builder(finish_fn)]
-                connection: fabric::Connection<'_>,
+                connection: fabric::Connection<'c>,
+                pagination: Option<Pagination>,
             ) -> fabric::Row<'c, Self> {{
+                let (limit, offset) = Pagination::resolve(pagination);
                 sqlx::query_as_unchecked!(
                     Self,
                     r#"
-                    "#
+                    limit $1
+                    offset $2
+                    "#,
+                    limit,  // 1
+                    offset, // 2
                 )
+                .fetch(connection)
             }}
         }}
     ]],
