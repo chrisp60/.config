@@ -41,6 +41,7 @@ return {
 			htmldjango = { "prettier_jinja" },
 			c = { lsp_format = "prefer" },
 			json = { "jq" },
+			zig = { "zigfmt" },
 			rust = { "rustfmt" },
 			toml = { "taplo" },
 			sql = {
