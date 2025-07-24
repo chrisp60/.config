@@ -46,6 +46,7 @@ return {
 			toml = { "taplo" },
 			sql = {
 				"pg_format",
+				"sqlfluff",
 				-- Can take an aggresively long time
 				timeout_ms = 5000,
 			},

@@ -41,14 +41,18 @@ return {
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
 		config = function(_, _)
+			---@diagnostic disable-next-line: missing-fields
 			require("nvim-treesitter.configs").setup({
 				matchup = { enable = true },
+				-- n_gnn: start incremental_selection
+				-- v_grn: to upper named parent
+				-- v_grm: to lower named parent
 				incremental_selection = { enable = true },
 				indent = { enable = true },
-				ignore_install = { enable = true },
 				auto_install = true,
 				ensure_installed = {},
 				sync_install = false,
+				textobjects = { enable = true },
 				highlight = {
 					enable = true,
 					additional_vim_regex_highlighting = false,
