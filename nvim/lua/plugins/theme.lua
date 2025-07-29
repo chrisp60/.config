@@ -4,6 +4,9 @@ return {
 	{
 		"catppuccin/nvim",
 		name = "catppuccin",
+		-- lsp semantic token issues.
+		-- https://github.com/catppuccin/nvim/issues/900
+		version = "v1.11",
 		init = function()
 			vim.cmd.colorscheme("catppuccin")
 		end,
@@ -13,6 +16,7 @@ return {
 			no_italic = true,
 			integrations = {
 				fidget = true,
+				mini = { enabled = true },
 				native_lsp = {
 					enabled = true,
 				},

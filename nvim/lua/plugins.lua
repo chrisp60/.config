@@ -1,6 +1,19 @@
 ---@module "lazy"
 ---@type LazyPluginSpec[]
 return {
+
+	{
+		"nvim-mini/mini.hipatterns",
+		version = false,
+		opts = {
+			highlighters = {
+				section = { pattern = "@section", group = "MiniHipatternsNote" },
+				todo = { pattern = "TODO", group = "MiniHipatternsTodo" },
+				note = { pattern = "NOTE", group = "MiniHipatternsNote" },
+			},
+		},
+	},
+
 	{
 		"gregorias/coerce.nvim",
 		tag = "v4.1.0",
@@ -8,6 +21,8 @@ return {
 	},
 
 	{ "andymass/vim-matchup" },
+
+	{ "theHamsta/nvim-treesitter-pairs" },
 
 	{ "tpope/vim-surround" },
 
@@ -20,6 +35,7 @@ return {
 		init = function()
 			vim.g.sql_type_default = "pgsql"
 		end,
+		enabled = false,
 	},
 
 	{
@@ -43,16 +59,22 @@ return {
 		config = function(_, _)
 			---@diagnostic disable-next-line: missing-fields
 			require("nvim-treesitter.configs").setup({
-				matchup = { enable = true },
-				-- n_gnn: start incremental_selection
-				-- v_grn: to upper named parent
-				-- v_grm: to lower named parent
-				incremental_selection = { enable = true },
-				indent = { enable = true },
+				-- copy pasted from https://github.com/theHamsta/nvim-treesitter-pairs
+				pairs = {
+					enable = true,
+					disable = {},
+					highlight_pair_events = {},
+					highlight_self = false,
+					goto_right_end = false,
+					fallback_cmd_normal = "call matchit#Match_wrapper('',1,'n')",
+					keymaps = {
+						goto_partner = "<leader>%",
+						delete_balanced = "X",
+					},
+				},
 				auto_install = true,
 				ensure_installed = {},
 				sync_install = false,
-				textobjects = { enable = true },
 				highlight = {
 					enable = true,
 					additional_vim_regex_highlighting = false,

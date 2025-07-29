@@ -28,7 +28,7 @@ require("lazy").setup("plugins", {
 	},
 })
 
-vim.lsp.set_log_level("OFF")
+vim.lsp.log.set_level(vim.log.levels.ERROR)
 vim.g.clipboard = "tmux"
 vim.opt.autoindent = true
 vim.opt.smartcase = true
@@ -54,7 +54,7 @@ vim.opt.undofile = true
 vim.opt.wrap = false
 
 vim.diagnostic.config({
-	virtual_text = { severity = { min = "WARN" } },
+	virtual_text = true,
 	update_in_insert = true,
 	signs = false,
 	underline = false,
@@ -65,6 +65,14 @@ vim.keymap.set(
 	{ "v" },
 	"<leader>z",
 	[[:'<,'>.! sqlfluff format --dialect postgres - <cr>]],
+	{ desc = "Format sql block", silent = true }
+)
+
+-- util keymap for inlined rinja templates.
+vim.keymap.set(
+	{ "v" },
+	"<leader>Z",
+	[[:'<,'>.! pg_format --keyword-case=1 <cr>]],
 	{ desc = "Format sql block", silent = true }
 )
 

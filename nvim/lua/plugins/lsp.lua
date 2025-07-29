@@ -7,15 +7,34 @@ end)
 local ra_config = {
 	settings = {
 		["rust-analyzer"] = {
-			showDependenciesExplorer = false,
+			hover = {
+				memoryLayout = { niches = true },
+			},
+			semanticHighlighting = {
+				punctuation = {
+					enable = true,
+					specialization = { enable = true },
+				},
+				operator = {
+					specialization = { enable = true },
+				},
+			},
+			rustfmt = { rangeFormatting = { enable = true } },
 			completion = {
+				fullFunctionSignatures = { enable = true },
 				postfix = { enable = false },
 				limit = 10,
 				autoIter = { enable = false },
-				excludeTraits = { "std::iter::IntoIterator", "std::iter::Iterator" },
 			},
-			check = { command = "clippy" },
+			assist = {
+				expressionFillDefault = "default",
+			},
+			check = { command = "check" },
 			diagnostics = {
+				experimental = { enable = true },
+				styleLints = { enable = true },
+				previewRustcOutput = true,
+				useRustcErrorCode = true,
 				disabled = {
 					"inactive-code",
 					"unlinked-file",
@@ -73,11 +92,11 @@ local on_attach = function(client, bufnr)
 	end
 
 	set("n", "<c-n>", function()
-		vim.diagnostic.goto_next({ severity = { min = "WARN", max = "ERROR" } })
+		vim.diagnostic.goto_next()
 	end, opts("next ERROR diagnostic"))
 
 	set("n", "<c-p>", function()
-		vim.diagnostic.goto_prev({ severity = { min = "WARN", max = "ERROR" } })
+		vim.diagnostic.goto_prev()
 	end, opts("prev ERROR diagnostic"))
 
 	set("i", "<C-h>", vim.lsp.buf.signature_help, opts("signature help"))
@@ -160,11 +179,6 @@ return {
 					["<C-k>"] = lsp_zero.cmp_action().luasnip_shift_supertab(select),
 					["<C-;>"] = cmp.mapping.close(),
 					["<C-x>"] = cmp.mapping.close(),
-
-					-- ["<C-j>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
-					-- ["<C-k>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
-					-- ["<C-n>"] = lsp_zero.cmp_action().luasnip_jump_forward(),
-					-- ["<C-p>"] = lsp_zero.cmp_action().luasnip_jump_backward(),
 				},
 				formatting = lsp_zero.cmp_format({ details = true, max_width = 40 }),
 				experimental = { ghost_text = false },
