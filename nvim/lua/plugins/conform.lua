@@ -42,7 +42,7 @@ return {
 			c = { lsp_format = "prefer" },
 			json = { "jq" },
 			zig = { "zigfmt" },
-			rust = { "rustfmt" },
+			rust = { lsp_format = "first" },
 			toml = { "taplo" },
 			sql = {
 				"pg_format",
