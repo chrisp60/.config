@@ -9,6 +9,13 @@ local ra_config = {
 		["rust-analyzer"] = {
 			hover = {
 				memoryLayout = { niches = true },
+				actions = {
+					implementations = { enable = true },
+					references = { enable = true },
+					debug = { enable = true },
+					updateTest = { enable = true },
+					gotoTypeDef = { enable = true },
+				},
 			},
 			semanticHighlighting = {
 				punctuation = {
@@ -25,6 +32,7 @@ local ra_config = {
 				postfix = { enable = false },
 				limit = 10,
 				autoIter = { enable = false },
+				autoAwait = { enable = false },
 			},
 			assist = {
 				expressionFillDefault = "default",
