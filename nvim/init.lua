@@ -60,19 +60,10 @@ vim.diagnostic.config({
 	underline = false,
 })
 
--- util keymap for inlined rinja templates.
 vim.keymap.set(
 	{ "v" },
 	"<leader>z",
 	[[:'<,'>.! sqlfluff format --dialect postgres - <cr>]],
-	{ desc = "Format sql block", silent = true }
-)
-
--- util keymap for inlined rinja templates.
-vim.keymap.set(
-	{ "v" },
-	"<leader>Z",
-	[[:'<,'>.! pg_format --keyword-case=1 <cr>]],
 	{ desc = "Format sql block", silent = true }
 )
 

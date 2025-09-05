@@ -1,22 +1,3 @@
---- constructs a table for conforms custom formatters using prettier-pnp
----@param extension string
----@return conform.FormatterConfigOverride
-local function prettier_pnp(extension)
-	return {
-		command = "prettier-pnp",
-		args = {
-			"--quiet",
-			"--pn",
-			extension,
-			"--stdin-filepath",
-			"$FILENAME",
-			"--parser",
-			extension,
-		},
-		stdin = true,
-	}
-end
-
 local prettierd = { "prettierd" }
 
 ---@module "lazy"
@@ -44,19 +25,27 @@ return {
 			c = { lsp_format = "prefer" },
 			json = { "jq" },
 			zig = { "zigfmt" },
-			rust = { lsp_format = "first" },
+			rust = {
+				-- last so that trim_whitespace can remove any trailing spaces that can choke up rustfmt
+				lsp_format = "last",
+			},
 			toml = { "taplo" },
 			sql = {
 				"pg_format",
-				-- "sqlfluff",
-				-- Can take an aggresively long time
-				timeout_ms = 5000,
+				"sqlfluff",
+				timeout_ms = 2000,
 			},
 			["*"] = { "trim_whitespace", "trim_newlines" },
 		},
 		format_after_save = { timeout_ms = 500 },
 		formatters = {
-			pg_format = { command = "pg_format", append_args = { "--keyword-case=1" } },
+			pg_format = {
+				command = "pg_format",
+				append_args = {
+					"--keyword-case=1",
+					"--no-space-function",
+				},
+			},
 			sqlfluff = {
 				command = "sqlfluff",
 				args = {
@@ -71,8 +60,6 @@ return {
 				stdin = true,
 				require_cwd = false,
 			},
-			prettier_jinja = prettier_pnp("jinja-template"),
-			prettier_svelte = prettier_pnp("svelte"),
 		},
 	},
 }
