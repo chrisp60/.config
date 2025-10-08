@@ -3,6 +3,12 @@
 return {
 
 	{
+		"catppuccin/nvim",
+		name = "catppuccin",
+		priority = 1000,
+		opts = {},
+	},
+	{
 		"nvim-mini/mini.hipatterns",
 		version = false,
 		opts = {

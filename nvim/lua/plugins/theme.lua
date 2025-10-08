@@ -42,7 +42,7 @@ return {
 		"lukas-reineke/indent-blankline.nvim",
 		config = function()
 			---@type ibl.config
-			opts = {
+			local opts = {
 				enabled = true,
 				scope = {
 					enabled = true,
