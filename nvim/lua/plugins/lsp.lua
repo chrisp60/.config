@@ -1,54 +1,25 @@
 local set = vim.keymap.set
 
-set("n", "<leader>i", function()
-	vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
-end)
-
-local ra_config = {
+vim.lsp.config("rust_analyzer", {
 	settings = {
 		["rust-analyzer"] = {
-			hover = {
-				memoryLayout = { niches = true },
-				actions = {
-					implementations = { enable = true },
-					references = { enable = true },
-					debug = { enable = true },
-					updateTest = { enable = true },
-					gotoTypeDef = { enable = true },
-				},
-			},
-			semanticHighlighting = {
-				punctuation = {
-					enable = true,
-					specialization = { enable = true },
-				},
-				operator = {
-					specialization = { enable = true },
-				},
-			},
-			rustfmt = { rangeFormatting = { enable = true } },
-			completion = {
-				fullFunctionSignatures = { enable = true },
-				postfix = { enable = false },
-				limit = 10,
-				autoIter = { enable = false },
-				autoAwait = { enable = false },
-			},
 			assist = {
 				expressionFillDefault = "default",
+				preferSelf = true,
 			},
-			check = { command = "check" },
+			rustfmt = {
+				rangeFormatting = { enable = true },
+			},
+			cargo = { features = "all", command = "clippy" },
+			check = { features = "all" },
 			diagnostics = {
-				experimental = { enable = true },
-				styleLints = { enable = true },
-				previewRustcOutput = true,
-				useRustcErrorCode = true,
 				disabled = {
 					"inactive-code",
 					"unlinked-file",
 					"macro-error",
 					"proc-macro-disabled",
 				},
+				styleLints = { enable = true },
 			},
 			references = { excludeImports = true },
 			workspace = { symbol = { search = { excludeImports = true } } },
@@ -70,8 +41,9 @@ local ra_config = {
 				},
 			},
 			imports = {
+				preferPrelude = true,
 				merge = {
-					glob = false,
+					glob = true,
 				},
 				prefix = "crate",
 				granularity = {
@@ -81,7 +53,7 @@ local ra_config = {
 			},
 		},
 	},
-}
+})
 
 ---@param client vim.lsp.Client
 ---@param bufnr integer
@@ -100,11 +72,11 @@ local on_attach = function(client, bufnr)
 	end
 
 	set("n", "<c-n>", function()
-		vim.diagnostic.goto_next()
+		vim.diagnostic.goto_next({ severity = { min = "WARN" } })
 	end, opts("next ERROR diagnostic"))
 
 	set("n", "<c-p>", function()
-		vim.diagnostic.goto_prev()
+		vim.diagnostic.goto_prev({ severity = { min = "WARN" } })
 	end, opts("prev ERROR diagnostic"))
 
 	set("i", "<C-h>", vim.lsp.buf.signature_help, opts("signature help"))

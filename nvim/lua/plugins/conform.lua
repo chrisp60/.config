@@ -9,6 +9,7 @@ return {
 	---@module "conform"
 	---@type conform.setupOpts
 	opts = {
+		log_level = vim.log.levels.TRACE,
 		formatters_by_ft = {
 			query = { "format-queries" },
 			lua = { "stylua" },
@@ -26,7 +27,10 @@ return {
 			zig = { "zigfmt" },
 			rust = {
 				-- last so that trim_whitespace can remove any trailing spaces that can choke up rustfmt
-				lsp_format = "last",
+				"trim_whitespace",
+				"trim_newlines",
+				"leptosfmt",
+				"lsp_format",
 			},
 			toml = { "taplo" },
 			sql = {
@@ -40,6 +44,12 @@ return {
 		},
 		format_after_save = { timeout_ms = 500 },
 		formatters = {
+			leptosfmt = {
+				command = "leptosfmt",
+				append_args = {
+					"--rustfmt",
+				},
+			},
 			pg_format = {
 				command = "pg_format",
 				append_args = {
