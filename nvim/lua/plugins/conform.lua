@@ -14,6 +14,7 @@ return {
 			query = { "format-queries" },
 			lua = { "stylua" },
 			just = { "just" },
+			cs = { "csharpier", lsp_format = "never" },
 
 			css = prettierd,
 			typescript = prettierd,
@@ -29,8 +30,7 @@ return {
 				-- last so that trim_whitespace can remove any trailing spaces that can choke up rustfmt
 				"trim_whitespace",
 				"trim_newlines",
-				"leptosfmt",
-				"lsp_format",
+				lsp_format = "last",
 			},
 			toml = { "taplo" },
 			sql = {
@@ -44,12 +44,6 @@ return {
 		},
 		format_after_save = { timeout_ms = 500 },
 		formatters = {
-			leptosfmt = {
-				command = "leptosfmt",
-				append_args = {
-					"--rustfmt",
-				},
-			},
 			pg_format = {
 				command = "pg_format",
 				append_args = {

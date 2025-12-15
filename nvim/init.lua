@@ -28,30 +28,31 @@ require("lazy").setup("plugins", {
 	},
 })
 
+local o = vim.opt
 vim.lsp.log.set_level(vim.log.levels.ERROR)
 vim.g.clipboard = "tmux"
-vim.opt.autoindent = true
-vim.opt.smartcase = true
-vim.opt.ignorecase = true
-vim.opt.conceallevel = 0
-vim.opt.colorcolumn = "80,100"
-vim.opt.cursorline = true
-vim.opt.expandtab = true
-vim.opt.hlsearch = false
-vim.opt.incsearch = true
-vim.opt.nu = true
-vim.opt.relativenumber = true
-vim.opt.shiftwidth = 4
-vim.opt.showmode = true
-vim.opt.signcolumn = "yes"
-vim.opt.smartindent = true
-vim.opt.softtabstop = 4
-vim.opt.splitright = true
-vim.opt.swapfile = false
-vim.opt.tabstop = 2
-vim.opt.termguicolors = true
-vim.opt.undofile = true
-vim.opt.wrap = false
+o.autoindent = true
+o.smartcase = true
+o.ignorecase = true
+o.conceallevel = 0
+o.colorcolumn = "80,100"
+o.cursorline = true
+o.expandtab = true
+o.hlsearch = false
+o.incsearch = true
+o.nu = true
+o.relativenumber = true
+o.shiftwidth = 4
+o.showmode = true
+o.signcolumn = "yes"
+o.smartindent = true
+o.softtabstop = 4
+o.splitright = true
+o.swapfile = false
+o.tabstop = 2
+o.termguicolors = true
+o.undofile = true
+o.wrap = false
 
 vim.diagnostic.config({
 	virtual_text = true,

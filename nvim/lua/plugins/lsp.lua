@@ -3,26 +3,55 @@ local set = vim.keymap.set
 vim.lsp.config("rust_analyzer", {
 	settings = {
 		["rust-analyzer"] = {
-			assist = {
-				expressionFillDefault = "default",
-				preferSelf = true,
+			hover = {
+				memoryLayout = { niches = true },
+				actions = {
+					implementations = { enable = true },
+					references = { enable = true },
+					debug = { enable = true },
+					updateTest = { enable = true },
+					gotoTypeDef = { enable = true },
+				},
+			},
+			semanticHighlighting = {
+				punctuation = {
+					enable = true,
+					specialization = { enable = true },
+				},
+				operator = {
+					specialization = { enable = true },
+				},
 			},
 			rustfmt = {
 				rangeFormatting = { enable = true },
 			},
-			cargo = { features = "all", command = "clippy" },
-			check = { features = "all" },
+			completion = {
+				fullFunctionSignatures = { enable = true },
+				postfix = { enable = false },
+				autoIter = { enable = false },
+				autoAwait = { enable = false },
+			},
+			cargo = { features = "all" },
 			diagnostics = {
+				experimental = { enable = true },
+				styleLints = { enable = true },
+				previewRustcOutput = true,
+				useRustcErrorCode = true,
 				disabled = {
 					"inactive-code",
 					"unlinked-file",
 					"macro-error",
 					"proc-macro-disabled",
 				},
-				styleLints = { enable = true },
 			},
 			references = { excludeImports = true },
-			workspace = { symbol = { search = { excludeImports = true } } },
+			workspace = {
+				symbol = {
+					search = {
+						excludeImports = true,
+					},
+				},
+			},
 			procMacro = {
 				ignored = {
 					sqlx_macros = {
@@ -40,8 +69,11 @@ vim.lsp.config("rust_analyzer", {
 					},
 				},
 			},
+			assist = {
+				expressionFillDefault = "default",
+				preferSelf = true,
+			},
 			imports = {
-				preferPrelude = true,
 				merge = {
 					glob = true,
 				},
@@ -71,13 +103,23 @@ local on_attach = function(client, bufnr)
 		end, opts("Ferris open parent"))
 	end
 
-	set("n", "<c-n>", function()
-		vim.diagnostic.goto_next({ severity = { min = "WARN" } })
-	end, opts("next ERROR diagnostic"))
+	local jump = function(count)
+		count = count or 1
+		vim.diagnostic.jump({
+			count = count,
+			_highest = true,
+			wrap = false,
+			on_jump = function()
+				vim.diagnostic.open_float({ bufnr, border = "single" })
+			end,
+		})
+	end
+
+	set("n", "<c-n>", jump, opts("next diagnost"))
 
 	set("n", "<c-p>", function()
-		vim.diagnostic.goto_prev({ severity = { min = "WARN" } })
-	end, opts("prev ERROR diagnostic"))
+		jump(-1)
+	end, opts("prev diagnostic"))
 
 	set("i", "<C-h>", vim.lsp.buf.signature_help, opts("signature help"))
 	set("n", "<leader>r", vim.lsp.buf.rename, opts("rename"))
@@ -93,7 +135,6 @@ end
 ---@type LazyPluginSpec[]
 return {
 	{ "vxpm/ferris.nvim", opts = {} },
-
 	{
 		"j-hui/fidget.nvim",
 		opts = {
@@ -103,19 +144,12 @@ return {
 	},
 
 	{ "williamboman/mason.nvim", opts = {} },
-
 	{ "saadparwaiz1/cmp_luasnip" },
-
 	{ "hrsh7th/cmp-nvim-lsp" },
-
 	{ "wesleimp/stylua.nvim" },
-
 	{ "folke/lazydev.nvim", ft = "lua", opts = {} },
-
 	{ "Bilal2453/luvit-meta", lazy = true },
-
 	{ "neovim/nvim-lspconfig", lazy = false },
-
 	{
 		"hrsh7th/nvim-cmp",
 		dependencies = {
@@ -185,15 +219,9 @@ return {
 			"neovim/nvim-lspconfig",
 		},
 		opts = function()
-			local lsp_zero = require("lsp-zero")
-			local lsp_config = require("lspconfig")
 			return {
 				handlers = {
-					-- Handlers for everything else
-					lsp_zero.default_setup,
-					rust_analyzer = function()
-						lsp_config.rust_analyzer.setup(ra_config)
-					end,
+					require("lsp-zero").default_setup,
 				},
 			}
 		end,
